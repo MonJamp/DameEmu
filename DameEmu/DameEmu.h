@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include <cstdint>
 
 #define LCD_HEIGHT 166;
@@ -6,8 +7,17 @@
 
 class DameEmu {
 public:
-	DameEmu(const char* BIOS_DIR, const char* ROM_DIR);
+	DameEmu(const char* ROM_DIR, const char* BIOS_DIR);
+	~DameEmu();
+
+	void BootUp(const char* ROM_DIR, const char* BIOS_DIR);
+	void Cycle();
+
+	sf::RenderWindow* GetApp() { return app; };
+
 private:
+	sf::RenderWindow* app;
+
 	//Memory map
 	union {
 		uint8_t memory[0xFFFF];
