@@ -1,9 +1,13 @@
 #pragma once
 #include <cstdint>
 
+#define LCD_HEIGHT 166;
+#define LCD_WIDTH 144;
+
 class DameEmu {
 public:
-//private:
+	DameEmu(const char* BIOS_DIR, const char* ROM_DIR);
+private:
 	//Memory map
 	union {
 		uint8_t memory[0xFFFF];
