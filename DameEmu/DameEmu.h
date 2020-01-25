@@ -1,11 +1,27 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+
 #include <cstdint>
 
 #define LCD_HEIGHT 166
 #define LCD_WIDTH 144
 
 #define ROM_ENTRY 0x150
+
+//Flag registers
+#define FLAG_Z   ((F & 0b10000000) >> 7)
+#define FLAG_N   ((F & 0b01000000) >> 6)
+#define FLAG_H   ((F & 0b00100000) >> 5)
+#define FLAG_CY  ((F & 0b00010000) >> 4)
+#define SET_Z   (F |= 1 << 7)
+#define SET_N   (F |= 1 << 6)
+#define SET_H   (F |= 1 << 5)
+#define SET_CY  (F |= 1 << 4)
+#define CLEAR_Z   (F ^= 1 << 7)
+#define CLEAR_N   (F ^= 1 << 6)
+#define CLEAR_H   (F ^= 1 << 5)
+#define CLEAR_CY  (F ^= 1 << 4)
+
 
 class DameEmu {
 public:
