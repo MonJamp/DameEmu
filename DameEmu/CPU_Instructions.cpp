@@ -12,8 +12,37 @@ void DameEmu::UNKNOWN(uint8_t opcode) {
 	debug_msg("Unknown OP: " << (int)opcode << endl);
 }
 
+void DameEmu::LD_BC(uint16_t nn) {
+	BC = nn;
+
+	cycles += 3;
+	PC += 3;
+
+	debug_msg("LD BC, " << nn << endl);
+}
+
+void DameEmu::LD_DE(uint16_t nn) {
+	DE = nn;
+
+	cycles += 3;
+	PC += 3;
+
+	debug_msg("LD DE, " << nn << endl);
+}
+
+void DameEmu::LD_HL(uint16_t nn) {
+	HL = nn;
+
+	cycles += 3;
+	PC += 3;
+
+	debug_msg("LD HL, " << nn << endl);
+}
+
 void DameEmu::LD_SP(uint16_t nn) {
 	SP = nn;
+
+	cycles += 3;
 	PC += 3;
 
 	debug_msg("LD SP, " << nn << endl);
