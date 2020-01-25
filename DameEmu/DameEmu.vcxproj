@@ -149,6 +149,7 @@
     <ClInclude Include="DameEmu.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CPU_Instructions.cpp" />
     <ClCompile Include="DameEmu.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

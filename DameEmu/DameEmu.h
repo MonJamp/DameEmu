@@ -22,6 +22,11 @@
 #define CLEAR_H   (F ^= 1 << 5)
 #define CLEAR_CY  (F ^= 1 << 4)
 
+//For debugging instructions
+enum EmuStatus {
+	OK,
+	HALT
+};
 
 class DameEmu {
 public:
@@ -29,7 +34,7 @@ public:
 	~DameEmu();
 
 	void BootUp(const char* ROM_DIR, const char* BIOS_DIR);
-	void Cycle();
+	EmuStatus Cycle();
 
 	sf::RenderWindow* GetApp() { return app; };
 
@@ -89,4 +94,8 @@ private:
 			uint8_t interruptsEnable;		//FFFFh - FFFFh
 		};
 	};
+
+	//Instructions
+	void UNKNOWN(uint8_t opcode);
+	void LDSP(uint16_t nn);			//31nn
 };
