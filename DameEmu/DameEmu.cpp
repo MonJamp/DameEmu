@@ -21,5 +21,5 @@ void DameEmu::BootUp(const char* ROM_DIR, const char* BIOS_DIR) {
 
 	std::ifstream ROM;
 	ROM.open(ROM_DIR, std::ios::binary);
-	for (uint8_t i = 0x0; ROM.get((char&)memory[i]); i++);
+	for (uint8_t i = ROM_ENTRY; ROM.get((char&)memory[i]); i++);
 }

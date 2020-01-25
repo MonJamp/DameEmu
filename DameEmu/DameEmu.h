@@ -2,8 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <cstdint>
 
-#define LCD_HEIGHT 166;
-#define LCD_WIDTH 144;
+#define LCD_HEIGHT 166
+#define LCD_WIDTH 144
+
+#define ROM_ENTRY 0x150
 
 class DameEmu {
 public:
