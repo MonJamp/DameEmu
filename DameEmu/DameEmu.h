@@ -100,6 +100,7 @@ private:
 
 	//Instructions
 	void UNKNOWN(uint8_t opcode);
+	void UNKNOWN_CB(uint8_t opcode);
 	void LD_BC(uint16_t nn);			//01
 	void LD_BC_A();						//02
 	void LD_DE(uint16_t nn);			//11
@@ -124,4 +125,8 @@ private:
 	void XOR_L();						//AD
 	void XOR_HL();						//AE
 	void XOR_A();						//AF
+	EmuStatus CB(uint8_t opcode);		//CB
+
+	//CB Instructions
+	void BIT_7_H();						//CB 7C
 };

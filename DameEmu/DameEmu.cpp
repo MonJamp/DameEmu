@@ -12,7 +12,7 @@ using namespace std;
 #define hi (opcode & 0xF0) >> 4
 #define lo opcode & 0x0F
 #define nn memory[PC + 2] << 8 | memory[PC + 1]
-#define n memory[PC + 2]
+#define n memory[PC + 1]
 
 DameEmu::DameEmu(const char* ROM_DIR, const char* BIOS_DIR) {
 	BootUp(ROM_DIR, BIOS_DIR);
@@ -142,6 +142,7 @@ EmuStatus DameEmu::Cycle() {
 		} break;
 	case 0xC:
 		switch (lo) {
+		case 0xB: return CB(n);
 		default:
 			UNKNOWN(opcode);
 			return HALT;
@@ -170,4 +171,108 @@ EmuStatus DameEmu::Cycle() {
 	}
 
 	return OK;
+}
+
+EmuStatus DameEmu::CB(uint8_t opcode) {
+	switch (hi) {
+	case 0x0:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x1:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x2:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x3:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x4:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x5:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x6:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x7:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x8:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0x9:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xA:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xB:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xC:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xD:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xE:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	case 0xF:
+		switch (lo) {
+		default:
+			UNKNOWN_CB(opcode);
+			return HALT;
+		}
+	default:
+		UNKNOWN_CB(opcode);
+		return HALT;
+	}
 }

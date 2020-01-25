@@ -12,6 +12,10 @@ void DameEmu::UNKNOWN(uint8_t opcode) {
 	debug_msg("Unknown OP: " << (int)opcode << endl);
 }
 
+void DameEmu::UNKNOWN_CB(uint8_t opcode) {
+	debug_msg("Unknown OP: CB " << (int)opcode << endl);
+}
+
 void DameEmu::LD_BC(uint16_t nn) {
 	BC = nn;
 
@@ -340,4 +344,9 @@ void DameEmu::XOR_A() {
 	PC += 1;
 
 	debug_msg("XOR A = " << (int)A << endl);
+}
+
+//CB Instructions
+void DameEmu::BIT_7_H() {
+
 }
