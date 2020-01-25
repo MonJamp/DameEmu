@@ -64,7 +64,7 @@ EmuStatus DameEmu::Cycle() {
 		} break;
 	case 0x3:
 		switch (lo) {
-		case 0x1: LDSP(nn); break;
+		case 0x1: LD_SP(nn); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;
@@ -107,6 +107,22 @@ EmuStatus DameEmu::Cycle() {
 		} break;
 	case 0xA:
 		switch (lo) {
+		case 0x0: AND_B(); break;
+		case 0x1: AND_C(); break;
+		case 0x2: AND_D(); break;
+		case 0x3: AND_E(); break;
+		case 0x4: AND_H(); break;
+		case 0x5: AND_L(); break;
+		case 0x6: AND_HL(); break;
+		case 0x7: AND_A(); break;
+		case 0x8: XOR_B(); break;
+		case 0x9: XOR_C(); break;
+		case 0xA: XOR_D(); break;
+		case 0xB: XOR_E(); break;
+		case 0xC: XOR_H(); break;
+		case 0xD: XOR_L(); break;
+		case 0xE: XOR_HL(); break;
+		case 0xF: XOR_A(); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;

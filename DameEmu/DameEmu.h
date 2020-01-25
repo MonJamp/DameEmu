@@ -39,7 +39,10 @@ public:
 	sf::RenderWindow* GetApp() { return app; };
 
 private:
+	//Emulator variables
 	sf::RenderWindow* app;
+	//TODO: Implement cycles
+	uint8_t cycles;
 
 	//CPU registers
 	union {
@@ -97,5 +100,21 @@ private:
 
 	//Instructions
 	void UNKNOWN(uint8_t opcode);
-	void LDSP(uint16_t nn);			//31nn
+	void LD_SP(uint16_t nn);			//31nn
+	void AND_B();						//A0
+	void AND_C();						//A1
+	void AND_D();						//A2
+	void AND_E();						//A3
+	void AND_H();						//A4
+	void AND_L();						//A5
+	void AND_HL();						//A6
+	void AND_A();						//A7
+	void XOR_B();						//A8
+	void XOR_C();						//A9
+	void XOR_D();						//AA
+	void XOR_E();						//AB
+	void XOR_H();						//AC
+	void XOR_L();						//AD
+	void XOR_HL();						//AE
+	void XOR_A();						//AF
 };
