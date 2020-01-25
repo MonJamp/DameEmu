@@ -101,9 +101,13 @@ private:
 	//Instructions
 	void UNKNOWN(uint8_t opcode);
 	void LD_BC(uint16_t nn);			//01
+	void LD_BC_A();						//02
 	void LD_DE(uint16_t nn);			//11
+	void LD_DE_A();						//12
 	void LD_HL(uint16_t nn);			//21
+	void LD_HLI_A();					//22
 	void LD_SP(uint16_t nn);			//31
+	void LD_HLD_A();					//32
 	void AND_B();						//A0
 	void AND_C();						//A1
 	void AND_D();						//A2

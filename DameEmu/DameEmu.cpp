@@ -47,6 +47,7 @@ EmuStatus DameEmu::Cycle() {
 	case 0x0:
 		switch (lo) {
 		case 0x1: LD_BC(nn); break;
+		case 0x2: LD_BC_A(); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;
@@ -54,6 +55,7 @@ EmuStatus DameEmu::Cycle() {
 	case 0x1:
 		switch (lo) {
 		case 0x1: LD_DE(nn); break;
+		case 0x2: LD_DE_A(); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;
@@ -61,6 +63,7 @@ EmuStatus DameEmu::Cycle() {
 	case 0x2:
 		switch (lo) {
 		case 0x1: LD_HL(nn); break;
+		case 0x2: LD_HLI_A(); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;
@@ -68,6 +71,7 @@ EmuStatus DameEmu::Cycle() {
 	case 0x3:
 		switch (lo) {
 		case 0x1: LD_SP(nn); break;
+		case 0x2: LD_HLD_A(); break;
 		default:
 			UNKNOWN(opcode);
 			return HALT;

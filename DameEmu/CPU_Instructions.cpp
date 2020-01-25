@@ -21,6 +21,15 @@ void DameEmu::LD_BC(uint16_t nn) {
 	debug_msg("LD BC, " << nn << endl);
 }
 
+void DameEmu::LD_BC_A() {
+	memory[BC] = A;
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD (BC), A; (" << BC << ") <- " << (int)A << endl);
+}
+
 void DameEmu::LD_DE(uint16_t nn) {
 	DE = nn;
 
@@ -28,6 +37,15 @@ void DameEmu::LD_DE(uint16_t nn) {
 	PC += 3;
 
 	debug_msg("LD DE, " << nn << endl);
+}
+
+void DameEmu::LD_DE_A() {
+	memory[DE] = A;
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD (DE), A; (" << BC << ") <- " << (int)A << endl);
 }
 
 void DameEmu::LD_HL(uint16_t nn) {
@@ -39,6 +57,16 @@ void DameEmu::LD_HL(uint16_t nn) {
 	debug_msg("LD HL, " << nn << endl);
 }
 
+void DameEmu::LD_HLI_A() {
+	memory[HL] = A;
+	HL++;
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD (HL+), A; (" << HL - 1 << ") <- " << (int)A << endl);
+}
+
 void DameEmu::LD_SP(uint16_t nn) {
 	SP = nn;
 
@@ -46,6 +74,16 @@ void DameEmu::LD_SP(uint16_t nn) {
 	PC += 3;
 
 	debug_msg("LD SP, " << nn << endl);
+}
+
+void DameEmu::LD_HLD_A() {
+	memory[HL] = A;
+	HL--;
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD (HL-), A; (" << HL+1 << ") <- " << (int)A << endl);
 }
 
 void DameEmu::AND_B() {
