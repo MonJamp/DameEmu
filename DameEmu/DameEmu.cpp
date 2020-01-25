@@ -9,6 +9,11 @@ using namespace std;
 #define debug_msg(x)
 #endif
 
+#define hi (opcode & 0xF0) >> 4
+#define lo opcode & 0x0F
+#define nn memory[PC + 2] << 8 | memory[PC + 1]
+#define n memory[PC + 2]
+
 DameEmu::DameEmu(const char* ROM_DIR, const char* BIOS_DIR) {
 	BootUp(ROM_DIR, BIOS_DIR);
 }
@@ -35,9 +40,6 @@ void DameEmu::BootUp(const char* ROM_DIR, const char* BIOS_DIR) {
 
 EmuStatus DameEmu::Cycle() {
 	uint8_t opcode = memory[PC];
-	const unsigned char hi = (opcode & 0xF0) >> 4;
-	const unsigned char lo = (opcode & 0x0F);
-	uint16_t nn = memory[PC + 2] << 8 | memory[PC + 1];
 
 	debug_msg(std::hex << PC << ": ");
 
