@@ -101,6 +101,19 @@ private:
 	//Instructions
 	void UNKNOWN(uint8_t opcode);
 	void UNKNOWN_CB(uint8_t opcode);
+	//06 16 26 0E 1E 2E 3E
+	void LD_r_n(uint8_t& r, uint8_t n);
+	//36
+	void LD_HL_n(uint8_t n);
+	//40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F
+	//50 51 52 53 54 55 57 58 59 5A 5B 5C 5D 5F
+	//60 61 62 63 64 65 67 68 69 6A 6B 6C 6D 6F
+	//78 79 7A 7B 7C 7D 7F
+	void LD_r_r(uint8_t& r1, uint8_t& r2);
+	//46 4E 56 5E 66 6E 7E
+	void LD_r_HL(uint8_t& r);
+	//70 71 72 73 74 75 77
+	void LD_HL_r(uint8_t& r);
 	void LD_BC(uint16_t nn);			//01
 	void LD_BC_A();						//02
 	void LD_DE(uint16_t nn);			//11
@@ -127,6 +140,8 @@ private:
 	void XOR_HL();						//AE
 	void XOR_A();						//AF
 	EmuStatus CB(uint8_t opcode);		//CB
+	void LD_C_A();						//E2
+	void LD_A_C();						//F2
 
 	//CB Instructions
 	//CB 40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F

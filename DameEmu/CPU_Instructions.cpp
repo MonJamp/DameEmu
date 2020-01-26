@@ -4,7 +4,6 @@
 #include <iostream>
 using namespace std;
 #define debug_msg(x) cout << x
-#define name(x) #x
 #else
 #define debug_msg(x)
 #endif
@@ -15,6 +14,51 @@ void DameEmu::UNKNOWN(uint8_t opcode) {
 
 void DameEmu::UNKNOWN_CB(uint8_t opcode) {
 	debug_msg("Unknown OP: CB " << (int)opcode << endl);
+}
+
+void DameEmu::LD_r_n(uint8_t& r, uint8_t n) {
+	debug_msg("LD " << (int)r << ", " << (int)n << endl);
+	
+	r = n;
+
+	cycles += 2;
+	PC += 2;
+}
+
+void DameEmu::LD_HL_n(uint8_t n) {
+	debug_msg("LD (" << HL << "), " << (int)n << endl);
+
+	memory[HL] = n;
+
+	cycles += 3;
+	PC += 2;
+}
+
+void DameEmu::LD_r_r(uint8_t& r1, uint8_t& r2) {
+	debug_msg("LD " << (int)r1 << ", " << (int)r2 << ";" << endl);
+
+	r1 = r2;
+
+	cycles += 1;
+	PC += 1;
+}
+
+void DameEmu::LD_r_HL(uint8_t& r) {
+	debug_msg("LD " << (int)r << ", (" << HL << ");" << endl);
+
+	r = memory[HL];
+
+	cycles += 2;
+	PC += 1;
+}
+
+void DameEmu::LD_HL_r(uint8_t& r) {
+	debug_msg("LD (" << HL << "), " << (int)r << ";" << endl);
+
+	memory[HL] = r;
+
+	cycles += 2;
+	PC += 1;
 }
 
 void DameEmu::LD_BC(uint16_t nn) {
@@ -364,6 +408,24 @@ void DameEmu::XOR_A() {
 	debug_msg("XOR A = " << (int)A << endl);
 }
 
+void DameEmu::LD_C_A() {
+	memory[0xFF00 + C] = A;
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD (" << 0xFF00 + (int)C << "), A;" << endl);
+}
+
+void DameEmu::LD_A_C() {
+	A = memory[0xFF00 + C];
+
+	cycles += 2;
+	PC += 1;
+
+	debug_msg("LD A, (" << 0xFF00 + (int)C << ");" << endl);
+}
+
 //CB Instructions
 void DameEmu::BIT(uint8_t b, uint8_t& r) {
 	(r & (1 << b)) ? CLEAR_Z : SET_Z;
@@ -374,7 +436,7 @@ void DameEmu::BIT(uint8_t b, uint8_t& r) {
 	cycles += 2;
 	PC += 2;
 
-	debug_msg("BIT " << (int)b << ", " << name(r) << "; Z <- " << (int)FLAG_Z << endl);
+	debug_msg("BIT " << (int)b << ", " << (int)r << "; Z <- " << (int)FLAG_Z << endl);
 }
 
 void DameEmu::BIT_HL(uint8_t b) {
