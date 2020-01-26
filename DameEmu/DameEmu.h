@@ -129,12 +129,11 @@ private:
 	EmuStatus CB(uint8_t opcode);		//CB
 
 	//CB Instructions
-	void BIT_7_B();						//CB 78
-	void BIT_7_C();						//CB 79
-	void BIT_7_D();						//CB 7A
-	void BIT_7_E();						//CB 7B
-	void BIT_7_H();						//CB 7C
-	void BIT_7_L();						//CB 7D
-	void BIT_7_HL();					//CB 7E
-	void BIT_7_A();						//CB 7F
+	//CB 40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F
+	//50 51 52 53 54 55 57 58 59 5A 5B 5C 5D 5F
+	//60 61 62 63 64 65 67 68 69 6A 6B 6C 6D 6F
+	//70 71 72 73 74 75 77 78 79 7A 7B 7C 7D 7F
+	void BIT(uint8_t b, uint8_t& r);
+	//CB 46 4E 56 5E 66 6E 76 7E
+	void BIT_HL(uint8_t b);
 };

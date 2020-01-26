@@ -4,6 +4,7 @@
 #include <iostream>
 using namespace std;
 #define debug_msg(x) cout << x
+#define name(x) #x
 #else
 #define debug_msg(x)
 #endif
@@ -364,8 +365,8 @@ void DameEmu::XOR_A() {
 }
 
 //CB Instructions
-void DameEmu::BIT_7_B() {
-	(B >> 7) ? CLEAR_Z : SET_Z;
+void DameEmu::BIT(uint8_t b, uint8_t& r) {
+	(r & (1 << b)) ? CLEAR_Z : SET_Z;
 
 	SET_H;
 	CLEAR_N;
@@ -373,71 +374,11 @@ void DameEmu::BIT_7_B() {
 	cycles += 2;
 	PC += 2;
 
-	debug_msg("BIT 7, B; Z <- " << (int)FLAG_Z << endl);
+	debug_msg("BIT " << (int)b << ", " << name(r) << "; Z <- " << (int)FLAG_Z << endl);
 }
 
-void DameEmu::BIT_7_C() {
-	(C >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, C; Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_D() {
-	(D >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, D; Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_E() {
-	(E >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, E; Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_H() {
-	(H >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, H; Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_L() {
-	(L >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, L; Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_HL() {
-	(memory[HL] >> 7) ? CLEAR_Z : SET_Z;
+void DameEmu::BIT_HL(uint8_t b) {
+	(memory[HL] & (1 << b)) ? CLEAR_Z : SET_Z;
 
 	SET_H;
 	CLEAR_N;
@@ -445,17 +386,5 @@ void DameEmu::BIT_7_HL() {
 	cycles += 3;
 	PC += 2;
 
-	debug_msg("BIT 7, (HL); Z <- " << (int)FLAG_Z << endl);
-}
-
-void DameEmu::BIT_7_A() {
-	(A >> 7) ? CLEAR_Z : SET_Z;
-
-	SET_H;
-	CLEAR_N;
-
-	cycles += 2;
-	PC += 2;
-
-	debug_msg("BIT 7, A; Z <- " << (int)FLAG_Z << endl);
+	debug_msg("BIT " << b << ", (HL); Z <- " << (int)FLAG_Z << endl);
 }

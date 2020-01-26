@@ -203,32 +203,88 @@ EmuStatus DameEmu::CB(uint8_t opcode) {
 		} break;
 	case 0x4:
 		switch (lo) {
+		case 0x0: BIT(0, B); break;
+		case 0x1: BIT(0, C); break;
+		case 0x2: BIT(0, D); break;
+		case 0x3: BIT(0, E); break;
+		case 0x4: BIT(0, H); break;
+		case 0x5: BIT(0, L); break;
+		case 0x6: BIT_HL(0); break;
+		case 0x7: BIT(0, A); break;
+		case 0x8: BIT(1, B); break;
+		case 0x9: BIT(1, C); break;
+		case 0xA: BIT(1, D); break;
+		case 0xB: BIT(1, E); break;
+		case 0xC: BIT(1, H); break;
+		case 0xD: BIT(1, L); break;
+		case 0xE: BIT_HL(1); break;
+		case 0xF: BIT(1, A); break;
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
 		} break;
 	case 0x5:
 		switch (lo) {
+		case 0x0: BIT(2, B); break;
+		case 0x1: BIT(2, C); break;
+		case 0x2: BIT(2, D); break;
+		case 0x3: BIT(2, E); break;
+		case 0x4: BIT(2, H); break;
+		case 0x5: BIT(2, L); break;
+		case 0x6: BIT_HL(2); break;
+		case 0x7: BIT(2, A); break;
+		case 0x8: BIT(3, B); break;
+		case 0x9: BIT(3, C); break;
+		case 0xA: BIT(3, D); break;
+		case 0xB: BIT(3, E); break;
+		case 0xC: BIT(3, H); break;
+		case 0xD: BIT(3, L); break;
+		case 0xE: BIT_HL(3); break;
+		case 0xF: BIT(3, A); break;
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
 		} break;
 	case 0x6:
 		switch (lo) {
+		case 0x0: BIT(4, B); break;
+		case 0x1: BIT(4, C); break;
+		case 0x2: BIT(4, D); break;
+		case 0x3: BIT(4, E); break;
+		case 0x4: BIT(4, H); break;
+		case 0x5: BIT(4, L); break;
+		case 0x6: BIT_HL(4); break;
+		case 0x7: BIT(4, A); break;
+		case 0x8: BIT(5, B); break;
+		case 0x9: BIT(5, C); break;
+		case 0xA: BIT(5, D); break;
+		case 0xB: BIT(5, E); break;
+		case 0xC: BIT(5, H); break;
+		case 0xD: BIT(5, L); break;
+		case 0xE: BIT_HL(5); break;
+		case 0xF: BIT(5, A); break;
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
 		} break;
 	case 0x7:
 		switch (lo) {
-		case 0x8: BIT_7_B(); break;
-		case 0x9: BIT_7_C(); break;
-		case 0xA: BIT_7_D(); break;
-		case 0xB: BIT_7_E(); break;
-		case 0xC: BIT_7_H(); break;
-		case 0xD: BIT_7_L(); break;
-		case 0xE: BIT_7_HL(); break;
-		case 0xF: BIT_7_A(); break;
+		case 0x0: BIT(6, B); break;
+		case 0x1: BIT(6, C); break;
+		case 0x2: BIT(6, D); break;
+		case 0x3: BIT(6, E); break;
+		case 0x4: BIT(6, H); break;
+		case 0x5: BIT(6, L); break;
+		case 0x6: BIT_HL(6); break;
+		case 0x7: BIT(6, A); break;
+		case 0x8: BIT(7, B); break;
+		case 0x9: BIT(7, C); break;
+		case 0xA: BIT(7, D); break;
+		case 0xB: BIT(7, E); break;
+		case 0xC: BIT(7, H); break;
+		case 0xD: BIT(7, L); break;
+		case 0xE: BIT_HL(7); break;
+		case 0xF: BIT(7, A); break;
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
