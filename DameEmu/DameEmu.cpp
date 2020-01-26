@@ -11,8 +11,9 @@ using namespace std;
 
 #define hi (opcode & 0xF0) >> 4
 #define lo opcode & 0x0F
-#define nn memory[PC + 2] << 8 | memory[PC + 1]
-#define n memory[PC + 1]
+#define nn (uint16_t)(memory[PC + 2] << 8 | memory[PC + 1])
+#define n (uint8_t)(memory[PC + 1])
+#define e (int8_t)(memory[PC + 1])
 
 DameEmu::DameEmu(const char* ROM_DIR, const char* BIOS_DIR) {
 	BootUp(ROM_DIR, BIOS_DIR);
@@ -62,6 +63,7 @@ EmuStatus DameEmu::Cycle() {
 		} break;
 	case 0x2:
 		switch (lo) {
+		case 0x0: JR_NZ(e); break;
 		case 0x1: LD_HL(nn); break;
 		case 0x2: LD_HLI_A(); break;
 		default:

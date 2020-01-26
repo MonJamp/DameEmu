@@ -17,10 +17,10 @@
 #define SET_N   (F |= 1 << 6)
 #define SET_H   (F |= 1 << 5)
 #define SET_CY  (F |= 1 << 4)
-#define CLEAR_Z   (F ^= 1 << 7)
-#define CLEAR_N   (F ^= 1 << 6)
-#define CLEAR_H   (F ^= 1 << 5)
-#define CLEAR_CY  (F ^= 1 << 4)
+#define CLEAR_Z   (F &= ~(1 << 7))
+#define CLEAR_N   (F &= ~(1 << 6))
+#define CLEAR_H   (F &= ~(1 << 5))
+#define CLEAR_CY  (F &= ~(1 << 4))
 
 //For debugging instructions
 enum EmuStatus {
@@ -105,6 +105,7 @@ private:
 	void LD_BC_A();						//02
 	void LD_DE(uint16_t nn);			//11
 	void LD_DE_A();						//12
+	void JR_NZ(int8_t e);				//20
 	void LD_HL(uint16_t nn);			//21
 	void LD_HLI_A();					//22
 	void LD_SP(uint16_t nn);			//31

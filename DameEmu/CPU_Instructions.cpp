@@ -52,6 +52,23 @@ void DameEmu::LD_DE_A() {
 	debug_msg("LD (DE), A; (" << BC << ") <- " << (int)A << endl);
 }
 
+void DameEmu::JR_NZ(int8_t e) {
+	debug_msg("JR NZ " << (int)e << "; ");
+
+	cycles += 2;
+	PC += 2;
+
+	if (FLAG_Z == 0) {
+		cycles += 1;
+		PC += e;
+
+		debug_msg("True, PC <- " << PC << endl);
+	}
+	else {
+		debug_msg("False, PC <- " << PC << endl);
+	}
+}
+
 void DameEmu::LD_HL(uint16_t nn) {
 	HL = nn;
 
