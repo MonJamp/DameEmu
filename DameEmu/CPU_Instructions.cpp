@@ -105,7 +105,7 @@ void DameEmu::JR_NZ(int8_t e) {
 	cycles += 2;
 	PC += 2;
 
-	if (FLAG_Z == 0) {
+	if (FLAG_CHECK(FLAG_ZERO) == 0) {
 		cycles += 1;
 		PC += e;
 
@@ -155,10 +155,10 @@ void DameEmu::LD_HLD_A() {
 }
 
 void DameEmu::INC(uint8_t& r) {
-	isAddHalfCarry(r, 1) ? SET_H : CLEAR_H;
+	isAddHalfCarry(r, 1) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_CLEAR(FLAG_HALFCARRY);
 	r++;
-	(r == 0) ? SET_Z : CLEAR_Z;
-	CLEAR_N;
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_NEGATIVE);
 
 	cycles += 1;
 	PC += 1;
@@ -167,26 +167,26 @@ void DameEmu::INC(uint8_t& r) {
 }
 
 void DameEmu::INC_HL() {
-	isAddHalfCarry(memory[HL], 1) ? SET_H : CLEAR_H;
+	isAddHalfCarry(memory[HL], 1) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_CLEAR(FLAG_HALFCARRY);
 	memory[HL]++;
-	(memory[HL] == 0) ? SET_Z : CLEAR_Z;
-	CLEAR_N;
+	(memory[HL] == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_NEGATIVE);
 
 	cycles += 3;
 	PC += 1;
 
-	debug_msg("INC " << memory[HL] - 1 << ";" << endl);
+	debug_msg("INC " << (int)memory[HL] - 1 << ";" << endl);
 }
 
 void DameEmu::AND_B() {
 	A &= B;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -197,12 +197,12 @@ void DameEmu::AND_B() {
 void DameEmu::AND_C() {
 	A &= C;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -213,12 +213,12 @@ void DameEmu::AND_C() {
 void DameEmu::AND_D() {
 	A &= D;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -229,12 +229,12 @@ void DameEmu::AND_D() {
 void DameEmu::AND_E() {
 	A &= E;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -245,12 +245,12 @@ void DameEmu::AND_E() {
 void DameEmu::AND_H() {
 	A &= H;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -261,12 +261,12 @@ void DameEmu::AND_H() {
 void DameEmu::AND_L() {
 	A &= L;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -277,12 +277,12 @@ void DameEmu::AND_L() {
 void DameEmu::AND_HL() {
 	A &= memory[HL];
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 2;
 	PC += 1;
@@ -293,12 +293,12 @@ void DameEmu::AND_HL() {
 void DameEmu::AND_A() {
 	A &= A;
 
-	CLEAR_CY;
-	SET_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -309,12 +309,12 @@ void DameEmu::AND_A() {
 void DameEmu::XOR_B() {
 	A ^= B;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -325,12 +325,12 @@ void DameEmu::XOR_B() {
 void DameEmu::XOR_C() {
 	A ^= C;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -341,12 +341,12 @@ void DameEmu::XOR_C() {
 void DameEmu::XOR_D() {
 	A ^= D;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -357,12 +357,12 @@ void DameEmu::XOR_D() {
 void DameEmu::XOR_E() {
 	A ^= E;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -373,12 +373,12 @@ void DameEmu::XOR_E() {
 void DameEmu::XOR_H() {
 	A ^= H;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -389,12 +389,12 @@ void DameEmu::XOR_H() {
 void DameEmu::XOR_L() {
 	A ^= L;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -405,12 +405,12 @@ void DameEmu::XOR_L() {
 void DameEmu::XOR_HL() {
 	A ^= (HL);
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 2;
 	PC += 1;
@@ -421,12 +421,12 @@ void DameEmu::XOR_HL() {
 void DameEmu::XOR_A() {
 	A ^= A;
 
-	CLEAR_CY;
-	CLEAR_H;
-	CLEAR_N;
-	CLEAR_Z;
+	FLAG_CLEAR(FLAG_CARRY);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	FLAG_CLEAR(FLAG_ZERO);
 	if (A == 0)
-		SET_Z;
+		FLAG_SET(FLAG_ZERO);
 
 	cycles += 1;
 	PC += 1;
@@ -454,25 +454,25 @@ void DameEmu::LD_A_C() {
 
 //CB Instructions
 void DameEmu::BIT(uint8_t b, uint8_t& r) {
-	(r & (1 << b)) ? CLEAR_Z : SET_Z;
+	(r & (1 << b)) ? FLAG_CLEAR(FLAG_ZERO) : FLAG_SET(FLAG_ZERO);
 
-	SET_H;
-	CLEAR_N;
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
 
 	cycles += 2;
 	PC += 2;
 
-	debug_msg("BIT " << (int)b << ", " << (int)r << "; Z <- " << (int)FLAG_Z << endl);
+	debug_msg("BIT " << (int)b << ", " << (int)r << "; Z <- " << (int)FLAG_CHECK(FLAG_ZERO) << endl);
 }
 
 void DameEmu::BIT_HL(uint8_t b) {
-	(memory[HL] & (1 << b)) ? CLEAR_Z : SET_Z;
+	(memory[HL] & (1 << b)) ? FLAG_CLEAR(FLAG_ZERO) : FLAG_SET(FLAG_ZERO);
 
-	SET_H;
-	CLEAR_N;
+	FLAG_SET(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
 
 	cycles += 3;
 	PC += 2;
 
-	debug_msg("BIT " << b << ", (HL); Z <- " << (int)FLAG_Z << endl);
+	debug_msg("BIT " << b << ", (HL); Z <- " << (int)FLAG_CHECK(FLAG_ZERO) << endl);
 }
