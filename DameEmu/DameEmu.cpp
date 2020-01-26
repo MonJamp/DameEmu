@@ -180,99 +180,109 @@ EmuStatus DameEmu::CB(uint8_t opcode) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x1:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x2:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x3:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x4:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x5:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x6:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x7:
 		switch (lo) {
+		case 0x8: BIT_7_B(); break;
+		case 0x9: BIT_7_C(); break;
+		case 0xA: BIT_7_D(); break;
+		case 0xB: BIT_7_E(); break;
+		case 0xC: BIT_7_H(); break;
+		case 0xD: BIT_7_L(); break;
+		case 0xE: BIT_7_HL(); break;
+		case 0xF: BIT_7_A(); break;
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x8:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0x9:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xA:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xB:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xC:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xD:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xE:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	case 0xF:
 		switch (lo) {
 		default:
 			UNKNOWN_CB(opcode);
 			return HALT;
-		}
+		} break;
 	default:
 		UNKNOWN_CB(opcode);
 		return HALT;
 	}
+
+	return OK;
 }

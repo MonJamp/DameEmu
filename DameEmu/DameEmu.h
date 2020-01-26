@@ -128,5 +128,12 @@ private:
 	EmuStatus CB(uint8_t opcode);		//CB
 
 	//CB Instructions
+	void BIT_7_B();						//CB 78
+	void BIT_7_C();						//CB 79
+	void BIT_7_D();						//CB 7A
+	void BIT_7_E();						//CB 7B
 	void BIT_7_H();						//CB 7C
+	void BIT_7_L();						//CB 7D
+	void BIT_7_HL();					//CB 7E
+	void BIT_7_A();						//CB 7F
 };

@@ -347,6 +347,98 @@ void DameEmu::XOR_A() {
 }
 
 //CB Instructions
-void DameEmu::BIT_7_H() {
+void DameEmu::BIT_7_B() {
+	(B >> 7) ? CLEAR_Z : SET_Z;
 
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, B; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_C() {
+	(C >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, C; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_D() {
+	(D >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, D; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_E() {
+	(E >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, E; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_H() {
+	(H >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, H; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_L() {
+	(L >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, L; Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_HL() {
+	(memory[HL] >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 3;
+	PC += 2;
+
+	debug_msg("BIT 7, (HL); Z <- " << (int)FLAG_Z << endl);
+}
+
+void DameEmu::BIT_7_A() {
+	(A >> 7) ? CLEAR_Z : SET_Z;
+
+	SET_H;
+	CLEAR_N;
+
+	cycles += 2;
+	PC += 2;
+
+	debug_msg("BIT 7, A; Z <- " << (int)FLAG_Z << endl);
 }
