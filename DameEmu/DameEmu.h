@@ -123,6 +123,9 @@ private:
 	void LD_HLI_A();					//22
 	void LD_SP(uint16_t nn);			//31
 	void LD_HLD_A();					//32
+	//8-bit arithmetic
+	void INC(uint8_t& r);
+	void INC_HL();
 	void AND_B();						//A0
 	void AND_C();						//A1
 	void AND_D();						//A2

@@ -47,20 +47,28 @@ EmuStatus DameEmu::Cycle() {
 	switch (opcode) {
 	case 0x01: LD_BC(nn); break;
 	case 0x02: LD_BC_A(); break;
+	case 0x04: INC(B); break;
 	case 0x06: LD_r_n(B, n); break;
+	case 0x0C: INC(C); break;
 	case 0x0E: LD_r_n(C, n); break;
 	case 0x11: LD_DE(nn); break;
 	case 0x12: LD_DE_A(); break;
+	case 0x14: INC(D); break;
 	case 0x16: LD_r_n(D, n); break;
+	case 0x1C: INC(E); break;
 	case 0x1E: LD_r_n(E, n); break;
 	case 0x20: JR_NZ(e); break;
 	case 0x21: LD_HL(nn); break;
 	case 0x22: LD_HLI_A(); break;
+	case 0x24: INC(H); break;
 	case 0x26: LD_r_n(H, n); break;
+	case 0x2C: INC(L); break;
 	case 0x2E: LD_r_n(L, n); break;
 	case 0x31: LD_SP(nn); break;
 	case 0x32: LD_HLD_A(); break;
+	case 0x34: INC_HL(); break;
 	case 0x36: LD_HL_n(n); break;
+	case 0x3C: INC(A); break;
 	case 0x3E: LD_r_n(A, n); break;
 	case 0x40: LD_r_r(B, B); break;
 	case 0x41: LD_r_r(B, C); break;

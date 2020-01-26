@@ -8,6 +8,8 @@ using namespace std;
 #define debug_msg(x)
 #endif
 
+#define isAddHalfCarry(x, y) ((((x & 0xF) + (y & 0xF)) & 0x10) == 0x10)
+
 void DameEmu::UNKNOWN(uint8_t opcode) {
 	debug_msg("Unknown OP: " << (int)opcode << endl);
 }
@@ -150,6 +152,30 @@ void DameEmu::LD_HLD_A() {
 	PC += 1;
 
 	debug_msg("LD (HL-), A; (" << HL+1 << ") <- " << (int)A << endl);
+}
+
+void DameEmu::INC(uint8_t& r) {
+	isAddHalfCarry(r, 1) ? SET_H : CLEAR_H;
+	r++;
+	(r == 0) ? SET_Z : CLEAR_Z;
+	CLEAR_N;
+
+	cycles += 1;
+	PC += 1;
+
+	debug_msg("INC " << r - 1 << ";" << endl);
+}
+
+void DameEmu::INC_HL() {
+	isAddHalfCarry(memory[HL], 1) ? SET_H : CLEAR_H;
+	memory[HL]++;
+	(memory[HL] == 0) ? SET_Z : CLEAR_Z;
+	CLEAR_N;
+
+	cycles += 3;
+	PC += 1;
+
+	debug_msg("INC " << memory[HL] - 1 << ";" << endl);
 }
 
 void DameEmu::AND_B() {
