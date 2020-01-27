@@ -1,6 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <string>
 #include <cstdint>
 
 #define LCD_HEIGHT 166
@@ -34,6 +34,12 @@ public:
 	EmuStatus Cycle();
 
 	sf::RenderWindow* GetApp() { return app; };
+
+	struct Instruction {
+		std::string mnemonic;
+		uint8_t length;
+		void (DameEmu::*execute)();
+	} static instructions[256];
 
 private:
 	//Emulator variables
@@ -96,7 +102,9 @@ private:
 	};
 
 	//Instructions
-	void UNKNOWN(uint8_t opcode);
+
+	void UNDEFINED();
+	void UNKNOWN();
 	void UNKNOWN_CB(uint8_t opcode);
 	//06 16 26 0E 1E 2E 3E
 	void LD_r_n(uint8_t& r, uint8_t n);
@@ -115,7 +123,7 @@ private:
 	void LD_BC_A();						//02
 	void LD_DE(uint16_t nn);			//11
 	void LD_DE_A();						//12
-	void JR_NZ(int8_t e);				//20
+	void JR_NZ();				//20
 	void LD_HL(uint16_t nn);			//21
 	void LD_HLI_A();					//22
 	void LD_SP(uint16_t nn);			//31

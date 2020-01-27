@@ -57,7 +57,9 @@ EmuStatus DameEmu::Cycle() {
 	case 0x16: LD_r_n(D, n); break;
 	case 0x1C: INC(E); break;
 	case 0x1E: LD_r_n(E, n); break;
-	case 0x20: JR_NZ(e); break;
+	case 0x20:
+		(this->*instructions[opcode].execute)();
+		break;
 	case 0x21: LD_HL(nn); break;
 	case 0x22: LD_HLI_A(); break;
 	case 0x24: INC(H); break;
@@ -153,7 +155,7 @@ EmuStatus DameEmu::Cycle() {
 	case 0xE2: LD_C_A(); break;
 	case 0xF2: LD_A_C(); break;
 	default:
-		UNKNOWN(opcode);
+		UNKNOWN();
 		return HALT;
 	}
 
