@@ -110,31 +110,29 @@ private:
 
 	void UNDEFINED();
 	void UNIMPLEMENTED();
-	//06 16 26 0E 1E 2E 3E
+	//8-bit load
 	void LD_r_n(uint8_t& r);
-	//36
 	void LD_HL_n();
-	//40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F
-	//50 51 52 53 54 55 57 58 59 5A 5B 5C 5D 5F
-	//60 61 62 63 64 65 67 68 69 6A 6B 6C 6D 6F
-	//78 79 7A 7B 7C 7D 7F
 	void LD_r_r(uint8_t& r1, uint8_t& r2);
-	//46 4E 56 5E 66 6E 7E
 	void LD_r_HL(uint8_t& r);
-	//70 71 72 73 74 75 77
 	void LD_HL_r(uint8_t& r);
-	void LD_BC();			//01
-	void LD_BC_A();						//02
-	void LD_DE();			//11
-	void LD_DE_A();						//12
-	void JR_NZ();				//20
-	void LD_HL();			//21
-	void LD_HLI_A();					//22
-	void LD_SP();			//31
-	void LD_HLD_A();					//32
 	//8-bit arithmetic
 	void INC(uint8_t& r);
 	void INC_HL();
+
+	void LD_BC();						//01
+	void LD_BC_A();						//02
+	void INC_C();						//0C
+	void LD_C_n();						//0E
+	void LD_DE();						//11
+	void LD_DE_A();						//12
+	void JR_NZ();						//20
+	void LD_HL();						//21
+	void LD_HLI_A();					//22
+	void LD_SP();						//31
+	void LD_HLD_A();					//32
+	void LD_A_n();						//3E
+	void LD_HL_A();						//77
 	void AND_B();						//A0
 	void AND_C();						//A1
 	void AND_D();						//A2
@@ -156,11 +154,73 @@ private:
 	void LD_A_C();						//F2
 
 	//CB Instructions
-	//CB 40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F
-	//50 51 52 53 54 55 57 58 59 5A 5B 5C 5D 5F
-	//60 61 62 63 64 65 67 68 69 6A 6B 6C 6D 6F
-	//70 71 72 73 74 75 77 78 79 7A 7B 7C 7D 7F
+
+	//Bit operations
 	void BIT(uint8_t b, uint8_t& r);
-	//CB 46 4E 56 5E 66 6E 76 7E
 	void BIT_HL(uint8_t b);
+
+	void BIT_0_B();						//40
+	void BIT_0_C();						//41
+	void BIT_0_D();						//42
+	void BIT_0_E();						//43
+	void BIT_0_H();						//44
+	void BIT_0_L();						//45
+	void BIT_0_HL();					//46
+	void BIT_0_A();						//47
+	void BIT_1_B();						//48
+	void BIT_1_C();						//49
+	void BIT_1_D();						//4A
+	void BIT_1_E();						//4B
+	void BIT_1_H();						//4C
+	void BIT_1_L();						//4D
+	void BIT_1_HL();					//4E
+	void BIT_1_A();						//4F
+	void BIT_2_B();						//50
+	void BIT_2_C();						//51
+	void BIT_2_D();						//52
+	void BIT_2_E();						//53
+	void BIT_2_H();						//54
+	void BIT_2_L();						//55
+	void BIT_2_HL();					//56
+	void BIT_2_A();						//57
+	void BIT_3_B();						//58
+	void BIT_3_C();						//59
+	void BIT_3_D();						//5A
+	void BIT_3_E();						//5B
+	void BIT_3_H();						//5C
+	void BIT_3_L();						//5D
+	void BIT_3_HL();					//5E
+	void BIT_3_A();						//5F
+	void BIT_4_B();						//60
+	void BIT_4_C();						//61
+	void BIT_4_D();						//62
+	void BIT_4_E();						//63
+	void BIT_4_H();						//64
+	void BIT_4_L();						//65
+	void BIT_4_HL();					//66
+	void BIT_4_A();						//67
+	void BIT_5_B();						//68
+	void BIT_5_C();						//69
+	void BIT_5_D();						//6A
+	void BIT_5_E();						//6B
+	void BIT_5_H();						//6C
+	void BIT_5_L();						//6D
+	void BIT_5_HL();					//6E
+	void BIT_5_A();						//6F
+	void BIT_6_B();						//70
+	void BIT_6_C();						//71
+	void BIT_6_D();						//72
+	void BIT_6_E();						//73
+	void BIT_6_H();						//74
+	void BIT_6_L();						//75
+	void BIT_6_HL();					//76
+	void BIT_6_A();						//77
+	void BIT_7_B();						//78
+	void BIT_7_C();						//79
+	void BIT_7_D();						//7A
+	void BIT_7_E();						//7B
+	void BIT_7_H();						//7C
+	void BIT_7_L();						//7D
+	void BIT_7_HL();					//7E
+	void BIT_7_A();						//7F
 };
