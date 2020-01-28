@@ -8,7 +8,7 @@ struct Instruction {
 };
 
 struct CB_Instruction {
-	const char* mnemonic;
+	std::string mnemonic;
 };
 
 class Dissassembler {
@@ -24,5 +24,5 @@ private:
 	std::string GetNextInstruction();
 
 	uint16_t PC;
-	std::vector<unsigned char> memory;
+	std::vector<uint8_t> memory;
 };
