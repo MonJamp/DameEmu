@@ -49,6 +49,8 @@ private:
 	EmuStatus status;
 	//TODO: Implement cycles
 	uint8_t cycles;
+	//Instruction register stores current opcode with operands
+	uint32_t IR;
 
 	//CPU registers
 	union {
@@ -107,8 +109,7 @@ private:
 	//Instructions
 
 	void UNDEFINED();
-	void UNKNOWN();
-	void UNKNOWN_CB();
+	void UNIMPLEMENTED();
 	//06 16 26 0E 1E 2E 3E
 	void LD_r_n(uint8_t& r);
 	//36

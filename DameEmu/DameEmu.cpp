@@ -47,23 +47,25 @@ EmuStatus DameEmu::Cycle() {
 	switch (ins.length) {
 	case 1:
 		debug_msg(ins.mnemonic);
+		IR = opcode;
 		PC += 1;
 		break;
 	case 2:
 		debug_msg(ins.mnemonic, n);
+		IR = (opcode << 8) | n;
 		PC += 2;
 		break;
 	case 3:
 		debug_msg(ins.mnemonic, nn);
+		IR = (opcode << 16) | nn;
 		PC += 3;
 		break;
 	default:
 		break;
 	};
 
+	(this->*ins.execute)();
 	printf("\n");
-
-	//(this->*ins.execute)();
 	
 	/*
 	switch (opcode) {
@@ -182,8 +184,6 @@ EmuStatus DameEmu::Cycle() {
 	}
 	*/
 	
-	if (PC >= 0x100)
-		status = HALT;
 
 	return status;
 }
@@ -256,6 +256,6 @@ void DameEmu::CB() {
 	case 0x7E: BIT_HL(7); break;
 	case 0x7F: BIT(7, A); break;
 	default:
-		UNKNOWN_CB();
+		UNIMPLEMENTED();
 	}
 }
