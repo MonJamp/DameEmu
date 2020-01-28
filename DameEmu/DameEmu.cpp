@@ -2,21 +2,20 @@
 #include <fstream>
 
 #ifdef _DEBUG
-#include <iostream>
-using namespace std;
-#define debug_msg(x) cout << x
+#include <cstdio>
+#define debug_msg(...) printf(__VA_ARGS__)
 #else
 #define debug_msg(x)
 #endif
 
-#define hi (opcode & 0xF0) >> 4
-#define lo opcode & 0x0F
 #define nn (uint16_t)(memory[PC + 2] << 8 | memory[PC + 1])
 #define n (uint8_t)(memory[PC + 1])
 #define e (int8_t)(memory[PC + 1])
 
 DameEmu::DameEmu(const char* ROM_DIR, const char* BIOS_DIR) {
 	BootUp(ROM_DIR, BIOS_DIR);
+
+	status = OK;
 }
 
 DameEmu::~DameEmu() {
@@ -41,9 +40,32 @@ void DameEmu::BootUp(const char* ROM_DIR, const char* BIOS_DIR) {
 
 EmuStatus DameEmu::Cycle() {
 	uint8_t opcode = memory[PC];
+	
 
-	debug_msg(std::hex << PC << ": ");
+	debug_msg("%04X: ", PC);
+	Instruction ins = instructions[opcode];
+	switch (ins.length) {
+	case 1:
+		debug_msg(ins.mnemonic);
+		PC += 1;
+		break;
+	case 2:
+		debug_msg(ins.mnemonic, n);
+		PC += 2;
+		break;
+	case 3:
+		debug_msg(ins.mnemonic, nn);
+		PC += 3;
+		break;
+	default:
+		break;
+	};
 
+	printf("\n");
+
+	//(this->*ins.execute)();
+	
+	/*
 	switch (opcode) {
 	case 0x01: LD_BC(nn); break;
 	case 0x02: LD_BC_A(); break;
@@ -158,11 +180,16 @@ EmuStatus DameEmu::Cycle() {
 		UNKNOWN();
 		return HALT;
 	}
+	*/
+	
+	if (PC >= 0x100)
+		status = HALT;
 
-	return OK;
+	return status;
 }
 
-EmuStatus DameEmu::CB(uint8_t opcode) {
+void DameEmu::CB() {
+	uint8_t opcode = n;
 	switch (opcode) {
 	case 0x40: BIT(0, B); break;
 	case 0x41: BIT(0, C); break;
@@ -229,9 +256,6 @@ EmuStatus DameEmu::CB(uint8_t opcode) {
 	case 0x7E: BIT_HL(7); break;
 	case 0x7F: BIT(7, A); break;
 	default:
-		UNKNOWN_CB(opcode);
-		return HALT;
+		UNKNOWN_CB();
 	}
-
-	return OK;
 }

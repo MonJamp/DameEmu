@@ -35,15 +35,18 @@ public:
 
 	sf::RenderWindow* GetApp() { return app; };
 
+	//Store information about instructions
+	//Also used as a hashmap to instruction's functions
 	struct Instruction {
-		std::string mnemonic;
+		const char* mnemonic;
 		uint8_t length;
 		void (DameEmu::*execute)();
-	} static instructions[256];
+	} static instructions[256], cb_instructions[256];
 
 private:
 	//Emulator variables
 	sf::RenderWindow* app;
+	EmuStatus status;
 	//TODO: Implement cycles
 	uint8_t cycles;
 
@@ -105,11 +108,11 @@ private:
 
 	void UNDEFINED();
 	void UNKNOWN();
-	void UNKNOWN_CB(uint8_t opcode);
+	void UNKNOWN_CB();
 	//06 16 26 0E 1E 2E 3E
-	void LD_r_n(uint8_t& r, uint8_t n);
+	void LD_r_n(uint8_t& r);
 	//36
-	void LD_HL_n(uint8_t n);
+	void LD_HL_n();
 	//40 41 42 43 44 45 47 48 49 4A 4B 4C 4D 4F
 	//50 51 52 53 54 55 57 58 59 5A 5B 5C 5D 5F
 	//60 61 62 63 64 65 67 68 69 6A 6B 6C 6D 6F
@@ -119,14 +122,14 @@ private:
 	void LD_r_HL(uint8_t& r);
 	//70 71 72 73 74 75 77
 	void LD_HL_r(uint8_t& r);
-	void LD_BC(uint16_t nn);			//01
+	void LD_BC();			//01
 	void LD_BC_A();						//02
-	void LD_DE(uint16_t nn);			//11
+	void LD_DE();			//11
 	void LD_DE_A();						//12
 	void JR_NZ();				//20
-	void LD_HL(uint16_t nn);			//21
+	void LD_HL();			//21
 	void LD_HLI_A();					//22
-	void LD_SP(uint16_t nn);			//31
+	void LD_SP();			//31
 	void LD_HLD_A();					//32
 	//8-bit arithmetic
 	void INC(uint8_t& r);
@@ -147,7 +150,7 @@ private:
 	void XOR_L();						//AD
 	void XOR_HL();						//AE
 	void XOR_A();						//AF
-	EmuStatus CB(uint8_t opcode);		//CB
+	void CB();							//CB
 	void LD_C_A();						//E2
 	void LD_A_C();						//F2
 
