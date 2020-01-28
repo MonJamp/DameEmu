@@ -273,7 +273,9 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 };
 
 void DameEmu::UNDEFINED() {
+	debug_msg("\nUndefined instruction!");
 
+	status = HALT;
 }
 
 void DameEmu::UNIMPLEMENTED() {
