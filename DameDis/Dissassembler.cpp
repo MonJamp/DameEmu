@@ -555,6 +555,15 @@ void Dissassembler::PrintInstructions() {
 	std::cout << GetFullDissassembly();
 }
 
+void Dissassembler::DisassembleToFile(std::string OUTPUT_DIR) {
+	std::ofstream outputFile;
+	outputFile.open(OUTPUT_DIR, std::ofstream::trunc);
+
+	outputFile << GetFullDissassembly();
+
+	outputFile.close();
+}
+
 std::string Dissassembler::GetFullDissassembly() {
 	std::stringstream ss;
 

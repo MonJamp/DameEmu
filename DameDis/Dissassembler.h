@@ -16,6 +16,7 @@ public:
 	Dissassembler(std::string ROM_DIR);
 	void LoadROM(std::string ROM__DIR);
 	void PrintInstructions();
+	void DisassembleToFile(std::string OUTPUT_DIR);
 
 	static Instruction instructions[256];
 	static CB_Instruction cb_instructions[256];
