@@ -112,7 +112,6 @@ private:
 	void UNIMPLEMENTED();
 	//8-bit load
 	void LD_r_n(uint8_t& r);
-	void LD_HL_n();
 	void LD_r_r(uint8_t& r1, uint8_t& r2);
 	void LD_r_HL(uint8_t& r);
 	void LD_HL_r(uint8_t& r);
@@ -122,17 +121,87 @@ private:
 
 	void LD_BC();						//01
 	void LD_BC_A();						//02
+	void LD_B_n();						//06
+	void LD_A_BC();						//0A
 	void INC_C();						//0C
 	void LD_C_n();						//0E
 	void LD_DE();						//11
 	void LD_DE_A();						//12
+	void LD_D_n();						//16
+	void LD_A_DE();						//1A
 	void JR_NZ();						//20
 	void LD_HL();						//21
 	void LD_HLI_A();					//22
+	void LD_H_n();						//26
+	void LD_A_HLI();					//2A
 	void LD_SP();						//31
 	void LD_HLD_A();					//32
+	void LD_HL_n();						//36
+	void LD_A_HLD();					//3A
 	void LD_A_n();						//3E
+	void LD_B_B();						//40
+	void LD_B_C();						//41
+	void LD_B_D();						//42
+	void LD_B_E();						//43
+	void LD_B_H();						//44
+	void LD_B_L();						//45
+	void LD_B_HL();						//46
+	void LD_B_A();						//47
+	void LD_C_B();						//48
+	void LD_C_C();						//49
+	void LD_C_D();						//4A
+	void LD_C_E();						//4B
+	void LD_C_H();						//4C
+	void LD_C_L();						//4D
+	void LD_C_HL();						//4E
+	void LD_C_A();						//4F
+	void LD_D_B();						//50
+	void LD_D_C();						//51
+	void LD_D_D();						//52
+	void LD_D_E();						//53
+	void LD_D_H();						//54
+	void LD_D_L();						//55
+	void LD_D_HL();						//56
+	void LD_D_A();						//57
+	void LD_E_B();						//58
+	void LD_E_C();						//59
+	void LD_E_D();						//5A
+	void LD_E_E();						//5B
+	void LD_E_H();						//5C
+	void LD_E_L();						//5D
+	void LD_E_HL();						//5E
+	void LD_E_A();						//5F
+	void LD_H_B();						//60
+	void LD_H_C();						//61
+	void LD_H_D();						//62
+	void LD_H_E();						//63
+	void LD_H_H();						//64
+	void LD_H_L();						//65
+	void LD_H_HL();						//66
+	void LD_H_A();						//67
+	void LD_L_B();						//68
+	void LD_L_C();						//69
+	void LD_L_D();						//6A
+	void LD_L_E();						//6B
+	void LD_L_H();						//6C
+	void LD_L_L();						//6D
+	void LD_L_HL();						//6E
+	void LD_L_A();						//6F
+	void LD_HL_B();						//70
+	void LD_HL_C();						//71
+	void LD_HL_D();						//72
+	void LD_HL_E();						//73
+	void LD_HL_H();						//74
+	void LD_HL_L();						//75
 	void LD_HL_A();						//77
+	void LD_A_B();						//78
+	void LD_A_C();						//79
+	void LD_A_D();						//7A
+	void LD_A_E();						//7B
+	void LD_A_H();						//7C
+	void LD_A_L();						//7D
+	void LD_A_HL();						//7E
+	void LD_A_A();						//7F
 	void AND_B();						//A0
 	void AND_C();						//A1
 	void AND_D();						//A2
@@ -150,8 +219,13 @@ private:
 	void XOR_HL();						//AE
 	void XOR_A();						//AF
 	void CB();							//CB
-	void LD_C_A();						//E2
-	void LD_A_C();						//F2
+	void CALL();						//CD
+	void LDH_n_A();						//E0
+	void LD_Ca_A();						//E2
+	void LD_nn_A();						//EA
+	void LDH_A_n();						//F0
+	void LD_A_Ca();						//F2
+	void LD_A_nn();						//FA
 
 	//CB Instructions
 
