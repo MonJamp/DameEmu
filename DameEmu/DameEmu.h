@@ -118,6 +118,9 @@ private:
 	//8-bit arithmetic
 	void INC(uint8_t& r);
 	void INC_HL();
+	//16-bit load
+	void POP(uint16_t& rr);
+	void PUSH(uint16_t& rr);
 
 	void LD_BC();						//01
 	void LD_BC_A();						//02
@@ -218,13 +221,21 @@ private:
 	void XOR_L();						//AD
 	void XOR_HL();						//AE
 	void XOR_A();						//AF
+	void POP_BC();						//C1
+	void PUSH_BC();						//C5
 	void CB();							//CB
 	void CALL();						//CD
+	void POP_DE();						//D1
+	void PUSH_DE();						//D5
 	void LDH_n_A();						//E0
+	void POP_HL();						//E1
 	void LD_Ca_A();						//E2
+	void PUSH_HL();						//E5
 	void LD_nn_A();						//EA
 	void LDH_A_n();						//F0
+	void POP_AF();						//F1
 	void LD_A_Ca();						//F2
+	void PUSH_AF();						//F5
 	void LD_A_nn();						//FA
 
 	//CB Instructions
