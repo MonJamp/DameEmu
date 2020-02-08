@@ -218,6 +218,12 @@ private:
 	void PUSH_DE();
 	void PUSH_HL();
 	//Arithmetic
+	void ADD_HL(uint16_t rr);
+	void ADD_HL_BC();
+	void ADD_HL_DE();
+	void ADD_HL_HL();
+	void ADD_HL_SP();
+	void ADD_SP_e();
 	void ADD(uint8_t r);
 	void ADD_A();
 	void ADD_B();

@@ -24,7 +24,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD B, %02X", 2, &DameEmu::LD_B_n},				//06
 	{"RLCA", 1, &DameEmu::RLCA},						//07
 	{"LD (%04X), SP", 3, &DameEmu::LD_nn_SP},			//08
-	{"ADD HL, BC", 1, &DameEmu::UNIMPLEMENTED},			//09
+	{"ADD HL, BC", 1, &DameEmu::ADD_HL_BC},				//09
 	{"LD A, (BC)", 1, &DameEmu::LD_A_BC},				//0A
 	{"DEC BC", 1, &DameEmu::DEC_BC},					//0B
 	{"INC C", 1, &DameEmu::INC_C},						//0C
@@ -40,7 +40,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD D, %02X", 2, &DameEmu::LD_D_n},				//16
 	{"RLA", 1, &DameEmu::RLA},							//17
 	{"JR %02X", 2, &DameEmu::JR},						//18
-	{"ADD HL, DE", 1, &DameEmu::UNIMPLEMENTED},			//19
+	{"ADD HL, DE", 1, &DameEmu::ADD_HL_DE},				//19
 	{"LD A, (DE)", 1, &DameEmu::LD_A_DE},				//1A
 	{"DEC DE", 1, &DameEmu::DEC_DE},					//1B
 	{"INC E", 1, &DameEmu::INC_E},						//1C
@@ -56,7 +56,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD H, %02X", 2, &DameEmu::LD_H_n},				//26
 	{"DAA", 1, &DameEmu::UNIMPLEMENTED},				//27
 	{"JR Z, %02X", 2, &DameEmu::JR_Z},					//28
-	{"ADD HL, HL", 1, &DameEmu::UNIMPLEMENTED},			//29
+	{"ADD HL, HL", 1, &DameEmu::ADD_HL_HL},				//29
 	{"LD A, (HL+)", 1, &DameEmu::LD_A_HLI},				//2A
 	{"DEC HL", 1, &DameEmu::DEC_HL},					//2B
 	{"INC L", 1, &DameEmu::INC_L},						//2C
@@ -72,7 +72,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD (HL), %02X", 2, &DameEmu::LD_HL_n},			//36
 	{"SCF", 1, &DameEmu::SCF},							//37
 	{"JR C, %02X", 2, &DameEmu::JR_C},					//38
-	{"ADD HL, SP", 1, &DameEmu::UNIMPLEMENTED},			//39
+	{"ADD HL, SP", 1, &DameEmu::ADD_HL_SP},				//39
 	{"LD A, (HL-)", 1, &DameEmu::LD_A_HLD},				//3A
 	{"DEC SP", 1, &DameEmu::DEC_SP},					//3B
 	{"INC A", 1, &DameEmu::INC_A},						//3C
@@ -247,7 +247,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"PUSH HL", 1, &DameEmu::PUSH_HL},					//E5
 	{"AND %02X", 2, &DameEmu::AND_n},					//E6
 	{"RST 0x20", 1, &DameEmu::RST_20},					//E7
-	{"ADD SP, %02X", 2, &DameEmu::UNIMPLEMENTED},		//E8
+	{"ADD SP, %02X", 2, &DameEmu::ADD_SP_e},		//E8
 	{"JP HL", 1, &DameEmu::JP_HL},						//E9
 	{"LD (%04X), A", 3, &DameEmu::LD_nn_A},				//EA
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//EB
@@ -311,6 +311,31 @@ void DameEmu::LD_HL_r(uint8_t& r) {
 
 void DameEmu::LD_E_n() { LD_r_n(E); }
 void DameEmu::LD_L_n() { LD_r_n(L); }
+
+void DameEmu::ADD_HL(uint16_t rr) {
+	uint32_t result = HL + rr;
+	(result > UINT16_MAX) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	isHalfCarry16(HL, rr, result) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE);
+	HL = result;
+
+	cycles += 2;
+}
+
+void DameEmu::ADD_HL_BC() { ADD_HL(BC); }
+void DameEmu::ADD_HL_DE() { ADD_HL(DE); }
+void DameEmu::ADD_HL_HL() { ADD_HL(HL); }
+void DameEmu::ADD_HL_SP() { ADD_HL(SP); }
+
+void DameEmu::ADD_SP_e() {
+	uint32_t result = SP + e;
+	(result > UINT16_MAX) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	isHalfCarry16(SP, e, result) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE | FLAG_ZERO);
+	SP = result;
+
+	cycles += 4;
+}
 
 void DameEmu::ADD(uint8_t r) {
 	uint16_t result = A + r;
