@@ -118,6 +118,17 @@ private:
 	void LD_HL_r(uint8_t& r);
 	void LD_E_n();
 	void LD_L_n();
+	void CP(uint8_t r);
+	void CP_B();
+	void CP_C();
+	void CP_D();
+	void CP_E();
+	void CP_H();
+	void CP_L();
+	void CP_A();
+	void CP_n();
+	void CP_HL();
+	void CPL();
 	//8-bit arithmetic
 	void INC(uint8_t& r);
 	void INC(uint16_t& rr);

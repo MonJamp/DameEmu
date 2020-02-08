@@ -61,7 +61,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"INC L", 1, &DameEmu::INC_L},						//2C
 	{"DEC L", 1, &DameEmu::DEC_L},						//2D
 	{"LD L, %02X", 2, &DameEmu::LD_L_n},				//2E
-	{"CPL", 1, &DameEmu::UNIMPLEMENTED},				//2F
+	{"CPL", 1, &DameEmu::CPL},							//2F
 	{"JR NC, %02X", 2, &DameEmu::UNIMPLEMENTED},		//30
 	{"LD SP, %04X", 3, &DameEmu::LD_SP},				//31
 	{"LD (HL-), A", 1, &DameEmu::LD_HLD_A},				//32
@@ -198,14 +198,14 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"OR L", 1, &DameEmu::UNIMPLEMENTED},				//B5
 	{"OR (HL)", 1, &DameEmu::UNIMPLEMENTED},			//B6
 	{"OR A", 1, &DameEmu::UNIMPLEMENTED},				//B7
-	{"CP B", 1, &DameEmu::UNIMPLEMENTED},				//B8
-	{"CP C", 1, &DameEmu::UNIMPLEMENTED},				//B9
-	{"CP D", 1, &DameEmu::UNIMPLEMENTED},				//BA
-	{"CP E", 1, &DameEmu::UNIMPLEMENTED},				//BB
-	{"CP H", 1, &DameEmu::UNIMPLEMENTED},				//BC
-	{"CP L", 1, &DameEmu::UNIMPLEMENTED},				//BD
-	{"CP (HL)", 1, &DameEmu::UNIMPLEMENTED},			//BE
-	{"CP A", 1, &DameEmu::UNIMPLEMENTED},				//BF
+	{"CP B", 1, &DameEmu::CP_B},						//B8
+	{"CP C", 1, &DameEmu::CP_C},						//B9
+	{"CP D", 1, &DameEmu::CP_D},						//BA
+	{"CP E", 1, &DameEmu::CP_E},						//BB
+	{"CP H", 1, &DameEmu::CP_H},						//BC
+	{"CP L", 1, &DameEmu::CP_L},						//BD
+	{"CP (HL)", 1, &DameEmu::CP_HL},					//BE
+	{"CP A", 1, &DameEmu::CP_A},						//BF
 	{"RET NZ", 1, &DameEmu::RET_NZ},					//C0
 	{"POP BC", 1, &DameEmu::POP_BC},					//C1
 	{"JP NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},		//C2
@@ -268,7 +268,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"EI", 1, &DameEmu::UNIMPLEMENTED},					//FB
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FD
-	{"CP %02X", 2, &DameEmu::UNIMPLEMENTED},			//FE
+	{"CP %02X", 2, &DameEmu::CP_n},						//FE
 	{"RST 0x38", 1, &DameEmu::RST_38},					//FF
 };
 
@@ -310,6 +310,33 @@ void DameEmu::LD_HL_r(uint8_t& r) {
 
 void DameEmu::LD_E_n() { LD_r_n(E); }
 void DameEmu::LD_L_n() { LD_r_n(L); }
+
+void DameEmu::CP(uint8_t r) {
+	int8_t result = A - r;
+	(result == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	(result < 0) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	isHalfCarry(A, r, result) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_SET(FLAG_HALFCARRY);
+	FLAG_SET(FLAG_NEGATIVE);
+
+	cycles += 1;
+}
+
+void DameEmu::CP_B() { CP(B); }
+void DameEmu::CP_C() { CP(C); }
+void DameEmu::CP_D() { CP(D); }
+void DameEmu::CP_E() { CP(E); }
+void DameEmu::CP_H() { CP(H); }
+void DameEmu::CP_L() { CP(L); }
+void DameEmu::CP_A() { CP(A); }
+void DameEmu::CP_n() { CP(n);  cycles += 1; }
+void DameEmu::CP_HL() { CP(memory[HL]); cycles += 1; }
+
+void DameEmu::CPL() {
+	A = ~A;
+	FLAG_SET(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 1;
+}
 
 void DameEmu::INC(uint8_t& r) {
 	uint8_t result = r + 1;
