@@ -38,7 +38,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"DEC D", 1, &DameEmu::DEC_D},						//15
 	{"LD D, %02X", 2, &DameEmu::LD_D_n},				//16
 	{"RLA", 1, &DameEmu::RLA},							//17
-	{"JR %02X", 2, &DameEmu::UNIMPLEMENTED},			//18
+	{"JR %02X", 2, &DameEmu::JR},						//18
 	{"ADD HL, DE", 1, &DameEmu::UNIMPLEMENTED},			//19
 	{"LD A, (DE)", 1, &DameEmu::LD_A_DE},				//1A
 	{"DEC DE", 1, &DameEmu::UNIMPLEMENTED},				//1B
@@ -54,7 +54,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"DEC H", 1, &DameEmu::DEC_H},						//25
 	{"LD H, %02X", 2, &DameEmu::LD_H_n},				//26
 	{"DAA", 1, &DameEmu::UNIMPLEMENTED},				//27
-	{"JR Z, %02X", 2, &DameEmu::UNIMPLEMENTED},			//28
+	{"JR Z, %02X", 2, &DameEmu::JR_Z},					//28
 	{"ADD HL, HL", 1, &DameEmu::UNIMPLEMENTED},			//29
 	{"LD A, (HL+)", 1, &DameEmu::LD_A_HLI},				//2A
 	{"DEC HL", 1, &DameEmu::UNIMPLEMENTED},				//2B
@@ -62,7 +62,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"DEC L", 1, &DameEmu::DEC_L},						//2D
 	{"LD L, %02X", 2, &DameEmu::LD_L_n},				//2E
 	{"CPL", 1, &DameEmu::CPL},							//2F
-	{"JR NC, %02X", 2, &DameEmu::UNIMPLEMENTED},		//30
+	{"JR NC, %02X", 2, &DameEmu::JR_NC},				//30
 	{"LD SP, %04X", 3, &DameEmu::LD_SP},				//31
 	{"LD (HL-), A", 1, &DameEmu::LD_HLD_A},				//32
 	{"INC SP", 1, &DameEmu::INC_SP},					//33
@@ -70,7 +70,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"DEC (HL)", 1, &DameEmu::DEC_HL},					//35
 	{"LD (HL), %02X", 2, &DameEmu::LD_HL_n},			//36
 	{"SCF", 1, &DameEmu::UNIMPLEMENTED},				//37
-	{"JR C, %02X", 2, &DameEmu::UNIMPLEMENTED},			//38
+	{"JR C, %02X", 2, &DameEmu::JR_C},					//38
 	{"ADD HL, SP", 1, &DameEmu::UNIMPLEMENTED},			//39
 	{"LD A, (HL-)", 1, &DameEmu::LD_A_HLD},				//3A
 	{"DEC SP", 1, &DameEmu::UNIMPLEMENTED},				//3B
@@ -208,15 +208,15 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"CP A", 1, &DameEmu::CP_A},						//BF
 	{"RET NZ", 1, &DameEmu::RET_NZ},					//C0
 	{"POP BC", 1, &DameEmu::POP_BC},					//C1
-	{"JP NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},		//C2
-	{"JP %04X", 3, &DameEmu::UNIMPLEMENTED},			//C3
+	{"JP NZ, %04X", 3, &DameEmu::JP_NZ},				//C2
+	{"JP %04X", 3, &DameEmu::JP},						//C3
 	{"CALL NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},		//C4
 	{"PUSH BC", 1, &DameEmu::PUSH_BC},					//C5
 	{"ADD %02X", 2, &DameEmu::UNIMPLEMENTED},			//C6
 	{"RST 0x00", 1, &DameEmu::RST_00},					//C7
 	{"RET Z", 1, &DameEmu::RET_Z},						//C8
 	{"RET", 1, &DameEmu::RET},							//C9
-	{"JP Z, %04X", 3, &DameEmu::UNIMPLEMENTED},			//CA
+	{"JP Z, %04X", 3, &DameEmu::JP_Z},					//CA
 	{"CB %02X - ", 2, &DameEmu::CB},					//CB
 	{"CALL Z, %04X", 3, &DameEmu::UNIMPLEMENTED},		//CC
 	{"CALL %04X", 3, &DameEmu::CALL},					//CD
@@ -224,7 +224,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"RST 0x08", 1, &DameEmu::RST_08},					//CF
 	{"RET NC", 1, &DameEmu::RET_NC},					//D0
 	{"POP DE", 1, &DameEmu::POP_DE},					//D1
-	{"JP NC, %04X", 3, &DameEmu::UNIMPLEMENTED},		//D2
+	{"JP NC, %04X", 3, &DameEmu::JP_NC},				//D2
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//D3
 	{"CALL NC, %04X", 3, &DameEmu::UNIMPLEMENTED},		//D4
 	{"PUSH DE", 1, &DameEmu::PUSH_DE},					//D5
@@ -232,7 +232,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"RST 0x10", 1, &DameEmu::RST_10},					//D7
 	{"RET C", 1, &DameEmu::RET_C},						//D8
 	{"RETI", 1, &DameEmu::RETI},						//D9
-	{"JP C, %04X", 3, &DameEmu::UNIMPLEMENTED},			//DA
+	{"JP C, %04X", 3, &DameEmu::JP_C},					//DA
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//DB
 	{"CALL C, %04X", 3, &DameEmu::UNIMPLEMENTED},		//DC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//DD
@@ -247,7 +247,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"AND %02X", 2, &DameEmu::UNIMPLEMENTED},			//E6
 	{"RST 0x20", 1, &DameEmu::RST_20},					//E7
 	{"ADD SP, %02X", 2, &DameEmu::UNIMPLEMENTED},		//E8
-	{"JP HL", 1, &DameEmu::UNIMPLEMENTED},				//E9
+	{"JP HL", 1, &DameEmu::JP_HL},						//E9
 	{"LD (%04X), A", 3, &DameEmu::LD_nn_A},				//EA
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//EB
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//EC
@@ -450,6 +450,97 @@ void DameEmu::RST_28() { RST(0x28); }
 void DameEmu::RST_30() { RST(0x30); }
 void DameEmu::RST_38() { RST(0x38); }
 
+void DameEmu::JP() {
+	PC = nn;
+
+	cycles += 4;
+}
+
+void DameEmu::JP_HL() {
+	PC = memory[HL];
+
+	cycles += 1;
+}
+
+void DameEmu::JP_NZ() {
+	if (!FLAG_CHECK(FLAG_ZERO)) {
+		JP();
+	}
+	else {
+		cycles += 3;
+	}
+}
+
+void DameEmu::JP_Z() {
+	if (FLAG_CHECK(FLAG_ZERO)) {
+		JP();
+	}
+	else {
+		cycles += 3;
+	}
+}
+
+void DameEmu::JP_NC() {
+	if (!FLAG_CHECK(FLAG_CARRY)) {
+		JP();
+	}
+	else {
+		cycles += 3;
+	}
+}
+
+void DameEmu::JP_C() {
+	if (FLAG_CHECK(FLAG_CARRY)) {
+		JP();
+	}
+	else {
+		cycles += 3;
+	}
+}
+
+
+void DameEmu::JR() {
+	PC += e;
+
+	cycles += 3;
+}
+
+void DameEmu::JR_NZ() {
+	if (!FLAG_CHECK(FLAG_ZERO)) {
+		JR();
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::JR_Z() {
+	if (FLAG_CHECK(FLAG_ZERO)) {
+		JR();
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::JR_NC() {
+	if (!FLAG_CHECK(FLAG_CARRY)) {
+		JR();
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::JR_C() {
+	if (FLAG_CHECK(FLAG_CARRY)) {
+		JR();
+	}
+	else {
+		cycles += 2;
+	}
+}
+
 void DameEmu::LD_BC() {
 	BC = nn;
 
@@ -544,20 +635,6 @@ void DameEmu::RRA() {
 	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
 
 	cycles += 1;
-}
-
-void DameEmu::JR_NZ() {
-	cycles += 2;
-
-	if (FLAG_CHECK(FLAG_ZERO) == 0) {
-		cycles += 1;
-		PC += e;
-
-		debug_msg(";\tTrue, PC <- %02X", PC);
-	}
-	else {
-		debug_msg(";\tFalse, PC <- %02X", PC);
-	}
 }
 
 void DameEmu::LD_HL() {

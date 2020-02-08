@@ -153,6 +153,17 @@ private:
 	void RST_28();
 	void RST_30();
 	void RST_38();
+	void JP();
+	void JP_HL();
+	void JP_NZ();
+	void JP_Z();
+	void JP_NC();
+	void JP_C();
+	void JR();
+	void JR_NZ();
+	void JR_Z();
+	void JR_NC();
+	void JR_C();
 
 	void LD_BC();						//01
 	void LD_BC_A();						//02
@@ -177,7 +188,6 @@ private:
 	void INC_E();						//1C
 	void DEC_E();						//1D
 	void RRA();							//1F
-	void JR_NZ();						//20
 	void LD_HL();						//21
 	void LD_HLI_A();					//22
 	void INC_HL();						//23
