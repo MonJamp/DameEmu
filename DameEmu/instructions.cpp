@@ -15,7 +15,7 @@
 #define e  (int8_t)(IR & 0xFF)
 
 DameEmu::Instruction DameEmu::instructions[256] = {
-	{"NOP", 1, &DameEmu::UNIMPLEMENTED},				//00
+	{"NOP", 1, &DameEmu::NOP},							//00
 	{"LD BC, %04X", 3, &DameEmu::LD_BC},				//01
 	{"LD (BC), A", 1, &DameEmu::LD_BC_A},				//02
 	{"INC BC", 1, &DameEmu::INC_BC},					//03
@@ -31,7 +31,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"DEC C", 1, &DameEmu::DEC_C},						//0D
 	{"LD C, %02X", 2, &DameEmu::LD_C_n},				//0E
 	{"RRCA", 1, &DameEmu::RRCA},						//0F
-	{"STOP", 1, &DameEmu::UNIMPLEMENTED},				//10
+	{"STOP", 1, &DameEmu::STOP},						//10
 	{"LD DE, %04X", 3, &DameEmu::LD_DE},				//11
 	{"LD (DE), A", 1, &DameEmu::LD_DE_A},				//12
 	{"INC DE", 1, &DameEmu::INC_DE},					//13
@@ -54,7 +54,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"INC H", 1, &DameEmu::INC_H},						//24
 	{"DEC H", 1, &DameEmu::DEC_H},						//25
 	{"LD H, %02X", 2, &DameEmu::LD_H_n},				//26
-	{"DAA", 1, &DameEmu::UNIMPLEMENTED},				//27
+	{"DAA", 1, &DameEmu::DAA},							//27
 	{"JR Z, %02X", 2, &DameEmu::JR_Z},					//28
 	{"ADD HL, HL", 1, &DameEmu::ADD_HL_HL},				//29
 	{"LD A, (HL+)", 1, &DameEmu::LD_A_HLI},				//2A
@@ -133,7 +133,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD (HL), E", 1, &DameEmu::LD_HL_E},				//73
 	{"LD (HL), H", 1, &DameEmu::LD_HL_H},				//74
 	{"LD (HL), L", 1, &DameEmu::LD_HL_L},				//75
-	{"HALT", 1, &DameEmu::UNIMPLEMENTED},				//76
+	{"HALT", 1, &DameEmu::HALT},						//76
 	{"LD (HL), A", 1, &DameEmu::LD_HL_A},				//77
 	{"LD A, B", 1, &DameEmu::LD_A_B},					//78
 	{"LD A, C", 1, &DameEmu::LD_A_C},					//79
@@ -247,7 +247,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"PUSH HL", 1, &DameEmu::PUSH_HL},					//E5
 	{"AND %02X", 2, &DameEmu::AND_n},					//E6
 	{"RST 0x20", 1, &DameEmu::RST_20},					//E7
-	{"ADD SP, %02X", 2, &DameEmu::ADD_SP_e},		//E8
+	{"ADD SP, %02X", 2, &DameEmu::ADD_SP_e},			//E8
 	{"JP HL", 1, &DameEmu::JP_HL},						//E9
 	{"LD (%04X), A", 3, &DameEmu::LD_nn_A},				//EA
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//EB
@@ -258,7 +258,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD A, (FF00+%02X)", 2, &DameEmu::LDH_A_n},		//F0
 	{"POP AF", 1, &DameEmu::POP_AF},					//F1
 	{"LD A, (FF00+C)", 1, &DameEmu::LD_A_Ca},			//F2
-	{"DI", 1, &DameEmu::UNIMPLEMENTED},					//F3
+	{"DI", 1, &DameEmu::DI},							//F3
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//F4
 	{"PUSH AF", 1, &DameEmu::PUSH_AF},					//F5
 	{"OR %02X", 2, &DameEmu::OR_n},						//F6
@@ -266,7 +266,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD HL, SP+%02X", 2, &DameEmu::LD_HL_SP_e},		//F8
 	{"LD SP, HL", 1, &DameEmu::LD_SP_HL},				//F9
 	{"LD A, (%04X)", 3, &DameEmu::LD_A_nn},				//FA
-	{"EI", 1, &DameEmu::UNIMPLEMENTED},					//FB
+	{"EI", 1, &DameEmu::EI},							//FB
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FD
 	{"CP %02X", 2, &DameEmu::CP_n},						//FE
@@ -276,13 +276,47 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 void DameEmu::UNDEFINED() {
 	debug_msg("\nUndefined instruction! OP: %X", IR);
 
-	status = HALT;
+	status = EmuStatus::HALT;
 }
 
 void DameEmu::UNIMPLEMENTED() {
 	debug_msg("\nUnimplemented instruction! OP: %X", IR);
 	
-	status = HALT;
+	status = EmuStatus::HALT;
+}
+
+void DameEmu::NOP() {
+	cycles += 1;
+}
+
+void DameEmu::STOP() {
+	//TODO: Stop system clock, oscialltor circuit, and LCD controller
+	debug_msg("\nSTOP instruction has been called but it isn't properly implemented!\n");
+	
+	cycles += 1;
+}
+
+void DameEmu::HALT() {
+	//TODO: Stop system clock. HALT mode is exited when interrupt request/enable flag are set
+	debug_msg("\nHALT instruction has been called but it isn't properly implemented!\n");
+
+	cycles += 1;
+}
+
+void DameEmu::DI() {
+	//TODO: reset IME flag and prohibit maskable interrupts
+	debug_msg("\nDI instruction! Interrupts not implemented yet...\n");
+	UNIMPLEMENTED();
+
+	cycles += 1;
+}
+
+void DameEmu::EI() {
+	//TODO: Set IME flag and enable maskable interrupts
+	debug_msg("\nEI instruction! Interrupts not implemented yet...\n");
+	UNIMPLEMENTED();
+
+	cycles += 1;
 }
 
 void DameEmu::LD_r_n(uint8_t& r) {
@@ -441,6 +475,13 @@ void DameEmu::CP_L() { CP(L); }
 void DameEmu::CP_A() { CP(A); }
 void DameEmu::CP_n() { CP(n);  cycles += 1; }
 void DameEmu::CP_HL() { CP(memory[HL]); cycles += 1; }
+
+void DameEmu::DAA() {
+	debug_msg("\nDAA instruction not implemnted...\n");
+	UNIMPLEMENTED();
+
+	cycles += 1;
+}
 
 void DameEmu::CPL() {
 	A = ~A;

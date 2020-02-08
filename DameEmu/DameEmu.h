@@ -110,6 +110,12 @@ private:
 	//Instructions
 	void UNDEFINED();
 	void UNIMPLEMENTED();
+	//Misc
+	void NOP();
+	void STOP();
+	void HALT();
+	void DI();
+	void EI();
 	//Load instructions
 	void LD_A_A();	
 	void LD_A_B();	
@@ -284,6 +290,7 @@ private:
 	void CP_L();
 	void CP_HL();
 	void CP_n();
+	void DAA();
 	void CPL();
 	void CCF();
 	void SCF();
