@@ -164,6 +164,11 @@ private:
 	void JR_Z();
 	void JR_NC();
 	void JR_C();
+	void CALL();
+	void CALL_NZ();
+	void CALL_Z();
+	void CALL_NC();
+	void CALL_C();
 
 	void LD_BC();						//01
 	void LD_BC_A();						//02
@@ -289,7 +294,6 @@ private:
 	void POP_BC();						//C1
 	void PUSH_BC();						//C5
 	void CB();							//CB
-	void CALL();						//CD
 	void POP_DE();						//D1
 	void PUSH_DE();						//D5
 	void LDH_n_A();						//E0
