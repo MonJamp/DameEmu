@@ -25,7 +25,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD (%04X), SP", 3, &DameEmu::UNIMPLEMENTED},		//08
 	{"ADD HL, BC", 1, &DameEmu::UNIMPLEMENTED},			//09
 	{"LD A, (BC)", 1, &DameEmu::LD_A_BC},				//0A
-	{"DEC BC", 1, &DameEmu::UNIMPLEMENTED},				//0B
+	{"DEC BC", 1, &DameEmu::DEC_BC},					//0B
 	{"INC C", 1, &DameEmu::INC_C},						//0C
 	{"DEC C", 1, &DameEmu::DEC_C},						//0D
 	{"LD C, %02X", 2, &DameEmu::LD_C_n},				//0E
@@ -41,7 +41,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"JR %02X", 2, &DameEmu::JR},						//18
 	{"ADD HL, DE", 1, &DameEmu::UNIMPLEMENTED},			//19
 	{"LD A, (DE)", 1, &DameEmu::LD_A_DE},				//1A
-	{"DEC DE", 1, &DameEmu::UNIMPLEMENTED},				//1B
+	{"DEC DE", 1, &DameEmu::DEC_DE},					//1B
 	{"INC E", 1, &DameEmu::INC_E},						//1C
 	{"DEC E", 1, &DameEmu::DEC_E},						//1D
 	{"LD E, %02X", 2, &DameEmu::LD_E_n},				//1E
@@ -57,7 +57,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"JR Z, %02X", 2, &DameEmu::JR_Z},					//28
 	{"ADD HL, HL", 1, &DameEmu::UNIMPLEMENTED},			//29
 	{"LD A, (HL+)", 1, &DameEmu::LD_A_HLI},				//2A
-	{"DEC HL", 1, &DameEmu::UNIMPLEMENTED},				//2B
+	{"DEC HL", 1, &DameEmu::DEC_HL},					//2B
 	{"INC L", 1, &DameEmu::INC_L},						//2C
 	{"DEC L", 1, &DameEmu::DEC_L},						//2D
 	{"LD L, %02X", 2, &DameEmu::LD_L_n},				//2E
@@ -67,13 +67,13 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"LD (HL-), A", 1, &DameEmu::LD_HLD_A},				//32
 	{"INC SP", 1, &DameEmu::INC_SP},					//33
 	{"INC (HL)", 1, &DameEmu::INC_HLP},					//34
-	{"DEC (HL)", 1, &DameEmu::DEC_HL},					//35
+	{"DEC (HL)", 1, &DameEmu::DEC_HLP},					//35
 	{"LD (HL), %02X", 2, &DameEmu::LD_HL_n},			//36
 	{"SCF", 1, &DameEmu::UNIMPLEMENTED},				//37
 	{"JR C, %02X", 2, &DameEmu::JR_C},					//38
 	{"ADD HL, SP", 1, &DameEmu::UNIMPLEMENTED},			//39
 	{"LD A, (HL-)", 1, &DameEmu::LD_A_HLD},				//3A
-	{"DEC SP", 1, &DameEmu::UNIMPLEMENTED},				//3B
+	{"DEC SP", 1, &DameEmu::DEC_SP},					//3B
 	{"INC A", 1, &DameEmu::INC_A},						//3C
 	{"DEC A", 1, &DameEmu::DEC_A},						//3D
 	{"LD A, %02X", 2, &DameEmu::LD_A_n},				//3E
@@ -364,8 +364,19 @@ void DameEmu::DEC(uint8_t& r) {
 	cycles += 1;
 }
 
+void DameEmu::DEC(uint16_t& rr) {
+	rr--;
+
+	cycles += 2;
+}
+
+void DameEmu::DEC_BC() { DEC(BC); }
+void DameEmu::DEC_DE() { DEC(DE); }
+void DameEmu::DEC_HL() { DEC(HL); }
+void DameEmu::DEC_SP() { DEC(SP); }
+
 void DameEmu::INC_HLP() { INC(memory[HL]); cycles += 2; }
-void DameEmu::DEC_HL() { DEC(memory[HL]); cycles += 2; }
+void DameEmu::DEC_HLP() { DEC(memory[HL]); cycles += 2; }
 
 void DameEmu::POP(uint16_t& rr) {
 	rr = memory[SP];

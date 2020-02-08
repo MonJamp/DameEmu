@@ -133,6 +133,11 @@ private:
 	void INC(uint8_t& r);
 	void INC(uint16_t& rr);
 	void DEC(uint8_t& r);
+	void DEC(uint16_t& rr);
+	void DEC_BC();
+	void DEC_DE();
+	void DEC_HL();
+	void DEC_SP();
 	//16-bit load
 	void POP(uint16_t& rr);
 	void PUSH(uint16_t& rr);
@@ -206,7 +211,7 @@ private:
 	void LD_HLD_A();					//32
 	void INC_SP();						//33
 	void INC_HLP();						//34
-	void DEC_HL();						//35
+	void DEC_HLP();						//35
 	void LD_HL_n();						//36
 	void LD_A_HLD();					//3A
 	void INC_A();						//3C
