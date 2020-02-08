@@ -116,6 +116,8 @@ private:
 	void LD_r_r(uint8_t& r1, uint8_t& r2);
 	void LD_r_HL(uint8_t& r);
 	void LD_HL_r(uint8_t& r);
+	void LD_E_n();
+	void LD_L_n();
 	//8-bit arithmetic
 	void INC(uint8_t& r);
 	void INC(uint16_t& rr);
