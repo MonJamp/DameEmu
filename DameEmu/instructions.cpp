@@ -37,7 +37,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"INC D", 1, &DameEmu::UNIMPLEMENTED},				//14
 	{"DEC D", 1, &DameEmu::UNIMPLEMENTED},				//15
 	{"LD D, %02X", 2, &DameEmu::LD_D_n},					//16
-	{"RLA", 1, &DameEmu::UNIMPLEMENTED},					//17
+	{"RLA", 1, &DameEmu::RLA},							//17
 	{"JR %02X", 2, &DameEmu::UNIMPLEMENTED},				//18
 	{"ADD HL, DE", 1, &DameEmu::UNIMPLEMENTED},			//19
 	{"LD A, (DE)", 1, &DameEmu::LD_A_DE},				//1A
@@ -45,7 +45,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"INC E", 1, &DameEmu::UNIMPLEMENTED},				//1C
 	{"DEC E", 1, &DameEmu::UNIMPLEMENTED},				//1D
 	{"LD E, %02X", 2, &DameEmu::UNIMPLEMENTED},			//1E
-	{"RRA", 1, &DameEmu::UNIMPLEMENTED},					//1F
+	{"RRA", 1, &DameEmu::RRA},							//1F
 	{"JR NZ, %02X", 2, &DameEmu::JR_NZ},					//20
 	{"LD HL, %04X", 3, &DameEmu::LD_HL},					//21
 	{"LD (HL+), A", 1, &DameEmu::UNIMPLEMENTED},			//22
@@ -356,6 +356,16 @@ void DameEmu::LD_BC_A() {
 
 void DameEmu::LD_B_n() { LD_r_n(B); }
 
+void DameEmu::RLCA() {
+	(A & (1 << 7)) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	A = (A << 1) | FLAG_CHECK(FLAG_CARRY);
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 1;
+}
+
 void DameEmu::LD_A_BC() {
 	A = memory[BC];
 
@@ -365,6 +375,16 @@ void DameEmu::LD_A_BC() {
 void DameEmu::INC_C() { INC(C); }
 
 void DameEmu::LD_C_n() { LD_r_n(C); }
+
+void DameEmu::RRCA() {
+	(A & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	A = (A >> 1) | (FLAG_CHECK(FLAG_CARRY) << 7);
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 1;
+}
 
 void DameEmu::LD_DE() {
 	DE = nn;
@@ -380,10 +400,32 @@ void DameEmu::LD_DE_A() {
 
 void DameEmu::LD_D_n() { LD_r_n(D); }
 
+void DameEmu::RLA() {
+	uint8_t carry = FLAG_CHECK(FLAG_CARRY);
+	(A & (1 << 7)) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	A = (A << 1) & carry;
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 1;
+}
+
 void DameEmu::LD_A_DE() {
 	A = memory[DE];
 
 	cycles += 2;
+}
+
+void DameEmu::RRA() {
+	uint8_t carry = FLAG_CHECK(FLAG_CARRY);
+	(A & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	A = (A >> 1) | (carry << 7);
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 1;
 }
 
 void DameEmu::JR_NZ() {

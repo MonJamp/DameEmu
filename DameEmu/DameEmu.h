@@ -14,9 +14,10 @@
 #define FLAG_HALFCARRY	(1 << 5)
 #define FLAG_CARRY		(1 << 4)
 
-#define FLAG_CHECK(x)	(F & x)
-#define FLAG_SET(x)		(F |= x)
-#define FLAG_CLEAR(x)	(F &= ~x)
+//Returns 1 if bit is set
+#define FLAG_CHECK(x)	((F & (x)) == (x))
+#define FLAG_SET(x)		(F |= (x))
+#define FLAG_CLEAR(x)	(F &= ~(x))
 
 
 //For debugging instructions
@@ -125,13 +126,17 @@ private:
 	void LD_BC();						//01
 	void LD_BC_A();						//02
 	void LD_B_n();						//06
+	void RLCA();						//07
 	void LD_A_BC();						//0A
 	void INC_C();						//0C
 	void LD_C_n();						//0E
+	void RRCA();						//0F
 	void LD_DE();						//11
 	void LD_DE_A();						//12
 	void LD_D_n();						//16
+	void RLA();							//17
 	void LD_A_DE();						//1A
+	void RRA();							//1F
 	void JR_NZ();						//20
 	void LD_HL();						//21
 	void LD_HLI_A();					//22
@@ -243,7 +248,44 @@ private:
 	//Bit operations
 	void BIT(uint8_t b, uint8_t& r);
 	void BIT_HL(uint8_t b);
+	//Rotate
+	void RLC(uint8_t& r);
+	void RRC(uint8_t& r);
+	void RL(uint8_t& r);
+	void RR(uint8_t& r);
 
+	void RLC_B();						//00
+	void RLC_C();						//01
+	void RLC_D();						//02
+	void RLC_E();						//03
+	void RLC_H();						//04
+	void RLC_L();						//05
+	void RLC_HL();						//06
+	void RLC_A();						//07
+	void RRC_B();						//08
+	void RRC_C();						//09
+	void RRC_D();						//0A
+	void RRC_E();						//0B
+	void RRC_H();						//0C
+	void RRC_L();						//0D
+	void RRC_HL();						//0E
+	void RRC_A();						//0F
+	void RL_B();						//10
+	void RL_C();						//11
+	void RL_D();						//12
+	void RL_E();						//13
+	void RL_H();						//14
+	void RL_L();						//15
+	void RL_HL();						//16
+	void RL_A();						//17
+	void RR_B();						//18
+	void RR_C();						//19
+	void RR_D();						//1A
+	void RR_E();						//1B
+	void RR_H();						//1C
+	void RR_L();						//1D
+	void RR_HL();						//1E
+	void RR_A();						//1F
 	void BIT_0_B();						//40
 	void BIT_0_C();						//41
 	void BIT_0_D();						//42

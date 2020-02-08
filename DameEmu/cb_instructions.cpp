@@ -1,38 +1,38 @@
 #include "DameEmu.h"
 
 DameEmu::Instruction DameEmu::cb_instructions[256] = {
-	{"RLC B", 1, &DameEmu::UNIMPLEMENTED},			//00
-	{"RLC C", 1, &DameEmu::UNIMPLEMENTED},			//01
-	{"RLC D", 1, &DameEmu::UNIMPLEMENTED},			//02
-	{"RLC E", 1, &DameEmu::UNIMPLEMENTED},			//03
-	{"RLC H", 1, &DameEmu::UNIMPLEMENTED},			//04
-	{"RLC L", 1, &DameEmu::UNIMPLEMENTED},			//05
-	{"RLC (HL)", 1, &DameEmu::UNIMPLEMENTED},		//06
-	{"RLC A", 1, &DameEmu::UNIMPLEMENTED},			//07
-	{"RRC B", 1, &DameEmu::UNIMPLEMENTED},			//08
-	{"RRC C", 1, &DameEmu::UNIMPLEMENTED},			//09
-	{"RRC D", 1, &DameEmu::UNIMPLEMENTED},			//0A
-	{"RRC E", 1, &DameEmu::UNIMPLEMENTED},			//0B
-	{"RRC H", 1, &DameEmu::UNIMPLEMENTED},			//0C
-	{"RRC L", 1, &DameEmu::UNIMPLEMENTED},			//0D
-	{"RRC (HL)", 1, &DameEmu::UNIMPLEMENTED},		//0E
-	{"RRC A", 1, &DameEmu::UNIMPLEMENTED},			//0F
-	{"RL B", 1, &DameEmu::UNIMPLEMENTED},			//10
-	{"RL C", 1, &DameEmu::UNIMPLEMENTED},			//11
-	{"RL D", 1, &DameEmu::UNIMPLEMENTED},			//12
-	{"RL E", 1, &DameEmu::UNIMPLEMENTED},			//13
-	{"RL H", 1, &DameEmu::UNIMPLEMENTED},			//14
-	{"RL L", 1, &DameEmu::UNIMPLEMENTED},			//15
-	{"RL (HL)", 1, &DameEmu::UNIMPLEMENTED},			//16
-	{"RL A", 1, &DameEmu::UNIMPLEMENTED},			//17
-	{"RR B", 1, &DameEmu::UNIMPLEMENTED},			//18
-	{"RR C", 1, &DameEmu::UNIMPLEMENTED},			//19
-	{"RR D", 1, &DameEmu::UNIMPLEMENTED},			//1A
-	{"RR E", 1, &DameEmu::UNIMPLEMENTED},			//1B
-	{"RR H", 1, &DameEmu::UNIMPLEMENTED},			//1C
-	{"RR L", 1, &DameEmu::UNIMPLEMENTED},			//1D
-	{"RR (HL)", 1, &DameEmu::UNIMPLEMENTED},			//1E
-	{"RR A", 1, &DameEmu::UNIMPLEMENTED},			//1F
+	{"RLC B", 1, &DameEmu::RLC_B},					//00
+	{"RLC C", 1, &DameEmu::RLC_C},					//01
+	{"RLC D", 1, &DameEmu::RLC_D},					//02
+	{"RLC E", 1, &DameEmu::RLC_E},					//03
+	{"RLC H", 1, &DameEmu::RLC_H},					//04
+	{"RLC L", 1, &DameEmu::RLC_L},					//05
+	{"RLC (HL)", 1, &DameEmu::RLC_HL},				//06
+	{"RLC A", 1, &DameEmu::RLC_A},					//07
+	{"RRC B", 1, &DameEmu::RRC_B},					//08
+	{"RRC C", 1, &DameEmu::RRC_C},					//09
+	{"RRC D", 1, &DameEmu::RRC_D},					//0A
+	{"RRC E", 1, &DameEmu::RRC_E},					//0B
+	{"RRC H", 1, &DameEmu::RRC_H},					//0C
+	{"RRC L", 1, &DameEmu::RRC_L},					//0D
+	{"RRC (HL)", 1, &DameEmu::RRC_HL},				//0E
+	{"RRC A", 1, &DameEmu::RRC_A},					//0F
+	{"RL B", 1, &DameEmu::RL_B},					//10
+	{"RL C", 1, &DameEmu::RL_C},					//11
+	{"RL D", 1, &DameEmu::RL_D},					//12
+	{"RL E", 1, &DameEmu::RL_E},					//13
+	{"RL H", 1, &DameEmu::RL_H},					//14
+	{"RL L", 1, &DameEmu::RL_L},					//15
+	{"RL (HL)", 1, &DameEmu::RL_HL},				//16
+	{"RL A", 1, &DameEmu::RL_A},					//17
+	{"RR B", 1, &DameEmu::RR_B},					//18
+	{"RR C", 1, &DameEmu::RR_C},					//19
+	{"RR D", 1, &DameEmu::RR_D},					//1A
+	{"RR E", 1, &DameEmu::RR_E},					//1B
+	{"RR H", 1, &DameEmu::RR_H},					//1C
+	{"RR L", 1, &DameEmu::RR_L},					//1D
+	{"RR (HL)", 1, &DameEmu::RR_HL},				//1E
+	{"RR A", 1, &DameEmu::RR_A},					//1F
 	{"SLA B", 1, &DameEmu::UNIMPLEMENTED},			//20
 	{"SLA C", 1, &DameEmu::UNIMPLEMENTED},			//21
 	{"SLA D", 1, &DameEmu::UNIMPLEMENTED},			//22
@@ -276,6 +276,81 @@ void DameEmu::BIT_HL(uint8_t b) {
 
 	cycles += 3;
 }
+
+void DameEmu::RLC(uint8_t& r) {
+	(r & (1 << 7)) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r << 1) | FLAG_CHECK(FLAG_CARRY);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::RRC(uint8_t& r) {
+	(r & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r >> 1) | (FLAG_CHECK(FLAG_CARRY) << 7);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::RL(uint8_t& r) {
+	uint8_t carry = FLAG_CHECK(FLAG_CARRY);
+	(r & (1 << 7)) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r << 1) | carry;
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::RR(uint8_t& r) {
+	uint8_t carry = FLAG_CHECK(FLAG_CARRY);
+	(r & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r >> 1) | (carry << 7);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::RLC_B() { RLC(B); }
+void DameEmu::RLC_C() { RLC(C); }
+void DameEmu::RLC_D() { RLC(D); }
+void DameEmu::RLC_E() { RLC(E); }
+void DameEmu::RLC_H() { RLC(H); }
+void DameEmu::RLC_L() { RLC(L); }
+void DameEmu::RLC_HL() { RLC(memory[HL]); cycles += 2; }
+void DameEmu::RLC_A() { RRC(A); }
+void DameEmu::RRC_B() { RRC(B); }
+void DameEmu::RRC_C() { RRC(C); }
+void DameEmu::RRC_D() { RRC(D); }
+void DameEmu::RRC_E() { RRC(E); }
+void DameEmu::RRC_H() { RRC(H); }
+void DameEmu::RRC_L() { RRC(L); }
+void DameEmu::RRC_HL() { RRC(memory[HL]); cycles += 2; }
+void DameEmu::RRC_A() { RRC(A); }
+void DameEmu::RL_B() { RL(B); }
+void DameEmu::RL_C() { RL(C); }
+void DameEmu::RL_D() { RL(D); }
+void DameEmu::RL_E() { RL(E); }
+void DameEmu::RL_H() { RL(H); }
+void DameEmu::RL_L() { RL(L); }
+void DameEmu::RL_HL() { RL(memory[HL]); cycles += 2; }
+void DameEmu::RL_A() { RL(A); }
+void DameEmu::RR_B() { RR(B); }
+void DameEmu::RR_C() { RR(C); }
+void DameEmu::RR_D() { RR(D); }
+void DameEmu::RR_E() { RR(E); }
+void DameEmu::RR_H() { RR(H); }
+void DameEmu::RR_L() { RR(L); }
+void DameEmu::RR_HL() { RR(memory[HL]); cycles += 2; }
+void DameEmu::RR_A() { RR(A); }
 
 void DameEmu::BIT_0_B() { BIT(0, B); }
 
