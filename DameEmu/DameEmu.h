@@ -118,6 +118,7 @@ private:
 	void LD_HL_r(uint8_t& r);
 	//8-bit arithmetic
 	void INC(uint8_t& r);
+	void DEC(uint8_t& r);
 	void INC_HL();
 	//16-bit load
 	void POP(uint16_t& rr);
@@ -125,27 +126,35 @@ private:
 
 	void LD_BC();						//01
 	void LD_BC_A();						//02
+	void DEC_B();						//05
 	void LD_B_n();						//06
 	void RLCA();						//07
 	void LD_A_BC();						//0A
 	void INC_C();						//0C
+	void DEC_C();						//0D
 	void LD_C_n();						//0E
 	void RRCA();						//0F
 	void LD_DE();						//11
 	void LD_DE_A();						//12
+	void DEC_D();						//15
 	void LD_D_n();						//16
 	void RLA();							//17
 	void LD_A_DE();						//1A
+	void DEC_E();						//1D
 	void RRA();							//1F
 	void JR_NZ();						//20
 	void LD_HL();						//21
 	void LD_HLI_A();					//22
+	void DEC_H();						//25
 	void LD_H_n();						//26
 	void LD_A_HLI();					//2A
+	void DEC_L();						//2D
 	void LD_SP();						//31
 	void LD_HLD_A();					//32
+	void DEC_HL();						//35
 	void LD_HL_n();						//36
 	void LD_A_HLD();					//3A
+	void DEC_A();						//3D
 	void LD_A_n();						//3E
 	void LD_B_B();						//40
 	void LD_B_C();						//41
