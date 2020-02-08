@@ -6,7 +6,8 @@ set(SRC
     ${SRC}
     ${CMAKE_SOURCE_DIR}/DameEmu/DameEmu.cpp
     ${CMAKE_SOURCE_DIR}/DameEmu/main.cpp
-    ${CMAKE_SOURCE_DIR}/DameEmu/CPU_Instructions.cpp
+    ${CMAKE_SOURCE_DIR}/DameEmu/instructions.cpp
+    ${CMAKE_SOURCE_DIR}/DameEmu/cb_instructions.cpp
 )
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")

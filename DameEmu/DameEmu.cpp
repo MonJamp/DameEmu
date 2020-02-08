@@ -2,15 +2,20 @@
 #include <fstream>
 
 #ifdef _DEBUG
-#include <iostream>
-using namespace std;
-#define debug_msg(x) cout << x
+#include <cstdio>
+#define debug_msg(...) printf(__VA_ARGS__)
 #else
 #define debug_msg(x)
 #endif
 
+#define nn (uint16_t)(memory[PC + 2] << 8 | memory[PC + 1])
+#define n (uint8_t)(memory[PC + 1])
+#define e (int8_t)(memory[PC + 1])
+
 DameEmu::DameEmu(const char* ROM_DIR, const char* BIOS_DIR) {
 	BootUp(ROM_DIR, BIOS_DIR);
+
+	status = OK;
 }
 
 DameEmu::~DameEmu() {
@@ -35,114 +40,40 @@ void DameEmu::BootUp(const char* ROM_DIR, const char* BIOS_DIR) {
 
 EmuStatus DameEmu::Cycle() {
 	uint8_t opcode = memory[PC];
-	const unsigned char hi = (opcode & 0xF0) >> 4;
-	const unsigned char lo = (opcode & 0x0F);
-	uint16_t nn = memory[PC + 2] << 8 | memory[PC + 1];
+	Instruction ins = instructions[opcode];
 
-	debug_msg(std::hex << PC << ": ");
+	debug_msg("%04X: ", PC);
 
-	switch (hi) {
-	case 0x0:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x1:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x2:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x3:
-		switch (lo) {
-		case 0x1: LDSP(nn); break;
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x4:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x5:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x6:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x7:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x8:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0x9:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xA:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xB:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xC:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xD:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xE:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
-	case 0xF:
-		switch (lo) {
-		default:
-			UNKNOWN(opcode);
-			return HALT;
-		} break;
+	switch (ins.length) {
+	case 1:
+		debug_msg(ins.mnemonic);
+		IR = opcode;
+		PC += 1;
+		break;
+	case 2:
+		debug_msg(ins.mnemonic, n);
+		IR = (opcode << 8) | n;
+		PC += 2;
+		break;
+	case 3:
+		debug_msg(ins.mnemonic, nn);
+		IR = (opcode << 16) | nn;
+		PC += 3;
+		break;
 	default:
-		UNKNOWN(opcode);
-		return HALT;
-	}
+		break;
+	};
 
-	return OK;
+	(this->*ins.execute)();
+	printf("\n");
+	
+	return status;
+}
+
+void DameEmu::CB() {
+	uint8_t opcode = (uint8_t)(IR & 0xFF);
+	Instruction cb_ins = cb_instructions[opcode];
+
+	debug_msg(cb_ins.mnemonic);
+	(this->*cb_ins.execute)();
 }
