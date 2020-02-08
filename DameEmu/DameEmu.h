@@ -108,47 +108,196 @@ private:
 	};
 
 	//Instructions
-
 	void UNDEFINED();
 	void UNIMPLEMENTED();
-	//8-bit load
+	//Load instructions
+	void LD_A_A();	
+	void LD_A_B();	
+	void LD_A_BC();	
+	void LD_A_C();	
+	void LD_A_Ca();	
+	void LD_A_D();	
+	void LD_A_DE();	
+	void LD_A_E();	
+	void LD_A_H();	
+	void LD_A_HL();	
+	void LD_A_HLD();
+	void LD_A_HLI();
+	void LD_A_L();	
+	void LD_A_n();	
+	void LD_A_nn();	
+	void LD_B_A();	
+	void LD_B_B();	
+	void LD_B_C();	
+	void LD_B_D();	
+	void LD_B_E();	
+	void LD_B_H();	
+	void LD_B_HL();	
+	void LD_B_L();	
+	void LD_B_n();	
+	void LD_BC();	
+	void LD_BC_A();	
+	void LD_C_A();	
+	void LD_C_B();	
+	void LD_C_C();	
+	void LD_C_D();	
+	void LD_C_E();	
+	void LD_C_H();	
+	void LD_C_HL();	
+	void LD_C_L();	
+	void LD_C_n();	
+	void LD_Ca_A();	
+	void LD_D_A();	
+	void LD_D_B();	
+	void LD_D_C();	
+	void LD_D_D();	
+	void LD_D_E();	
+	void LD_D_H();	
+	void LD_D_HL();	
+	void LD_D_L();	
+	void LD_D_n();	
+	void LD_DE();	
+	void LD_DE_A();	
+	void LD_E_A();	
+	void LD_E_B();	
+	void LD_E_C();	
+	void LD_E_D();	
+	void LD_E_E();	
+	void LD_E_H();	
+	void LD_E_HL();	
+	void LD_E_L();	
+	void LD_E_n();
+	void LD_H_A();	
+	void LD_H_B();	
+	void LD_H_C();	
+	void LD_H_D();	
+	void LD_H_E();	
+	void LD_H_H();	
+	void LD_H_HL();	
+	void LD_H_L();	
+	void LD_H_n();	
+	void LD_HL();	
+	void LD_HL_A();	
+	void LD_HL_B();	
+	void LD_HL_C();	
+	void LD_HL_D();	
+	void LD_HL_E();	
+	void LD_HL_H();	
+	void LD_HL_L();	
+	void LD_HL_n();	
+	void LD_HL_r(uint8_t& r);
+	void LD_HLD_A();
+	void LD_HLI_A();
+	void LD_L_A();	
+	void LD_L_B();	
+	void LD_L_C();	
+	void LD_L_D();	
+	void LD_L_E();	
+	void LD_L_H();	
+	void LD_L_HL();	
+	void LD_L_L();	
+	void LD_L_n();
+	void LD_nn_A();	
+	void LD_r_HL(uint8_t& r);
 	void LD_r_n(uint8_t& r);
 	void LD_r_r(uint8_t& r1, uint8_t& r2);
-	void LD_r_HL(uint8_t& r);
-	void LD_HL_r(uint8_t& r);
-	void LD_E_n();
-	void LD_L_n();
+	void LD_SP();	
+	void LDH_A_n();	
+	void LDH_n_A();	
+	void POP(uint16_t& rr);
+	void POP_AF();
+	void POP_BC();
+	void POP_DE();
+	void POP_HL();
+	void PUSH(uint16_t& rr);
+	void PUSH_AF();
+	void PUSH_BC();
+	void PUSH_DE();
+	void PUSH_HL();
+	//Arithmetic
+	void AND_A();
+	void AND_B();
+	void AND_C();
+	void AND_D();
+	void AND_E();
+	void AND_H();
+	void AND_HL();
+	void AND_L();
 	void CP(uint8_t r);
+	void CP_A();
 	void CP_B();
 	void CP_C();
 	void CP_D();
 	void CP_E();
 	void CP_H();
-	void CP_L();
-	void CP_A();
-	void CP_n();
 	void CP_HL();
+	void CP_L();
+	void CP_n();
 	void CPL();
-	//8-bit arithmetic
-	void INC(uint8_t& r);
-	void INC(uint16_t& rr);
-	void DEC(uint8_t& r);
 	void DEC(uint16_t& rr);
+	void DEC(uint8_t& r);
+	void DEC_A();
+	void DEC_B();
 	void DEC_BC();
+	void DEC_C();
+	void DEC_D();
 	void DEC_DE();
+	void DEC_E();
+	void DEC_H();
 	void DEC_HL();
+	void DEC_HLP();
+	void DEC_L();
 	void DEC_SP();
-	//16-bit load
-	void POP(uint16_t& rr);
-	void PUSH(uint16_t& rr);
-
+	void INC(uint16_t& rr);
+	void INC(uint8_t& r);
+	void INC_A();
+	void INC_B();
+	void INC_BC();
+	void INC_C();
+	void INC_D();
+	void INC_DE();
+	void INC_E();
+	void INC_H();
+	void INC_HL();
+	void INC_HLP();
+	void INC_L();
+	void INC_SP();
+	void XOR_A();
+	void XOR_B();
+	void XOR_C();
+	void XOR_D();
+	void XOR_E();
+	void XOR_H();
+	void XOR_HL();
+	void XOR_L();
+	//Accumalator rotates
+	void RLA();
+	void RLCA();
+	void RRA();
+	void RRCA();
 	//Control Flow
+	void CALL();
+	void CALL_C();
+	void CALL_NC();
+	void CALL_NZ();
+	void CALL_Z();
+	void JP();
+	void JP_C();
+	void JP_HL();
+	void JP_NC();
+	void JP_NZ();
+	void JP_Z();
+	void JR();
+	void JR_C();
+	void JR_NC();
+	void JR_NZ();
+	void JR_Z();
 	void RET();
-	void RETI();
+	void RET_C();
+	void RET_NC();
 	void RET_NZ();
 	void RET_Z();
-	void RET_NC();
-	void RET_C();
+	void RETI();
 	void RST(uint8_t t);
 	void RST_00();
 	void RST_08();
@@ -158,265 +307,110 @@ private:
 	void RST_28();
 	void RST_30();
 	void RST_38();
-	void JP();
-	void JP_HL();
-	void JP_NZ();
-	void JP_Z();
-	void JP_NC();
-	void JP_C();
-	void JR();
-	void JR_NZ();
-	void JR_Z();
-	void JR_NC();
-	void JR_C();
-	void CALL();
-	void CALL_NZ();
-	void CALL_Z();
-	void CALL_NC();
-	void CALL_C();
-
-	void LD_BC();						//01
-	void LD_BC_A();						//02
-	void INC_BC();						//03
-	void INC_B();						//04
-	void DEC_B();						//05
-	void LD_B_n();						//06
-	void RLCA();						//07
-	void LD_A_BC();						//0A
-	void INC_C();						//0C
-	void DEC_C();						//0D
-	void LD_C_n();						//0E
-	void RRCA();						//0F
-	void LD_DE();						//11
-	void LD_DE_A();						//12
-	void INC_DE();						//13
-	void INC_D();						//14
-	void DEC_D();						//15
-	void LD_D_n();						//16
-	void RLA();							//17
-	void LD_A_DE();						//1A
-	void INC_E();						//1C
-	void DEC_E();						//1D
-	void RRA();							//1F
-	void LD_HL();						//21
-	void LD_HLI_A();					//22
-	void INC_HL();						//23
-	void INC_H();						//24
-	void DEC_H();						//25
-	void LD_H_n();						//26
-	void LD_A_HLI();					//2A
-	void INC_L();						//2C
-	void DEC_L();						//2D
-	void LD_SP();						//31
-	void LD_HLD_A();					//32
-	void INC_SP();						//33
-	void INC_HLP();						//34
-	void DEC_HLP();						//35
-	void LD_HL_n();						//36
-	void LD_A_HLD();					//3A
-	void INC_A();						//3C
-	void DEC_A();						//3D
-	void LD_A_n();						//3E
-	void LD_B_B();						//40
-	void LD_B_C();						//41
-	void LD_B_D();						//42
-	void LD_B_E();						//43
-	void LD_B_H();						//44
-	void LD_B_L();						//45
-	void LD_B_HL();						//46
-	void LD_B_A();						//47
-	void LD_C_B();						//48
-	void LD_C_C();						//49
-	void LD_C_D();						//4A
-	void LD_C_E();						//4B
-	void LD_C_H();						//4C
-	void LD_C_L();						//4D
-	void LD_C_HL();						//4E
-	void LD_C_A();						//4F
-	void LD_D_B();						//50
-	void LD_D_C();						//51
-	void LD_D_D();						//52
-	void LD_D_E();						//53
-	void LD_D_H();						//54
-	void LD_D_L();						//55
-	void LD_D_HL();						//56
-	void LD_D_A();						//57
-	void LD_E_B();						//58
-	void LD_E_C();						//59
-	void LD_E_D();						//5A
-	void LD_E_E();						//5B
-	void LD_E_H();						//5C
-	void LD_E_L();						//5D
-	void LD_E_HL();						//5E
-	void LD_E_A();						//5F
-	void LD_H_B();						//60
-	void LD_H_C();						//61
-	void LD_H_D();						//62
-	void LD_H_E();						//63
-	void LD_H_H();						//64
-	void LD_H_L();						//65
-	void LD_H_HL();						//66
-	void LD_H_A();						//67
-	void LD_L_B();						//68
-	void LD_L_C();						//69
-	void LD_L_D();						//6A
-	void LD_L_E();						//6B
-	void LD_L_H();						//6C
-	void LD_L_L();						//6D
-	void LD_L_HL();						//6E
-	void LD_L_A();						//6F
-	void LD_HL_B();						//70
-	void LD_HL_C();						//71
-	void LD_HL_D();						//72
-	void LD_HL_E();						//73
-	void LD_HL_H();						//74
-	void LD_HL_L();						//75
-	void LD_HL_A();						//77
-	void LD_A_B();						//78
-	void LD_A_C();						//79
-	void LD_A_D();						//7A
-	void LD_A_E();						//7B
-	void LD_A_H();						//7C
-	void LD_A_L();						//7D
-	void LD_A_HL();						//7E
-	void LD_A_A();						//7F
-	void AND_B();						//A0
-	void AND_C();						//A1
-	void AND_D();						//A2
-	void AND_E();						//A3
-	void AND_H();						//A4
-	void AND_L();						//A5
-	void AND_HL();						//A6
-	void AND_A();						//A7
-	void XOR_B();						//A8
-	void XOR_C();						//A9
-	void XOR_D();						//AA
-	void XOR_E();						//AB
-	void XOR_H();						//AC
-	void XOR_L();						//AD
-	void XOR_HL();						//AE
-	void XOR_A();						//AF
-	void POP_BC();						//C1
-	void PUSH_BC();						//C5
-	void CB();							//CB
-	void POP_DE();						//D1
-	void PUSH_DE();						//D5
-	void LDH_n_A();						//E0
-	void POP_HL();						//E1
-	void LD_Ca_A();						//E2
-	void PUSH_HL();						//E5
-	void LD_nn_A();						//EA
-	void LDH_A_n();						//F0
-	void POP_AF();						//F1
-	void LD_A_Ca();						//F2
-	void PUSH_AF();						//F5
-	void LD_A_nn();						//FA
-
 	//CB Instructions
-
+	void CB();
 	//Bit operations
 	void BIT(uint8_t b, uint8_t& r);
+	void BIT_0_A();
+	void BIT_0_B();
+	void BIT_0_C();
+	void BIT_0_D();
+	void BIT_0_E();
+	void BIT_0_H();
+	void BIT_0_HL();
+	void BIT_0_L();
+	void BIT_1_A();
+	void BIT_1_B();
+	void BIT_1_C();
+	void BIT_1_D();
+	void BIT_1_E();
+	void BIT_1_H();
+	void BIT_1_HL();
+	void BIT_1_L();
+	void BIT_2_A();
+	void BIT_2_B();
+	void BIT_2_C();
+	void BIT_2_D();
+	void BIT_2_E();
+	void BIT_2_H();
+	void BIT_2_HL();
+	void BIT_2_L();
+	void BIT_3_A();
+	void BIT_3_B();
+	void BIT_3_C();
+	void BIT_3_D();
+	void BIT_3_E();
+	void BIT_3_H();
+	void BIT_3_HL();
+	void BIT_3_L();
+	void BIT_4_A();
+	void BIT_4_B();
+	void BIT_4_C();
+	void BIT_4_D();
+	void BIT_4_E();
+	void BIT_4_H();
+	void BIT_4_HL();
+	void BIT_4_L();
+	void BIT_5_A();
+	void BIT_5_B();
+	void BIT_5_C();
+	void BIT_5_D();
+	void BIT_5_E();
+	void BIT_5_H();
+	void BIT_5_HL();
+	void BIT_5_L();
+	void BIT_6_A();
+	void BIT_6_B();
+	void BIT_6_C();
+	void BIT_6_D();
+	void BIT_6_E();
+	void BIT_6_H();
+	void BIT_6_HL();
+	void BIT_6_L();
+	void BIT_7_A();
+	void BIT_7_B();
+	void BIT_7_C();
+	void BIT_7_D();
+	void BIT_7_E();
+	void BIT_7_H();
+	void BIT_7_HL();
+	void BIT_7_L();
 	void BIT_HL(uint8_t b);
 	//Rotate
-	void RLC(uint8_t& r);
-	void RRC(uint8_t& r);
 	void RL(uint8_t& r);
+	void RL_A();
+	void RL_B();
+	void RL_C();
+	void RL_D();
+	void RL_E();
+	void RL_H();
+	void RL_HL();
+	void RL_L();
+	void RLC(uint8_t& r);
+	void RLC_A();
+	void RLC_B();
+	void RLC_C();
+	void RLC_D();
+	void RLC_E();
+	void RLC_H();
+	void RLC_HL();
+	void RLC_L();
 	void RR(uint8_t& r);
-
-	void RLC_B();						//00
-	void RLC_C();						//01
-	void RLC_D();						//02
-	void RLC_E();						//03
-	void RLC_H();						//04
-	void RLC_L();						//05
-	void RLC_HL();						//06
-	void RLC_A();						//07
-	void RRC_B();						//08
-	void RRC_C();						//09
-	void RRC_D();						//0A
-	void RRC_E();						//0B
-	void RRC_H();						//0C
-	void RRC_L();						//0D
-	void RRC_HL();						//0E
-	void RRC_A();						//0F
-	void RL_B();						//10
-	void RL_C();						//11
-	void RL_D();						//12
-	void RL_E();						//13
-	void RL_H();						//14
-	void RL_L();						//15
-	void RL_HL();						//16
-	void RL_A();						//17
-	void RR_B();						//18
-	void RR_C();						//19
-	void RR_D();						//1A
-	void RR_E();						//1B
-	void RR_H();						//1C
-	void RR_L();						//1D
-	void RR_HL();						//1E
-	void RR_A();						//1F
-	void BIT_0_B();						//40
-	void BIT_0_C();						//41
-	void BIT_0_D();						//42
-	void BIT_0_E();						//43
-	void BIT_0_H();						//44
-	void BIT_0_L();						//45
-	void BIT_0_HL();					//46
-	void BIT_0_A();						//47
-	void BIT_1_B();						//48
-	void BIT_1_C();						//49
-	void BIT_1_D();						//4A
-	void BIT_1_E();						//4B
-	void BIT_1_H();						//4C
-	void BIT_1_L();						//4D
-	void BIT_1_HL();					//4E
-	void BIT_1_A();						//4F
-	void BIT_2_B();						//50
-	void BIT_2_C();						//51
-	void BIT_2_D();						//52
-	void BIT_2_E();						//53
-	void BIT_2_H();						//54
-	void BIT_2_L();						//55
-	void BIT_2_HL();					//56
-	void BIT_2_A();						//57
-	void BIT_3_B();						//58
-	void BIT_3_C();						//59
-	void BIT_3_D();						//5A
-	void BIT_3_E();						//5B
-	void BIT_3_H();						//5C
-	void BIT_3_L();						//5D
-	void BIT_3_HL();					//5E
-	void BIT_3_A();						//5F
-	void BIT_4_B();						//60
-	void BIT_4_C();						//61
-	void BIT_4_D();						//62
-	void BIT_4_E();						//63
-	void BIT_4_H();						//64
-	void BIT_4_L();						//65
-	void BIT_4_HL();					//66
-	void BIT_4_A();						//67
-	void BIT_5_B();						//68
-	void BIT_5_C();						//69
-	void BIT_5_D();						//6A
-	void BIT_5_E();						//6B
-	void BIT_5_H();						//6C
-	void BIT_5_L();						//6D
-	void BIT_5_HL();					//6E
-	void BIT_5_A();						//6F
-	void BIT_6_B();						//70
-	void BIT_6_C();						//71
-	void BIT_6_D();						//72
-	void BIT_6_E();						//73
-	void BIT_6_H();						//74
-	void BIT_6_L();						//75
-	void BIT_6_HL();					//76
-	void BIT_6_A();						//77
-	void BIT_7_B();						//78
-	void BIT_7_C();						//79
-	void BIT_7_D();						//7A
-	void BIT_7_E();						//7B
-	void BIT_7_H();						//7C
-	void BIT_7_L();						//7D
-	void BIT_7_HL();					//7E
-	void BIT_7_A();						//7F
+	void RR_A();
+	void RR_B();
+	void RR_C();
+	void RR_D();
+	void RR_E();
+	void RR_H();
+	void RR_HL();
+	void RR_L();
+	void RRC(uint8_t& r);
+	void RRC_A();
+	void RRC_B();
+	void RRC_C();
+	void RRC_D();
+	void RRC_E();
+	void RRC_H();
+	void RRC_HL();
+	void RRC_L();
 };
