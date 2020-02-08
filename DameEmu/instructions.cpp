@@ -340,7 +340,7 @@ void DameEmu::POP(uint16_t& rr) {
 }
 
 void DameEmu::PUSH(uint16_t& rr) {
-	memory[SP - 1] = (rr & 0xFF00) << 8;
+	memory[SP - 1] = (rr & 0xFF00) >> 8;
 	memory[SP - 2] = (rr & 0x00FF);
 	SP -= 2;
 
