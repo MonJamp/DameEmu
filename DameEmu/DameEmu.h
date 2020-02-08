@@ -204,6 +204,9 @@ private:
 	void LD_SP();	
 	void LDH_A_n();	
 	void LDH_n_A();	
+	void LD_nn_SP();
+	void LD_HL_SP_e();
+	void LD_SP_HL();
 	void POP(uint16_t& rr);
 	void POP_AF();
 	void POP_BC();

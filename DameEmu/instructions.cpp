@@ -8,6 +8,7 @@
 #endif
 
 #define isHalfCarry(x, y, result) (((x ^ y ^ result) & 0x10) == 0x10)
+#define isHalfCarry16(x, y, result) (((x ^ y ^ result) & 0x1000) == 0x1000)
 
 #define nn (uint16_t)(IR & 0xFFFF)
 #define n  (uint8_t)(IR & 0xFF)
@@ -21,15 +22,15 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"INC B", 1, &DameEmu::INC_B},						//04
 	{"DEC B", 1, &DameEmu::DEC_B},						//05
 	{"LD B, %02X", 2, &DameEmu::LD_B_n},				//06
-	{"RLCA", 1, &DameEmu::UNIMPLEMENTED},				//07
-	{"LD (%04X), SP", 3, &DameEmu::UNIMPLEMENTED},		//08
+	{"RLCA", 1, &DameEmu::RLCA},						//07
+	{"LD (%04X), SP", 3, &DameEmu::LD_nn_SP},			//08
 	{"ADD HL, BC", 1, &DameEmu::UNIMPLEMENTED},			//09
 	{"LD A, (BC)", 1, &DameEmu::LD_A_BC},				//0A
 	{"DEC BC", 1, &DameEmu::DEC_BC},					//0B
 	{"INC C", 1, &DameEmu::INC_C},						//0C
 	{"DEC C", 1, &DameEmu::DEC_C},						//0D
 	{"LD C, %02X", 2, &DameEmu::LD_C_n},				//0E
-	{"RRCA", 1, &DameEmu::UNIMPLEMENTED},				//0F
+	{"RRCA", 1, &DameEmu::RRCA},						//0F
 	{"STOP", 1, &DameEmu::UNIMPLEMENTED},				//10
 	{"LD DE, %04X", 3, &DameEmu::LD_DE},				//11
 	{"LD (DE), A", 1, &DameEmu::LD_DE_A},				//12
@@ -262,8 +263,8 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"PUSH AF", 1, &DameEmu::PUSH_AF},					//F5
 	{"OR %02X", 2, &DameEmu::OR_n},						//F6
 	{"RST 0x30", 1, &DameEmu::RST_30},					//F7
-	{"LD HL, SP+%02X", 2, &DameEmu::UNIMPLEMENTED},		//F8
-	{"LD SP, HL", 1, &DameEmu::UNIMPLEMENTED},			//F9
+	{"LD HL, SP+%02X", 2, &DameEmu::LD_HL_SP_e},		//F8
+	{"LD SP, HL", 1, &DameEmu::LD_SP_HL},				//F9
 	{"LD A, (%04X)", 3, &DameEmu::LD_A_nn},				//FA
 	{"EI", 1, &DameEmu::UNIMPLEMENTED},					//FB
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FC
@@ -995,6 +996,29 @@ void DameEmu::LDH_n_A() {
 	memory[0xFF00 + n] = A;
 
 	cycles += 3;
+}
+
+void DameEmu::LD_nn_SP() {
+	memory[nn] = memory[SP];
+	memory[nn + 1] = (memory[SP - 1] << 8);
+
+	cycles += 5;
+}
+
+void DameEmu::LD_HL_SP_e() {
+	uint32_t result = SP + e;
+	(result > UINT16_MAX) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	isHalfCarry16(SP, e, result) ? FLAG_SET(FLAG_HALFCARRY) : FLAG_CLEAR(FLAG_HALFCARRY);
+	FLAG_CLEAR(FLAG_NEGATIVE | FLAG_ZERO);
+	HL = result;
+
+	cycles += 3;
+}
+
+void DameEmu::LD_SP_HL() {
+	SP = HL;
+
+	cycles += 2;
 }
 
 void DameEmu::POP_HL() { POP(HL); }
