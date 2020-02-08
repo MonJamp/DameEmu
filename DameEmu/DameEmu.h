@@ -124,6 +124,23 @@ private:
 	void POP(uint16_t& rr);
 	void PUSH(uint16_t& rr);
 
+	//Control Flow
+	void RET();
+	void RETI();
+	void RET_NZ();
+	void RET_Z();
+	void RET_NC();
+	void RET_C();
+	void RST(uint8_t t);
+	void RST_00();
+	void RST_08();
+	void RST_10();
+	void RST_18();
+	void RST_20();
+	void RST_28();
+	void RST_30();
+	void RST_38();
+
 	void LD_BC();						//01
 	void LD_BC_A();						//02
 	void INC_BC();						//03

@@ -196,7 +196,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"OR E", 1, &DameEmu::UNIMPLEMENTED},				//B3
 	{"OR H", 1, &DameEmu::UNIMPLEMENTED},				//B4
 	{"OR L", 1, &DameEmu::UNIMPLEMENTED},				//B5
-	{"OR (HL)", 1, &DameEmu::UNIMPLEMENTED},				//B6
+	{"OR (HL)", 1, &DameEmu::UNIMPLEMENTED},			//B6
 	{"OR A", 1, &DameEmu::UNIMPLEMENTED},				//B7
 	{"CP B", 1, &DameEmu::UNIMPLEMENTED},				//B8
 	{"CP C", 1, &DameEmu::UNIMPLEMENTED},				//B9
@@ -204,40 +204,40 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"CP E", 1, &DameEmu::UNIMPLEMENTED},				//BB
 	{"CP H", 1, &DameEmu::UNIMPLEMENTED},				//BC
 	{"CP L", 1, &DameEmu::UNIMPLEMENTED},				//BD
-	{"CP (HL)", 1, &DameEmu::UNIMPLEMENTED},				//BE
+	{"CP (HL)", 1, &DameEmu::UNIMPLEMENTED},			//BE
 	{"CP A", 1, &DameEmu::UNIMPLEMENTED},				//BF
-	{"RET NZ", 1, &DameEmu::UNIMPLEMENTED},				//C0
-	{"POP BC", 1, &DameEmu::POP_BC},						//C1
-	{"JP NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},			//C2
-	{"JP %04X", 3, &DameEmu::UNIMPLEMENTED},				//C3
+	{"RET NZ", 1, &DameEmu::RET_NZ},					//C0
+	{"POP BC", 1, &DameEmu::POP_BC},					//C1
+	{"JP NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},		//C2
+	{"JP %04X", 3, &DameEmu::UNIMPLEMENTED},			//C3
 	{"CALL NZ, %04X", 3, &DameEmu::UNIMPLEMENTED},		//C4
 	{"PUSH BC", 1, &DameEmu::PUSH_BC},					//C5
 	{"ADD %02X", 2, &DameEmu::UNIMPLEMENTED},			//C6
-	{"RST 0x00", 1, &DameEmu::UNIMPLEMENTED},			//C7
-	{"RET Z", 1, &DameEmu::UNIMPLEMENTED},				//C8
-	{"RET", 1, &DameEmu::UNIMPLEMENTED},					//C9
+	{"RST 0x00", 1, &DameEmu::RST_00},					//C7
+	{"RET Z", 1, &DameEmu::RET_Z},						//C8
+	{"RET", 1, &DameEmu::RET},							//C9
 	{"JP Z, %04X", 3, &DameEmu::UNIMPLEMENTED},			//CA
 	{"CB %02X - ", 2, &DameEmu::CB},						//CB
 	{"CALL Z, %04X", 3, &DameEmu::UNIMPLEMENTED},		//CC
 	{"CALL %04X", 3, &DameEmu::CALL},					//CD
 	{"ADC %02X", 2, &DameEmu::UNIMPLEMENTED},			//CE
-	{"RST 0x08", 1, &DameEmu::UNIMPLEMENTED},			//CF
-	{"RET NC", 1, &DameEmu::UNIMPLEMENTED},				//D0
+	{"RST 0x08", 1, &DameEmu::RST_08},					//CF
+	{"RET NC", 1, &DameEmu::RET_NC},					//D0
 	{"POP DE", 1, &DameEmu::POP_DE},						//D1
 	{"JP NC, %04X", 3, &DameEmu::UNIMPLEMENTED},			//D2
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//D3
 	{"CALL NC, %04X", 3, &DameEmu::UNIMPLEMENTED},		//D4
 	{"PUSH DE", 1, &DameEmu::PUSH_DE},					//D5
 	{"SUB %02X", 2, &DameEmu::UNIMPLEMENTED},			//D6
-	{"RST 0x10", 1, &DameEmu::UNIMPLEMENTED},			//D7
-	{"RET C", 1, &DameEmu::UNIMPLEMENTED},				//D8
-	{"RETI", 1, &DameEmu::UNIMPLEMENTED},				//D9
+	{"RST 0x10", 1, &DameEmu::RST_10},					//D7
+	{"RET C", 1, &DameEmu::RET_C},						//D8
+	{"RETI", 1, &DameEmu::RETI},						//D9
 	{"JP C, %04X", 3, &DameEmu::UNIMPLEMENTED},			//DA
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//DB
 	{"CALL C, %04X", 3, &DameEmu::UNIMPLEMENTED},		//DC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//DD
 	{"SBC %02X", 2, &DameEmu::UNIMPLEMENTED},			//DE
-	{"RST 0x18", 1, &DameEmu::UNIMPLEMENTED},			//DF
+	{"RST 0x18", 1, &DameEmu::RST_18},					//DF
 	{"LD (FF00+%02X), A", 2, &DameEmu::LDH_n_A},			//E0
 	{"POP HL", 1, &DameEmu::POP_HL},						//E1
 	{"LD (FF00+C), A", 1, &DameEmu::LD_Ca_A},			//E2
@@ -245,7 +245,7 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//E4
 	{"PUSH HL", 1, &DameEmu::PUSH_HL},					//E5
 	{"AND %02X", 2, &DameEmu::UNIMPLEMENTED},			//E6
-	{"RST 0x20", 1, &DameEmu::UNIMPLEMENTED},			//E7
+	{"RST 0x20", 1, &DameEmu::RST_20},					//E7
 	{"ADD SP, %02X", 2, &DameEmu::UNIMPLEMENTED},		//E8
 	{"JP HL", 1, &DameEmu::UNIMPLEMENTED},				//E9
 	{"LD (%04X), A", 3, &DameEmu::LD_nn_A},				//EA
@@ -253,23 +253,23 @@ DameEmu::Instruction DameEmu::instructions[256] = {
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//EC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//ED
 	{"XOR %02X", 2, &DameEmu::UNIMPLEMENTED},			//EE
-	{"RST 0x28", 1, &DameEmu::UNIMPLEMENTED},			//EF
-	{"LD A, (FF00+%02X)", 2, &DameEmu::LDH_A_n},			//F0
-	{"POP AF", 1, &DameEmu::POP_AF},						//F1
+	{"RST 0x28", 1, &DameEmu::RST_28},					//EF
+	{"LD A, (FF00+%02X)", 2, &DameEmu::LDH_A_n},		//F0
+	{"POP AF", 1, &DameEmu::POP_AF},					//F1
 	{"LD A, (FF00+C)", 1, &DameEmu::LD_A_Ca},			//F2
 	{"DI", 1, &DameEmu::UNIMPLEMENTED},					//F3
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//F4
 	{"PUSH AF", 1, &DameEmu::PUSH_AF},					//F5
-	{"OR %02X", 2, &DameEmu::UNIMPLEMENTED},				//F6
-	{"RST 0x30", 1, &DameEmu::UNIMPLEMENTED},			//F7
+	{"OR %02X", 2, &DameEmu::UNIMPLEMENTED},			//F6
+	{"RST 0x30", 1, &DameEmu::RST_30},					//F7
 	{"LD HL, SP+%02X", 2, &DameEmu::UNIMPLEMENTED},		//F8
 	{"LD SP, HL", 1, &DameEmu::UNIMPLEMENTED},			//F9
 	{"LD A, (%04X)", 3, &DameEmu::LD_A_nn},				//FA
 	{"EI", 1, &DameEmu::UNIMPLEMENTED},					//FB
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FC
 	{"Undefined OP", 1, &DameEmu::UNDEFINED},			//FD
-	{"CP %02X", 2, &DameEmu::UNIMPLEMENTED},				//FE
-	{"RST 0x38", 1, &DameEmu::UNIMPLEMENTED},			//FF
+	{"CP %02X", 2, &DameEmu::UNIMPLEMENTED},			//FE
+	{"RST 0x38", 1, &DameEmu::RST_38},					//FF
 };
 
 void DameEmu::UNDEFINED() {
@@ -352,6 +352,73 @@ void DameEmu::PUSH(uint16_t& rr) {
 
 	cycles += 4;
 }
+
+void DameEmu::RET() {
+	PC = (memory[SP] | (memory[SP + 1] << 8));
+	SP += 2;
+
+	cycles += 4;
+}
+
+void DameEmu::RETI() { RET(); }
+
+void DameEmu::RET_NZ() {
+	if (!FLAG_CHECK(FLAG_ZERO)) {
+		RET();
+		cycles += 1;
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::RET_Z() {
+	if (FLAG_CHECK(FLAG_ZERO)) {
+		RET();
+		cycles += 1;
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::RET_NC() {
+	if (!FLAG_CHECK(FLAG_CARRY)) {
+		RET();
+		cycles += 1;
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::RET_C() {
+	if (FLAG_CHECK(FLAG_CARRY)) {
+		RET();
+		cycles += 1;
+	}
+	else {
+		cycles += 2;
+	}
+}
+
+void DameEmu::RST(uint8_t t) {
+	memory[SP - 1] = (PC & 0xFF00) >> 8;
+	memory[SP - 2] = (PC & 0x00FF);
+	SP -= 2;
+	PC = t;
+
+	cycles += 4;
+}
+
+void DameEmu::RST_00() { RST(0x00); }
+void DameEmu::RST_08() { RST(0x08); }
+void DameEmu::RST_10() { RST(0x10); }
+void DameEmu::RST_18() { RST(0x18); }
+void DameEmu::RST_20() { RST(0x20); }
+void DameEmu::RST_28() { RST(0x28); }
+void DameEmu::RST_30() { RST(0x30); }
+void DameEmu::RST_38() { RST(0x38); }
 
 void DameEmu::LD_BC() {
 	BC = nn;
