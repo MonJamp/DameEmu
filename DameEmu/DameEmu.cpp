@@ -80,7 +80,7 @@ void DameEmu::BootUp(const char* ROM_DIR) {
 	InterruptEnable = 0x00;
 }
 
-EmuStatus DameEmu::Cycle() {
+EmuStatus DameEmu::Step() {
 	uint8_t opcode = memory[PC];
 	Instruction ins = instructions[opcode];
 

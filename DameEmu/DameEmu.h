@@ -32,7 +32,7 @@ public:
 	~DameEmu();
 
 	void BootUp(const char* ROM_DIR);
-	EmuStatus Cycle();
+	EmuStatus Step();
 
 	sf::RenderWindow* GetApp() { return app; };
 
