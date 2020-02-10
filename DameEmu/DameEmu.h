@@ -6,7 +6,7 @@
 #define LCD_HEIGHT 166
 #define LCD_WIDTH 144
 
-#define ROM_ENTRY 0x150
+#define ROM_ENTRY 0x100
 
 //Flag registers
 #define FLAG_ZERO		(1 << 7)

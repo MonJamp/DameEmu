@@ -27,15 +27,17 @@ DameEmu::~DameEmu() {
 }
 
 void DameEmu::BootUp(const char* ROM_DIR, const char* BIOS_DIR) {
+	/*
 	std::ifstream BIOS;
 	BIOS.open(BIOS_DIR, std::ios::binary);
 	for (uint16_t i = 0x0; BIOS.get((char&)memory[i]); i++);
+	*/
 
 	std::ifstream ROM;
 	ROM.open(ROM_DIR, std::ios::binary);
-	for (uint16_t i = ROM_ENTRY; ROM.get((char&)memory[i]); i++);
+	for (uint16_t i = 0; ROM.get((char&)memory[i]); i++);
 
-	PC = 0;
+	PC = ROM_ENTRY;
 }
 
 EmuStatus DameEmu::Cycle() {
