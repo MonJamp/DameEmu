@@ -304,17 +304,13 @@ void DameEmu::HALT() {
 }
 
 void DameEmu::DI() {
-	//TODO: reset IME flag and prohibit maskable interrupts
-	debug_msg("\nDI instruction! Interrupts not implemented yet...\n");
-	UNIMPLEMENTED();
+	InterruptEnable = 0;
 
 	cycles += 1;
 }
 
 void DameEmu::EI() {
-	//TODO: Set IME flag and enable maskable interrupts
-	debug_msg("\nEI instruction! Interrupts not implemented yet...\n");
-	UNIMPLEMENTED();
+	InterruptEnable = 1;
 
 	cycles += 1;
 }
