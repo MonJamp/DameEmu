@@ -129,134 +129,134 @@ DameEmu::Instruction DameEmu::cb_instructions[256] = {
 	{"BIT 7, L", 1, &DameEmu::BIT_7_L},				//7D
 	{"BIT 7, (HL)", 1, &DameEmu::BIT_7_HL},			//7E
 	{"BIT 7, A", 1, &DameEmu::BIT_7_A},				//7F
-	{"RES 0, B", 1, &DameEmu::UNIMPLEMENTED},		//80
-	{"RES 0, C", 1, &DameEmu::UNIMPLEMENTED},		//81
-	{"RES 0, D", 1, &DameEmu::UNIMPLEMENTED},		//82
-	{"RES 0, E", 1, &DameEmu::UNIMPLEMENTED},		//83
-	{"RES 0, H", 1, &DameEmu::UNIMPLEMENTED},		//84
-	{"RES 0, L", 1, &DameEmu::UNIMPLEMENTED},		//85
-	{"RES 0, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//86
-	{"RES 0, A", 1, &DameEmu::UNIMPLEMENTED},		//87
-	{"RES 1, B", 1, &DameEmu::UNIMPLEMENTED},		//88
-	{"RES 1, C", 1, &DameEmu::UNIMPLEMENTED},		//89
-	{"RES 1, D", 1, &DameEmu::UNIMPLEMENTED},		//8A
-	{"RES 1, E", 1, &DameEmu::UNIMPLEMENTED},		//8B
-	{"RES 1, H", 1, &DameEmu::UNIMPLEMENTED},		//8C
-	{"RES 1, L", 1, &DameEmu::UNIMPLEMENTED},		//8D
-	{"RES 1, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//8E
-	{"RES 1, A", 1, &DameEmu::UNIMPLEMENTED},		//8F
-	{"RES 2, B", 1, &DameEmu::UNIMPLEMENTED},		//90
-	{"RES 2, C", 1, &DameEmu::UNIMPLEMENTED},		//91
-	{"RES 2, D", 1, &DameEmu::UNIMPLEMENTED},		//92
-	{"RES 2, E", 1, &DameEmu::UNIMPLEMENTED},		//93
-	{"RES 2, H", 1, &DameEmu::UNIMPLEMENTED},		//94
-	{"RES 2, L", 1, &DameEmu::UNIMPLEMENTED},		//95
-	{"RES 2, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//96
-	{"RES 2, A", 1, &DameEmu::UNIMPLEMENTED},		//97
-	{"RES 3, B", 1, &DameEmu::UNIMPLEMENTED},		//98
-	{"RES 3, C", 1, &DameEmu::UNIMPLEMENTED},		//99
-	{"RES 3, D", 1, &DameEmu::UNIMPLEMENTED},		//9A
-	{"RES 3, E", 1, &DameEmu::UNIMPLEMENTED},		//9B
-	{"RES 3, H", 1, &DameEmu::UNIMPLEMENTED},		//9C
-	{"RES 3, L", 1, &DameEmu::UNIMPLEMENTED},		//9D
-	{"RES 3, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//9E
-	{"RES 3, A", 1, &DameEmu::UNIMPLEMENTED},		//9F
-	{"RES 4, B", 1, &DameEmu::UNIMPLEMENTED},		//A0
-	{"RES 4, C", 1, &DameEmu::UNIMPLEMENTED},		//A1
-	{"RES 4, D", 1, &DameEmu::UNIMPLEMENTED},		//A2
-	{"RES 4, E", 1, &DameEmu::UNIMPLEMENTED},		//A3
-	{"RES 4, H", 1, &DameEmu::UNIMPLEMENTED},		//A4
-	{"RES 4, L", 1, &DameEmu::UNIMPLEMENTED},		//A5
-	{"RES 4, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//A6
-	{"RES 4, A", 1, &DameEmu::UNIMPLEMENTED},		//A7
-	{"RES 5, B", 1, &DameEmu::UNIMPLEMENTED},		//A8
-	{"RES 5, C", 1, &DameEmu::UNIMPLEMENTED},		//A9
-	{"RES 5, D", 1, &DameEmu::UNIMPLEMENTED},		//AA
-	{"RES 5, E", 1, &DameEmu::UNIMPLEMENTED},		//AB
-	{"RES 5, H", 1, &DameEmu::UNIMPLEMENTED},		//AC
-	{"RES 5, L", 1, &DameEmu::UNIMPLEMENTED},		//AD
-	{"RES 5, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//AE
-	{"RES 5, A", 1, &DameEmu::UNIMPLEMENTED},		//AF
-	{"RES 6, B", 1, &DameEmu::UNIMPLEMENTED},		//B0
-	{"RES 6, C", 1, &DameEmu::UNIMPLEMENTED},		//B1
-	{"RES 6, D", 1, &DameEmu::UNIMPLEMENTED},		//B2
-	{"RES 6, E", 1, &DameEmu::UNIMPLEMENTED},		//B3
-	{"RES 6, H", 1, &DameEmu::UNIMPLEMENTED},		//B4
-	{"RES 6, L", 1, &DameEmu::UNIMPLEMENTED},		//B5
-	{"RES 6, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//B6
-	{"RES 6, A", 1, &DameEmu::UNIMPLEMENTED},		//B7
-	{"RES 7, B", 1, &DameEmu::UNIMPLEMENTED},		//B8
-	{"RES 7, C", 1, &DameEmu::UNIMPLEMENTED},		//B9
-	{"RES 7, D", 1, &DameEmu::UNIMPLEMENTED},		//BA
-	{"RES 7, E", 1, &DameEmu::UNIMPLEMENTED},		//BB
-	{"RES 7, H", 1, &DameEmu::UNIMPLEMENTED},		//BC
-	{"RES 7, L", 1, &DameEmu::UNIMPLEMENTED},		//BD
-	{"RES 7, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//BE
-	{"RES 7, A", 1, &DameEmu::UNIMPLEMENTED},		//BF
-	{"SET 0, B", 1, &DameEmu::UNIMPLEMENTED},		//C0
-	{"SET 0, C", 1, &DameEmu::UNIMPLEMENTED},		//C1
-	{"SET 0, D", 1, &DameEmu::UNIMPLEMENTED},		//C2
-	{"SET 0, E", 1, &DameEmu::UNIMPLEMENTED},		//C3
-	{"SET 0, H", 1, &DameEmu::UNIMPLEMENTED},		//C4
-	{"SET 0, L", 1, &DameEmu::UNIMPLEMENTED},		//C5
-	{"SET 0, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//C6
-	{"SET 0, A", 1, &DameEmu::UNIMPLEMENTED},		//C7
-	{"SET 1, B", 1, &DameEmu::UNIMPLEMENTED},		//C8
-	{"SET 1, C", 1, &DameEmu::UNIMPLEMENTED},		//C9
-	{"SET 1, D", 1, &DameEmu::UNIMPLEMENTED},		//CA
-	{"SET 1, E", 1, &DameEmu::UNIMPLEMENTED},		//CB
-	{"SET 1, H", 1, &DameEmu::UNIMPLEMENTED},		//CC
-	{"SET 1, L", 1, &DameEmu::UNIMPLEMENTED},		//CD
-	{"SET 1, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//CE
-	{"SET 1, A", 1, &DameEmu::UNIMPLEMENTED},		//CF
-	{"SET 2, B", 1, &DameEmu::UNIMPLEMENTED},		//D0
-	{"SET 2, C", 1, &DameEmu::UNIMPLEMENTED},		//D1
-	{"SET 2, D", 1, &DameEmu::UNIMPLEMENTED},		//D2
-	{"SET 2, E", 1, &DameEmu::UNIMPLEMENTED},		//D3
-	{"SET 2, H", 1, &DameEmu::UNIMPLEMENTED},		//D4
-	{"SET 2, L", 1, &DameEmu::UNIMPLEMENTED},		//D5
-	{"SET 2, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//D6
-	{"SET 2, A", 1, &DameEmu::UNIMPLEMENTED},		//D7
-	{"SET 3, B", 1, &DameEmu::UNIMPLEMENTED},		//D8
-	{"SET 3, C", 1, &DameEmu::UNIMPLEMENTED},		//D9
-	{"SET 3, D", 1, &DameEmu::UNIMPLEMENTED},		//DA
-	{"SET 3, E", 1, &DameEmu::UNIMPLEMENTED},		//DB
-	{"SET 3, H", 1, &DameEmu::UNIMPLEMENTED},		//DC
-	{"SET 3, L", 1, &DameEmu::UNIMPLEMENTED},		//DD
-	{"SET 3, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//DE
-	{"SET 3, A", 1, &DameEmu::UNIMPLEMENTED},		//DF
-	{"SET 4, B", 1, &DameEmu::UNIMPLEMENTED},		//E0
-	{"SET 4, C", 1, &DameEmu::UNIMPLEMENTED},		//E1
-	{"SET 4, D", 1, &DameEmu::UNIMPLEMENTED},		//E2
-	{"SET 4, E", 1, &DameEmu::UNIMPLEMENTED},		//E3
-	{"SET 4, H", 1, &DameEmu::UNIMPLEMENTED},		//E4
-	{"SET 4, L", 1, &DameEmu::UNIMPLEMENTED},		//E5
-	{"SET 4, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//E6
-	{"SET 4, A", 1, &DameEmu::UNIMPLEMENTED},		//E7
-	{"SET 5, B", 1, &DameEmu::UNIMPLEMENTED},		//E8
-	{"SET 5, C", 1, &DameEmu::UNIMPLEMENTED},		//E9
-	{"SET 5, D", 1, &DameEmu::UNIMPLEMENTED},		//EA
-	{"SET 5, E", 1, &DameEmu::UNIMPLEMENTED},		//EB
-	{"SET 5, H", 1, &DameEmu::UNIMPLEMENTED},		//EC
-	{"SET 5, L", 1, &DameEmu::UNIMPLEMENTED},		//ED
-	{"SET 5, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//EE
-	{"SET 5, A", 1, &DameEmu::UNIMPLEMENTED},		//EF
-	{"SET 6, B", 1, &DameEmu::UNIMPLEMENTED},		//F0
-	{"SET 6, C", 1, &DameEmu::UNIMPLEMENTED},		//F1
-	{"SET 6, D", 1, &DameEmu::UNIMPLEMENTED},		//F2
-	{"SET 6, E", 1, &DameEmu::UNIMPLEMENTED},		//F3
-	{"SET 6, H", 1, &DameEmu::UNIMPLEMENTED},		//F4
-	{"SET 6, L", 1, &DameEmu::UNIMPLEMENTED},		//F5
-	{"SET 6, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//F6
-	{"SET 6, A", 1, &DameEmu::UNIMPLEMENTED},		//F7
-	{"SET 7, B", 1, &DameEmu::UNIMPLEMENTED},		//F8
-	{"SET 7, C", 1, &DameEmu::UNIMPLEMENTED},		//F9
-	{"SET 7, D", 1, &DameEmu::UNIMPLEMENTED},		//FA
-	{"SET 7, E", 1, &DameEmu::UNIMPLEMENTED},		//FB
-	{"SET 7, H", 1, &DameEmu::UNIMPLEMENTED},		//FC
-	{"SET 7, L", 1, &DameEmu::UNIMPLEMENTED},		//FD
-	{"SET 7, (HL)", 1, &DameEmu::UNIMPLEMENTED},		//FE
-	{"SET 7, A", 1, &DameEmu::UNIMPLEMENTED},		//FF
+	{"RES 0, B", 1, &DameEmu::RES_0_B},				//80
+	{"RES 0, C", 1, &DameEmu::RES_0_C},				//81
+	{"RES 0, D", 1, &DameEmu::RES_0_D},				//82
+	{"RES 0, E", 1, &DameEmu::RES_0_E},				//83
+	{"RES 0, H", 1, &DameEmu::RES_0_H},				//84
+	{"RES 0, L", 1, &DameEmu::RES_0_L},				//85
+	{"RES 0, (HL)", 1, &DameEmu::RES_0_HL},			//86
+	{"RES 0, A", 1, &DameEmu::RES_0_A},				//87
+	{"RES 1, B", 1, &DameEmu::RES_1_B},				//88
+	{"RES 1, C", 1, &DameEmu::RES_1_C},				//89
+	{"RES 1, D", 1, &DameEmu::RES_1_D},				//8A
+	{"RES 1, E", 1, &DameEmu::RES_1_E},				//8B
+	{"RES 1, H", 1, &DameEmu::RES_1_H},				//8C
+	{"RES 1, L", 1, &DameEmu::RES_1_L},				//8D
+	{"RES 1, (HL)", 1, &DameEmu::RES_1_HL},			//8E
+	{"RES 1, A", 1, &DameEmu::RES_1_A},				//8F
+	{"RES 2, B", 1, &DameEmu::RES_2_B},				//90
+	{"RES 2, C", 1, &DameEmu::RES_2_C},				//91
+	{"RES 2, D", 1, &DameEmu::RES_2_D},				//92
+	{"RES 2, E", 1, &DameEmu::RES_2_E},				//93
+	{"RES 2, H", 1, &DameEmu::RES_2_H},				//94
+	{"RES 2, L", 1, &DameEmu::RES_2_L},				//95
+	{"RES 2, (HL)", 1, &DameEmu::RES_2_HL},			//96
+	{"RES 2, A", 1, &DameEmu::RES_2_A},				//97
+	{"RES 3, B", 1, &DameEmu::RES_3_B},				//98
+	{"RES 3, C", 1, &DameEmu::RES_3_C},				//99
+	{"RES 3, D", 1, &DameEmu::RES_3_D},				//9A
+	{"RES 3, E", 1, &DameEmu::RES_3_E},				//9B
+	{"RES 3, H", 1, &DameEmu::RES_3_H},				//9C
+	{"RES 3, L", 1, &DameEmu::RES_3_L},				//9D
+	{"RES 3, (HL)", 1, &DameEmu::RES_3_HL},			//9E
+	{"RES 3, A", 1, &DameEmu::RES_3_A},				//9F
+	{"RES 4, B", 1, &DameEmu::RES_4_B},				//A0
+	{"RES 4, C", 1, &DameEmu::RES_4_C},				//A1
+	{"RES 4, D", 1, &DameEmu::RES_4_D},				//A2
+	{"RES 4, E", 1, &DameEmu::RES_4_E},				//A3
+	{"RES 4, H", 1, &DameEmu::RES_4_H},				//A4
+	{"RES 4, L", 1, &DameEmu::RES_4_L},				//A5
+	{"RES 4, (HL)", 1, &DameEmu::RES_4_HL},			//A6
+	{"RES 4, A", 1, &DameEmu::RES_4_A},				//A7
+	{"RES 5, B", 1, &DameEmu::RES_5_B},				//A8
+	{"RES 5, C", 1, &DameEmu::RES_5_C},				//A9
+	{"RES 5, D", 1, &DameEmu::RES_5_D},				//AA
+	{"RES 5, E", 1, &DameEmu::RES_5_E},				//AB
+	{"RES 5, H", 1, &DameEmu::RES_5_H},				//AC
+	{"RES 5, L", 1, &DameEmu::RES_5_L},				//AD
+	{"RES 5, (HL)", 1, &DameEmu::RES_5_HL},			//AE
+	{"RES 5, A", 1, &DameEmu::RES_5_A},				//AF
+	{"RES 6, B", 1, &DameEmu::RES_6_B},				//B0
+	{"RES 6, C", 1, &DameEmu::RES_6_C},				//B1
+	{"RES 6, D", 1, &DameEmu::RES_6_D},				//B2
+	{"RES 6, E", 1, &DameEmu::RES_6_E},				//B3
+	{"RES 6, H", 1, &DameEmu::RES_6_H},				//B4
+	{"RES 6, L", 1, &DameEmu::RES_6_L},				//B5
+	{"RES 6, (HL)", 1, &DameEmu::RES_6_HL},			//B6
+	{"RES 6, A", 1, &DameEmu::RES_6_A},				//B7
+	{"RES 7, B", 1, &DameEmu::RES_7_B},				//B8
+	{"RES 7, C", 1, &DameEmu::RES_7_C},				//B9
+	{"RES 7, D", 1, &DameEmu::RES_7_D},				//BA
+	{"RES 7, E", 1, &DameEmu::RES_7_E},				//BB
+	{"RES 7, H", 1, &DameEmu::RES_7_H},				//BC
+	{"RES 7, L", 1, &DameEmu::RES_7_L},				//BD
+	{"RES 7, (HL)", 1, &DameEmu::RES_7_HL},			//BE
+	{"RES 7, A", 1, &DameEmu::RES_7_A},				//BF
+	{"SET 0, B", 1, &DameEmu::SET_0_B},				//C0
+	{"SET 0, C", 1, &DameEmu::SET_0_C},				//C1
+	{"SET 0, D", 1, &DameEmu::SET_0_D},				//C2
+	{"SET 0, E", 1, &DameEmu::SET_0_E},				//C3
+	{"SET 0, H", 1, &DameEmu::SET_0_H},				//C4
+	{"SET 0, L", 1, &DameEmu::SET_0_L},				//C5
+	{"SET 0, (HL)", 1, &DameEmu::SET_0_HL},			//C6
+	{"SET 0, A", 1, &DameEmu::SET_0_A},				//C7
+	{"SET 1, B", 1, &DameEmu::SET_1_B},				//C8
+	{"SET 1, C", 1, &DameEmu::SET_1_C},				//C9
+	{"SET 1, D", 1, &DameEmu::SET_1_D},				//CA
+	{"SET 1, E", 1, &DameEmu::SET_1_E},				//CB
+	{"SET 1, H", 1, &DameEmu::SET_1_H},				//CC
+	{"SET 1, L", 1, &DameEmu::SET_1_L},				//CD
+	{"SET 1, (HL)", 1, &DameEmu::SET_1_HL},			//CE
+	{"SET 1, A", 1, &DameEmu::SET_1_A},				//CF
+	{"SET 2, B", 1, &DameEmu::SET_2_B},				//D0
+	{"SET 2, C", 1, &DameEmu::SET_2_C},				//D1
+	{"SET 2, D", 1, &DameEmu::SET_2_D},				//D2
+	{"SET 2, E", 1, &DameEmu::SET_2_E},				//D3
+	{"SET 2, H", 1, &DameEmu::SET_2_H},				//D4
+	{"SET 2, L", 1, &DameEmu::SET_2_L},				//D5
+	{"SET 2, (HL)", 1, &DameEmu::SET_2_HL},			//D6
+	{"SET 2, A", 1, &DameEmu::SET_2_A},				//D7
+	{"SET 3, B", 1, &DameEmu::SET_3_B},				//D8
+	{"SET 3, C", 1, &DameEmu::SET_3_C},				//D9
+	{"SET 3, D", 1, &DameEmu::SET_3_D},				//DA
+	{"SET 3, E", 1, &DameEmu::SET_3_E},				//DB
+	{"SET 3, H", 1, &DameEmu::SET_3_H},				//DC
+	{"SET 3, L", 1, &DameEmu::SET_3_L},				//DD
+	{"SET 3, (HL)", 1, &DameEmu::SET_3_HL},			//DE
+	{"SET 3, A", 1, &DameEmu::SET_3_A},				//DF
+	{"SET 4, B", 1, &DameEmu::SET_4_B},				//E0
+	{"SET 4, C", 1, &DameEmu::SET_4_C},				//E1
+	{"SET 4, D", 1, &DameEmu::SET_4_D},				//E2
+	{"SET 4, E", 1, &DameEmu::SET_4_E},				//E3
+	{"SET 4, H", 1, &DameEmu::SET_4_H},				//E4
+	{"SET 4, L", 1, &DameEmu::SET_4_L},				//E5
+	{"SET 4, (HL)", 1, &DameEmu::SET_4_HL},			//E6
+	{"SET 4, A", 1, &DameEmu::SET_4_A},				//E7
+	{"SET 5, B", 1, &DameEmu::SET_5_B},				//E8
+	{"SET 5, C", 1, &DameEmu::SET_5_C},				//E9
+	{"SET 5, D", 1, &DameEmu::SET_5_D},				//EA
+	{"SET 5, E", 1, &DameEmu::SET_5_E},				//EB
+	{"SET 5, H", 1, &DameEmu::SET_5_H},				//EC
+	{"SET 5, L", 1, &DameEmu::SET_5_L},				//ED
+	{"SET 5, (HL)", 1, &DameEmu::SET_5_HL},			//EE
+	{"SET 5, A", 1, &DameEmu::SET_5_A},				//EF
+	{"SET 6, B", 1, &DameEmu::SET_6_B},				//F0
+	{"SET 6, C", 1, &DameEmu::SET_6_C},				//F1
+	{"SET 6, D", 1, &DameEmu::SET_6_D},				//F2
+	{"SET 6, E", 1, &DameEmu::SET_6_E},				//F3
+	{"SET 6, H", 1, &DameEmu::SET_6_H},				//F4
+	{"SET 6, L", 1, &DameEmu::SET_6_L},				//F5
+	{"SET 6, (HL)", 1, &DameEmu::SET_6_HL},			//F6
+	{"SET 6, A", 1, &DameEmu::SET_6_A},				//F7
+	{"SET 7, B", 1, &DameEmu::SET_7_B},				//F8
+	{"SET 7, C", 1, &DameEmu::SET_7_C},				//F9
+	{"SET 7, D", 1, &DameEmu::SET_7_D},				//FA
+	{"SET 7, E", 1, &DameEmu::SET_7_E},				//FB
+	{"SET 7, H", 1, &DameEmu::SET_7_H},				//FC
+	{"SET 7, L", 1, &DameEmu::SET_7_L},				//FD
+	{"SET 7, (HL)", 1, &DameEmu::SET_7_HL},			//FE
+	{"SET 7, A", 1, &DameEmu::SET_7_A},				//FF
 };
 
 void DameEmu::BIT(uint8_t b, uint8_t& r) {
@@ -319,6 +319,18 @@ void DameEmu::RR(uint8_t& r) {
 	cycles += 2;
 }
 
+void DameEmu::SET(uint8_t b, uint8_t& r) {
+	r |= (1 << b);
+
+	cycles += 2;
+}
+
+void DameEmu::RES(uint8_t b, uint8_t& r) {
+	F &= ~(1 << b);
+
+	cycles += 2;
+}
+
 void DameEmu::RLC_B() { RLC(B); }
 void DameEmu::RLC_C() { RLC(C); }
 void DameEmu::RLC_D() { RLC(D); }
@@ -353,129 +365,196 @@ void DameEmu::RR_HL() { RR(memory[HL]); cycles += 2; }
 void DameEmu::RR_A() { RR(A); }
 
 void DameEmu::BIT_0_B() { BIT(0, B); }
-
 void DameEmu::BIT_0_C() { BIT(0, C); }
-
 void DameEmu::BIT_0_D() { BIT(0, D); }
-
 void DameEmu::BIT_0_E() { BIT(0, E); }
-
 void DameEmu::BIT_0_H() { BIT(0, H); }
-
 void DameEmu::BIT_0_L() { BIT(0, L); }
-
 void DameEmu::BIT_0_HL() { BIT_HL(0); }
-
 void DameEmu::BIT_0_A() { BIT(0, A); }
-
 void DameEmu::BIT_1_B() { BIT(1, B); }
-
 void DameEmu::BIT_1_C() { BIT(1, C); }
-
 void DameEmu::BIT_1_D() { BIT(1, D); }
-
 void DameEmu::BIT_1_E() { BIT(1, E); }
-
 void DameEmu::BIT_1_H() { BIT(1, H); }
-
 void DameEmu::BIT_1_L() { BIT(1, L); }
-
 void DameEmu::BIT_1_HL() { BIT_HL(1); }
-
 void DameEmu::BIT_1_A() { BIT(1, A); }
-
 void DameEmu::BIT_2_B() { BIT(2, B); }
-
 void DameEmu::BIT_2_C() { BIT(2, C); }
-
 void DameEmu::BIT_2_D() { BIT(2, D); }
-
 void DameEmu::BIT_2_E() { BIT(2, E); }
-
 void DameEmu::BIT_2_H() { BIT(2, H); }
-
 void DameEmu::BIT_2_L() { BIT(2, L); }
-
 void DameEmu::BIT_2_HL() { BIT_HL(2); }
-
 void DameEmu::BIT_2_A() { BIT(2, A); }
-
 void DameEmu::BIT_3_B() { BIT(3, B); }
-
 void DameEmu::BIT_3_C() { BIT(3, C); }
-
 void DameEmu::BIT_3_D() { BIT(3, D); }
-
 void DameEmu::BIT_3_E() { BIT(3, E); }
-
 void DameEmu::BIT_3_H() { BIT(3, H); }
-
 void DameEmu::BIT_3_L() { BIT(3, L); }
-
 void DameEmu::BIT_3_HL() { BIT_HL(3); }
-
 void DameEmu::BIT_3_A() { BIT(3, A); }
-
 void DameEmu::BIT_4_B() { BIT(4, B); }
-
 void DameEmu::BIT_4_C() { BIT(4, C); }
-
 void DameEmu::BIT_4_D() { BIT(4, D); }
-
 void DameEmu::BIT_4_E() { BIT(4, E); }
-
 void DameEmu::BIT_4_H() { BIT(4, H); }
-
 void DameEmu::BIT_4_L() { BIT(4, L); }
-
 void DameEmu::BIT_4_HL() { BIT_HL(4); }
-
 void DameEmu::BIT_4_A() { BIT(4, A); }
-
 void DameEmu::BIT_5_B() { BIT(5, B); }
-
 void DameEmu::BIT_5_C() { BIT(5, C); }
-
 void DameEmu::BIT_5_D() { BIT(5, D); }
-
 void DameEmu::BIT_5_E() { BIT(5, E); }
-
 void DameEmu::BIT_5_H() { BIT(5, H); }
-
 void DameEmu::BIT_5_L() { BIT(5, L); }
-
 void DameEmu::BIT_5_HL() { BIT_HL(5); }
-
 void DameEmu::BIT_5_A() { BIT(5, A); }
-
 void DameEmu::BIT_6_B() { BIT(6, B); }
-
 void DameEmu::BIT_6_C() { BIT(6, C); }
-
 void DameEmu::BIT_6_D() { BIT(6, D); }
-
 void DameEmu::BIT_6_E() { BIT(6, E); }
-
 void DameEmu::BIT_6_H() { BIT(6, H); }
-
 void DameEmu::BIT_6_L() { BIT(6, L); }
-
 void DameEmu::BIT_6_HL() { BIT_HL(6); }
-
 void DameEmu::BIT_6_A() { BIT(6, A); }
-
 void DameEmu::BIT_7_B() { BIT(7, B); }
-
 void DameEmu::BIT_7_C() { BIT(7, C); }
-
 void DameEmu::BIT_7_D() { BIT(7, D); }
-
 void DameEmu::BIT_7_E() { BIT(7, E); }
-
 void DameEmu::BIT_7_H() { BIT(7, H); }
-
 void DameEmu::BIT_7_L() { BIT(7, L); }
-
 void DameEmu::BIT_7_HL() { BIT_HL(7); }
-
 void DameEmu::BIT_7_A() { BIT(7, A); }
+
+void DameEmu::SET_0_A() { SET(0, A); }
+void DameEmu::SET_0_B() { SET(0, B); }
+void DameEmu::SET_0_C() { SET(0, C); }
+void DameEmu::SET_0_D() { SET(0, D); }
+void DameEmu::SET_0_E() { SET(0, E); }
+void DameEmu::SET_0_H() { SET(0, H); }
+void DameEmu::SET_0_L() { SET(0, L); }
+void DameEmu::SET_0_HL() { SET(0, memory[HL]); cycles += 2; }
+void DameEmu::SET_1_A() { SET(1, A); }
+void DameEmu::SET_1_B() { SET(1, B); }
+void DameEmu::SET_1_C() { SET(1, C); }
+void DameEmu::SET_1_D() { SET(1, D); }
+void DameEmu::SET_1_E() { SET(1, E); }
+void DameEmu::SET_1_H() { SET(1, H); }
+void DameEmu::SET_1_L() { SET(1, L); }
+void DameEmu::SET_1_HL() { SET(1, memory[HL]); cycles += 2; }
+void DameEmu::SET_2_A() { SET(2, A); }
+void DameEmu::SET_2_B() { SET(2, B); }
+void DameEmu::SET_2_C() { SET(2, C); }
+void DameEmu::SET_2_D() { SET(2, D); }
+void DameEmu::SET_2_E() { SET(2, E); }
+void DameEmu::SET_2_H() { SET(2, H); }
+void DameEmu::SET_2_L() { SET(2, L); }
+void DameEmu::SET_2_HL() { SET(2, memory[HL]); cycles += 2; }
+void DameEmu::SET_3_A() { SET(3, A); }
+void DameEmu::SET_3_B() { SET(3, B); }
+void DameEmu::SET_3_C() { SET(3, C); }
+void DameEmu::SET_3_D() { SET(3, D); }
+void DameEmu::SET_3_E() { SET(3, E); }
+void DameEmu::SET_3_H() { SET(3, H); }
+void DameEmu::SET_3_L() { SET(3, L); }
+void DameEmu::SET_3_HL() { SET(3, memory[HL]); cycles += 2; }
+void DameEmu::SET_4_A() { SET(4, A); }
+void DameEmu::SET_4_B() { SET(4, B); }
+void DameEmu::SET_4_C() { SET(4, C); }
+void DameEmu::SET_4_D() { SET(4, D); }
+void DameEmu::SET_4_E() { SET(4, E); }
+void DameEmu::SET_4_H() { SET(4, H); }
+void DameEmu::SET_4_L() { SET(4, L); }
+void DameEmu::SET_4_HL() { SET(4, memory[HL]); cycles += 2; }
+void DameEmu::SET_5_A() { SET(5, A); }
+void DameEmu::SET_5_B() { SET(5, B); }
+void DameEmu::SET_5_C() { SET(5, C); }
+void DameEmu::SET_5_D() { SET(5, D); }
+void DameEmu::SET_5_E() { SET(5, E); }
+void DameEmu::SET_5_H() { SET(5, H); }
+void DameEmu::SET_5_L() { SET(5, L); }
+void DameEmu::SET_5_HL() { SET(5, memory[HL]); cycles += 2; }
+void DameEmu::SET_6_A() { SET(6, A); }
+void DameEmu::SET_6_B() { SET(6, B); }
+void DameEmu::SET_6_C() { SET(6, C); }
+void DameEmu::SET_6_D() { SET(6, D); }
+void DameEmu::SET_6_E() { SET(6, E); }
+void DameEmu::SET_6_H() { SET(6, H); }
+void DameEmu::SET_6_L() { SET(6, L); }
+void DameEmu::SET_6_HL() { SET(6, memory[HL]); cycles += 2; }
+void DameEmu::SET_7_A() { SET(7, A); }
+void DameEmu::SET_7_B() { SET(7, B); }
+void DameEmu::SET_7_C() { SET(7, C); }
+void DameEmu::SET_7_D() { SET(7, D); }
+void DameEmu::SET_7_E() { SET(7, E); }
+void DameEmu::SET_7_H() { SET(7, H); }
+void DameEmu::SET_7_L() { SET(7, L); }
+void DameEmu::SET_7_HL() { SET(7, memory[HL]); cycles += 2; }
+
+void DameEmu::RES_0_A() { RES(0, A); }
+void DameEmu::RES_0_B() { RES(0, B); }
+void DameEmu::RES_0_C() { RES(0, C); }
+void DameEmu::RES_0_D() { RES(0, D); }
+void DameEmu::RES_0_E() { RES(0, E); }
+void DameEmu::RES_0_H() { RES(0, H); }
+void DameEmu::RES_0_L() { RES(0, L); }
+void DameEmu::RES_0_HL() { RES(0, memory[HL]); cycles += 2; }
+void DameEmu::RES_1_A() { RES(1, A); }
+void DameEmu::RES_1_B() { RES(1, B); }
+void DameEmu::RES_1_C() { RES(1, C); }
+void DameEmu::RES_1_D() { RES(1, D); }
+void DameEmu::RES_1_E() { RES(1, E); }
+void DameEmu::RES_1_H() { RES(1, H); }
+void DameEmu::RES_1_L() { RES(1, L); }
+void DameEmu::RES_1_HL() { RES(1, memory[HL]); cycles += 2; }
+void DameEmu::RES_2_A() { RES(2, A); }
+void DameEmu::RES_2_B() { RES(2, B); }
+void DameEmu::RES_2_C() { RES(2, C); }
+void DameEmu::RES_2_D() { RES(2, D); }
+void DameEmu::RES_2_E() { RES(2, E); }
+void DameEmu::RES_2_H() { RES(2, H); }
+void DameEmu::RES_2_L() { RES(2, L); }
+void DameEmu::RES_2_HL() { RES(2, memory[HL]); cycles += 2; }
+void DameEmu::RES_3_A() { RES(3, A); }
+void DameEmu::RES_3_B() { RES(3, B); }
+void DameEmu::RES_3_C() { RES(3, C); }
+void DameEmu::RES_3_D() { RES(3, D); }
+void DameEmu::RES_3_E() { RES(3, E); }
+void DameEmu::RES_3_H() { RES(3, H); }
+void DameEmu::RES_3_L() { RES(3, L); }
+void DameEmu::RES_3_HL() { RES(3, memory[HL]); cycles += 2; }
+void DameEmu::RES_4_A() { RES(4, A); }
+void DameEmu::RES_4_B() { RES(4, B); }
+void DameEmu::RES_4_C() { RES(4, C); }
+void DameEmu::RES_4_D() { RES(4, D); }
+void DameEmu::RES_4_E() { RES(4, E); }
+void DameEmu::RES_4_H() { RES(4, H); }
+void DameEmu::RES_4_L() { RES(4, L); }
+void DameEmu::RES_4_HL() { RES(4, memory[HL]); cycles += 2; }
+void DameEmu::RES_5_A() { RES(5, A); }
+void DameEmu::RES_5_B() { RES(5, B); }
+void DameEmu::RES_5_C() { RES(5, C); }
+void DameEmu::RES_5_D() { RES(5, D); }
+void DameEmu::RES_5_E() { RES(5, E); }
+void DameEmu::RES_5_H() { RES(5, H); }
+void DameEmu::RES_5_L() { RES(5, L); }
+void DameEmu::RES_5_HL() { RES(5, memory[HL]); cycles += 2; }
+void DameEmu::RES_6_A() { RES(6, A); }
+void DameEmu::RES_6_B() { RES(6, B); }
+void DameEmu::RES_6_C() { RES(6, C); }
+void DameEmu::RES_6_D() { RES(6, D); }
+void DameEmu::RES_6_E() { RES(6, E); }
+void DameEmu::RES_6_H() { RES(6, H); }
+void DameEmu::RES_6_L() { RES(6, L); }
+void DameEmu::RES_6_HL() { RES(6, memory[HL]); cycles += 2; }
+void DameEmu::RES_7_A() { RES(7, A); }
+void DameEmu::RES_7_B() { RES(7, B); }
+void DameEmu::RES_7_C() { RES(7, C); }
+void DameEmu::RES_7_D() { RES(7, D); }
+void DameEmu::RES_7_E() { RES(7, E); }
+void DameEmu::RES_7_H() { RES(7, H); }
+void DameEmu::RES_7_L() { RES(7, L); }
+void DameEmu::RES_7_HL() { RES(7, memory[HL]); cycles += 2; }
