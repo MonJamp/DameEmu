@@ -33,38 +33,38 @@ DameEmu::Instruction DameEmu::cb_instructions[256] = {
 	{"RR L", 1, &DameEmu::RR_L},					//1D
 	{"RR (HL)", 1, &DameEmu::RR_HL},				//1E
 	{"RR A", 1, &DameEmu::RR_A},					//1F
-	{"SLA B", 1, &DameEmu::UNIMPLEMENTED},			//20
-	{"SLA C", 1, &DameEmu::UNIMPLEMENTED},			//21
-	{"SLA D", 1, &DameEmu::UNIMPLEMENTED},			//22
-	{"SLA E", 1, &DameEmu::UNIMPLEMENTED},			//23
-	{"SLA H", 1, &DameEmu::UNIMPLEMENTED},			//24
-	{"SLA L", 1, &DameEmu::UNIMPLEMENTED},			//25
-	{"SLA (HL)", 1, &DameEmu::UNIMPLEMENTED},		//26
-	{"SLA A", 1, &DameEmu::UNIMPLEMENTED},			//27
-	{"SRA B", 1, &DameEmu::UNIMPLEMENTED},			//28
-	{"SRA C", 1, &DameEmu::UNIMPLEMENTED},			//29
-	{"SRA D", 1, &DameEmu::UNIMPLEMENTED},			//2A
-	{"SRA E", 1, &DameEmu::UNIMPLEMENTED},			//2B
-	{"SRA H", 1, &DameEmu::UNIMPLEMENTED},			//2C
-	{"SRA L", 1, &DameEmu::UNIMPLEMENTED},			//2D
-	{"SRA (HL)", 1, &DameEmu::UNIMPLEMENTED},		//2E
-	{"SRA A", 1, &DameEmu::UNIMPLEMENTED},			//2F
-	{"SWAP B", 1, &DameEmu::UNIMPLEMENTED},			//30
-	{"SWAP C", 1, &DameEmu::UNIMPLEMENTED},			//31
-	{"SWAP D", 1, &DameEmu::UNIMPLEMENTED},			//32
-	{"SWAP E", 1, &DameEmu::UNIMPLEMENTED},			//33
-	{"SWAP H", 1, &DameEmu::UNIMPLEMENTED},			//34
-	{"SWAP L", 1, &DameEmu::UNIMPLEMENTED},			//35
-	{"SWAP (HL)", 1, &DameEmu::UNIMPLEMENTED},		//36
-	{"SWAP A", 1, &DameEmu::UNIMPLEMENTED},			//37
-	{"SRL B", 1, &DameEmu::UNIMPLEMENTED},			//38
-	{"SRL C", 1, &DameEmu::UNIMPLEMENTED},			//39
-	{"SRL D", 1, &DameEmu::UNIMPLEMENTED},			//3A
-	{"SRL E", 1, &DameEmu::UNIMPLEMENTED},			//3B
-	{"SRL H", 1, &DameEmu::UNIMPLEMENTED},			//3C
-	{"SRL L", 1, &DameEmu::UNIMPLEMENTED},			//3D
-	{"SRL (HL)", 1, &DameEmu::UNIMPLEMENTED},		//3E
-	{"SRL A", 1, &DameEmu::UNIMPLEMENTED},			//3F
+	{"SLA B", 1, &DameEmu::SLA_B},					//20
+	{"SLA C", 1, &DameEmu::SLA_C},					//21
+	{"SLA D", 1, &DameEmu::SLA_D},					//22
+	{"SLA E", 1, &DameEmu::SLA_E},					//23
+	{"SLA H", 1, &DameEmu::SLA_H},					//24
+	{"SLA L", 1, &DameEmu::SLA_L},					//25
+	{"SLA (HL)", 1, &DameEmu::SLA_HL},				//26
+	{"SLA A", 1, &DameEmu::SRA_A},					//27
+	{"SRA B", 1, &DameEmu::SRA_B},					//28
+	{"SRA C", 1, &DameEmu::SRA_C},					//29
+	{"SRA D", 1, &DameEmu::SRA_D},					//2A
+	{"SRA E", 1, &DameEmu::SRA_E},					//2B
+	{"SRA H", 1, &DameEmu::SRA_H},					//2C
+	{"SRA L", 1, &DameEmu::SRA_L},					//2D
+	{"SRA (HL)", 1, &DameEmu::SRA_HL},				//2E
+	{"SRA A", 1, &DameEmu::SRA_A},					//2F
+	{"SWAP B", 1, &DameEmu::SWAP_B},				//30
+	{"SWAP C", 1, &DameEmu::SWAP_C},				//31
+	{"SWAP D", 1, &DameEmu::SWAP_D},				//32
+	{"SWAP E", 1, &DameEmu::SWAP_E},				//33
+	{"SWAP H", 1, &DameEmu::SWAP_H},				//34
+	{"SWAP L", 1, &DameEmu::SWAP_L},				//35
+	{"SWAP (HL)", 1, &DameEmu::SWAP_HL},			//36
+	{"SWAP A", 1, &DameEmu::SWAP_A},				//37
+	{"SRL B", 1, &DameEmu::SRL_B},					//38
+	{"SRL C", 1, &DameEmu::SRL_C},					//39
+	{"SRL D", 1, &DameEmu::SRL_D},					//3A
+	{"SRL E", 1, &DameEmu::SRL_E},					//3B
+	{"SRL H", 1, &DameEmu::SRL_H},					//3C
+	{"SRL L", 1, &DameEmu::SRL_L},					//3D
+	{"SRL (HL)", 1, &DameEmu::SRL_HL},				//3E
+	{"SRL A", 1, &DameEmu::SRL_A},					//3F
 	{"BIT 0, B", 1, &DameEmu::BIT_0_B},				//40
 	{"BIT 0, C", 1, &DameEmu::BIT_0_C},				//41
 	{"BIT 0, D", 1, &DameEmu::BIT_0_D},				//42
@@ -331,6 +331,43 @@ void DameEmu::RES(uint8_t b, uint8_t& r) {
 	cycles += 2;
 }
 
+void DameEmu::SLA(uint8_t& r) {
+	(r & (1 << 7)) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r << 1);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::SRA(uint8_t& r) {
+	uint8_t bit7 = r & (1 << 7);
+	(r & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r >> 1) & bit7;
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+void DameEmu::SRL(uint8_t& r) {
+	(r & 1) ? FLAG_SET(FLAG_CARRY) : FLAG_CLEAR(FLAG_CARRY);
+	r = (r >> 1);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
+
+void DameEmu::SWAP(uint8_t& r) {
+	r = (r << 4) | (r >> 4);
+	(r == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_CARRY | FLAG_HALFCARRY | FLAG_NEGATIVE);
+
+	cycles += 2;
+}
+
 void DameEmu::RLC_B() { RLC(B); }
 void DameEmu::RLC_C() { RLC(C); }
 void DameEmu::RLC_D() { RLC(D); }
@@ -558,3 +595,39 @@ void DameEmu::RES_7_E() { RES(7, E); }
 void DameEmu::RES_7_H() { RES(7, H); }
 void DameEmu::RES_7_L() { RES(7, L); }
 void DameEmu::RES_7_HL() { RES(7, memory[HL]); cycles += 2; }
+
+void DameEmu::SLA_A() { SLA(A); }
+void DameEmu::SLA_B() { SLA(B); }
+void DameEmu::SLA_C() { SLA(C); }
+void DameEmu::SLA_D() { SLA(D); }
+void DameEmu::SLA_E() { SLA(E); }
+void DameEmu::SLA_H() { SLA(H); }
+void DameEmu::SLA_L() { SLA(L); }
+void DameEmu::SLA_HL() { SLA(memory[HL]); cycles += 2; }
+
+void DameEmu::SRA_A() { SRA(A); }
+void DameEmu::SRA_B() { SRA(B); }
+void DameEmu::SRA_C() { SRA(C); }
+void DameEmu::SRA_D() { SRA(D); }
+void DameEmu::SRA_E() { SRA(E); }
+void DameEmu::SRA_H() { SRA(H); }
+void DameEmu::SRA_L() { SRA(L); }
+void DameEmu::SRA_HL() { SRA(memory[HL]); cycles += 2; }
+
+void DameEmu::SRL_A() { SRL(A); }
+void DameEmu::SRL_B() { SRL(B); }
+void DameEmu::SRL_C() { SRL(C); }
+void DameEmu::SRL_D() { SRL(D); }
+void DameEmu::SRL_E() { SRL(E); }
+void DameEmu::SRL_H() { SRL(H); }
+void DameEmu::SRL_L() { SRL(L); }
+void DameEmu::SRL_HL() { SRL(memory[HL]); cycles += 2; }
+
+void DameEmu::SWAP_A() { SWAP(A); }
+void DameEmu::SWAP_B() { SWAP(B); }
+void DameEmu::SWAP_C() { SWAP(C); }
+void DameEmu::SWAP_D() { SWAP(D); }
+void DameEmu::SWAP_E() { SWAP(E); }
+void DameEmu::SWAP_H() { SWAP(H); }
+void DameEmu::SWAP_L() { SWAP(L); }
+void DameEmu::SWAP_HL() { SWAP(memory[HL]); cycles += 2; }
