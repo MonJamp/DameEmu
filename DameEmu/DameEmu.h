@@ -32,8 +32,11 @@ public:
 	~DameEmu();
 
 	void BootUp(const char* ROM_DIR);
+	void HandleInterrupts();
 	EmuStatus Step();
+	void UpdateScreen();
 
+	uint8_t GetCycles() { return cycles; }
 	sf::RenderWindow* GetApp() { return app; };
 
 	//Store information about instructions
@@ -50,6 +53,8 @@ private:
 	EmuStatus status;
 	//TODO: Implement cycles
 	uint8_t cycles;
+	int16_t scanline_counter;
+	bool IME;
 	//Instruction register stores current opcode with operands
 	uint32_t IR;
 

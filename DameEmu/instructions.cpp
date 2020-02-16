@@ -304,13 +304,13 @@ void DameEmu::HALT() {
 }
 
 void DameEmu::DI() {
-	InterruptEnable = 0;
+	IME = false;
 
 	cycles += 1;
 }
 
 void DameEmu::EI() {
-	InterruptEnable = 1;
+	IME = true;
 
 	cycles += 1;
 }
@@ -563,7 +563,7 @@ void DameEmu::RET() {
 	cycles += 4;
 }
 
-void DameEmu::RETI() { RET(); }
+void DameEmu::RETI() { RET(); IME = true; }
 
 void DameEmu::RET_NZ() {
 	if (!FLAG_CHECK(FLAG_ZERO)) {
@@ -630,7 +630,7 @@ void DameEmu::JP() {
 }
 
 void DameEmu::JP_HL() {
-	PC = memory[HL];
+	PC = HL;
 
 	cycles += 1;
 }
