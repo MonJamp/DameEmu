@@ -304,17 +304,13 @@ void DameEmu::HALT() {
 }
 
 void DameEmu::DI() {
-	//TODO: reset IME flag and prohibit maskable interrupts
-	debug_msg("\nDI instruction! Interrupts not implemented yet...\n");
-	UNIMPLEMENTED();
+	IME = false;
 
 	cycles += 1;
 }
 
 void DameEmu::EI() {
-	//TODO: Set IME flag and enable maskable interrupts
-	debug_msg("\nEI instruction! Interrupts not implemented yet...\n");
-	UNIMPLEMENTED();
+	IME = true;
 
 	cycles += 1;
 }
@@ -567,7 +563,7 @@ void DameEmu::RET() {
 	cycles += 4;
 }
 
-void DameEmu::RETI() { RET(); }
+void DameEmu::RETI() { RET(); IME = true; }
 
 void DameEmu::RET_NZ() {
 	if (!FLAG_CHECK(FLAG_ZERO)) {
@@ -634,7 +630,7 @@ void DameEmu::JP() {
 }
 
 void DameEmu::JP_HL() {
-	PC = memory[HL];
+	PC = HL;
 
 	cycles += 1;
 }

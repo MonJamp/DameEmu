@@ -12,10 +12,20 @@
 #define n (uint8_t)(memory[PC + 1])
 #define e (int8_t)(memory[PC + 1])
 
+//Interrupt flags
+#define INT_FLAG_INPUT  (1 << 4)
+#define INT_FLAG_SERIAL (1 << 3)
+#define INT_FLAG_TIMER  (1 << 2)
+#define INT_FLAG_LCDC   (1 << 1)
+#define INT_FLAG_VBLANK (1)
+
 DameEmu::DameEmu(const char* ROM_DIR) {
 	BootUp(ROM_DIR);
 
 	status = EmuStatus::OK;
+	cycles = 0;
+	scanline_counter = 456;
+	IME = false;
 }
 
 DameEmu::~DameEmu() {
@@ -27,6 +37,11 @@ DameEmu::~DameEmu() {
 }
 
 void DameEmu::BootUp(const char* ROM_DIR) {
+	//Clear memory
+	for (uint32_t i = 0; i < sizeof(memory); i++) {
+		memory[i] = 0x0;
+	}
+
 	//Load cartridge
 	std::ifstream ROM;
 	ROM.open(ROM_DIR, std::ios::binary);
@@ -35,11 +50,6 @@ void DameEmu::BootUp(const char* ROM_DIR) {
 	//Gameboy boot state after bios
 	//These values are true only for DMG
 	//TODO: Display scrolling logo and boot sound
-
-	//Clear VRAM
-	for (uint16_t i = 0x0; i < sizeof(VRAM); i++) {
-		VRAM[i] = 0x0;
-	}
 
 	AF = 0x01B0;
 	BC = 0x0013;
@@ -80,9 +90,34 @@ void DameEmu::BootUp(const char* ROM_DIR) {
 	InterruptEnable = 0x00;
 }
 
+//Service interrupt if IME is enabled and corresponding IE/IF flags are set
+//When servicing IME is disabled, corresponding IF is disabled,
+//PC is pushed to stack and jumps to interrupt handler address
+//This process takes 5 cycles
+void DameEmu::HandleInterrupts() {
+	if (!IME) {
+		return;
+	}
+
+	if (InterruptEnable & INT_FLAG_VBLANK) {
+		if (InterruptFlag & INT_FLAG_VBLANK) {
+			IME = false;
+			InterruptFlag &= ~INT_FLAG_VBLANK;
+			memory[SP - 1] = (PC & 0xFF00) >> 8;
+			memory[SP - 2] = (PC & 0x00FF);
+			SP = SP - 2;
+			PC = 0x0040;
+			cycles += 5;
+		}
+	}
+
+	//TODO: Service other interrupts
+}
+
 EmuStatus DameEmu::Step() {
 	uint8_t opcode = memory[PC];
 	Instruction ins = instructions[opcode];
+	cycles = 0;
 
 	debug_msg("%04X: ", PC);
 
@@ -110,6 +145,30 @@ EmuStatus DameEmu::Step() {
 	printf("\n");
 	
 	return status;
+}
+
+void DameEmu::UpdateScreen() {
+	//Check if LCD is on
+	//TODO: Helper functions for reading/writing to LCD registers
+	if (memory[0xFF40] & (1 << 7))
+		scanline_counter -= cycles;
+	else
+		return;
+	if (scanline_counter > 0) {
+		return;
+	}
+
+	scanline_counter = 456;
+	LY++;
+	if (LY == 144) {
+		InterruptFlag |= INT_FLAG_VBLANK;
+	}
+	else if (LY > 153) {
+		LY = 0;
+	}
+	else {
+		//DrawLine
+	}
 }
 
 void DameEmu::CB() {
