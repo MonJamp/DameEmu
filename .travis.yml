@@ -1,13 +1,14 @@
 notifications:
   email: false
 language: cpp
-dist: xenial
+dist: bionic
 sudo: required
 
 addons:
     apt:
         update: true
         packages:
+        - gcc
         - cmake
         
 before_script:
