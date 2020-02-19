@@ -15,5 +15,7 @@ before_script:
     - sudo apt-get -y install libsfml-dev
     
 script:
-    - cmake -DCMAKE_MODULE_PATH="/usr/share/SFML/cmake/Modules/" -DCMAKE_BUILD_TYPE=Debug .
+    - mkdir bin
+    - cd bin
+    - cmake -DCMAKE_MODULE_PATH="/usr/share/SFML/cmake/Modules/" -DCMAKE_BUILD_TYPE=Debug ..
     - make -j4
