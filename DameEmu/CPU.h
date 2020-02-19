@@ -2,7 +2,7 @@
 #include "MMU.h"
 #include <cstdint>
 
-#define BIT_CHECK(x, y) ((x & (y)) == (x))
+#define BIT_CHECK(x, y) ((x & (y)) == (y))
 #define BIT_SET(x, y)	(x |= (y))
 #define BIT_CLEAR(x, y) (x &= ~(y))
 
