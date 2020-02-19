@@ -6,7 +6,6 @@
 #define BIT_SET(x, y)	(x |= (y))
 #define BIT_CLEAR(x, y) (x &= ~(y))
 
-
 //Flag bits
 #define FLAG_ZERO		(1 << 7)
 #define FLAG_NEGATIVE	(1 << 6)
@@ -17,13 +16,6 @@
 #define FLAG_CHECK(x)	BIT_CHECK(F, x)
 #define FLAG_SET(x)		BIT_SET(F, x)
 #define FLAG_CLEAR(x)	BIT_CLEAR(F, x)
-
-//Interupts
-#define INTERUPT_INPUT  (1 << 4)
-#define INTERUPT_SERIAL (1 << 3)
-#define INTERUPT_TIMER  (1 << 2)
-#define INTERUPT_LCDC   (1 << 1)
-#define INTERUPT_VBLANK (1 << 0)
 
 class CPU {
 public:

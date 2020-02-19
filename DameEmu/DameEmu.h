@@ -5,11 +5,6 @@
 #include <string>
 #include <cstdint>
 
-#define LCD_HEIGHT 166
-#define LCD_WIDTH 144
-
-#define ROM_ENTRY 0x100
-
 
 class DameEmu {
 public:
