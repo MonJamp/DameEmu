@@ -1,3 +1,5 @@
+notifications:
+  email: false
 language: cpp
 dist: xenial
 sudo: required
@@ -10,9 +12,7 @@ addons:
         
 before_script:
     - sudo apt-get -y install libsfml-dev
-    - mkdir bin
-    - cd bin
     
 script:
-    - cmake -DCMAKE_BUILD_TYPE=Debug ..
-    -  make -j4
+    - cmake -DCMAKE_MODULE_PATH="/usr/share/SFML/cmake/Modules/" -DCMAKE_BUILD_TYPE=Debug .
+    - make -j4
