@@ -1,0 +1,18 @@
+language: cpp
+dist: xenial
+sudo: required
+
+addons:
+    apt:
+        update: true
+        packages:
+        - cmake
+        
+before_script:
+    - sudo apt-get -y install libsfml-dev
+    - mkdir bin
+    - cd bin
+    
+script:
+    - cmake -DCMAKE_BUILD_TYPE=Debug ..
+    -  make -j4
