@@ -25,6 +25,12 @@ MMU::MMU() {
 	Reset();
 }
 
+MMU::~MMU() {
+	delete interupt_flag;
+	delete interupt_enable;
+	delete lcd;
+}
+
 void MMU::Reset() {
 	for (uint32_t i = 0; i < sizeof(memory_map); i++) {
 		memory_map[i] = 0x0;

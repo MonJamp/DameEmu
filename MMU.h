@@ -116,6 +116,7 @@ namespace Memory {
 	class MMU {
 	public:
 		MMU();
+		~MMU();
 
 		void LoadCartridge(const char* rom_dir);
 		uint8_t Read(uint16_t address);
