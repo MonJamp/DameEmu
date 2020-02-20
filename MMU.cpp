@@ -32,9 +32,7 @@ MMU::~MMU() {
 }
 
 void MMU::Reset() {
-	for (uint32_t i = 0; i < sizeof(memory_map); i++) {
-		memory_map[i] = 0x0;
-	}
+	std::fill_n(memory_map, sizeof(memory_map), 0x0);
 
 	//Gameboy boot state after bios
 	//These values are true only for DMG
