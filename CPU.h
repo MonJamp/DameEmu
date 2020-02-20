@@ -165,7 +165,7 @@ private:
 	void LD_HL_H();
 	void LD_HL_L();
 	void LD_HL_n();
-	void LD_HL_r(uint8_t& r);
+	void LD_HL_r(uint8_t r);
 	void LD_HLD_A();
 	void LD_HLI_A();
 	void LD_L_A();
@@ -180,7 +180,7 @@ private:
 	void LD_nn_A();
 	void LD_r_HL(uint8_t& r);
 	void LD_r_n(uint8_t& r);
-	void LD_r_r(uint8_t& r1, uint8_t& r2);
+	void LD_r_r(uint8_t& r1, uint8_t r2);
 	void LD_SP();
 	void LDH_A_n();
 	void LDH_n_A();
@@ -192,7 +192,7 @@ private:
 	void POP_BC();
 	void POP_DE();
 	void POP_HL();
-	void PUSH(uint16_t& rr);
+	void PUSH(uint16_t rr);
 	void PUSH_AF();
 	void PUSH_BC();
 	void PUSH_DE();
@@ -356,7 +356,7 @@ private:
 	//CB Instructions
 	void CB();
 	//Bit operations
-	void BIT(uint8_t b, uint8_t& r);
+	void BIT(uint8_t b, uint8_t r);
 	void BIT_HL(uint8_t b);
 	void BIT_0_A();
 	void BIT_0_B();

@@ -317,7 +317,7 @@ void CPU::LD_r_n(uint8_t& r) {
 	cycles += 2;
 }
 
-void CPU::LD_r_r(uint8_t& r1, uint8_t& r2) {
+void CPU::LD_r_r(uint8_t& r1, uint8_t r2) {
 	r1 = r2;
 
 	cycles += 1;
@@ -329,7 +329,7 @@ void CPU::LD_r_HL(uint8_t& r) {
 	cycles += 2;
 }
 
-void CPU::LD_HL_r(uint8_t& r) {
+void CPU::LD_HL_r(uint8_t r) {
 	mmu.Write(HL, r);
 
 	cycles += 2;
@@ -556,7 +556,7 @@ void CPU::POP(uint16_t& rr) {
 	cycles += 3;
 }
 
-void CPU::PUSH(uint16_t& rr) {
+void CPU::PUSH(uint16_t rr) {
 	uint8_t hi = static_cast<uint8_t>((rr & 0xFF00) >> 8);
 	uint8_t lo = static_cast<uint8_t>(rr & 0x00FF);
 	mmu.Write(SP - 1, hi);

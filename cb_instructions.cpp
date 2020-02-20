@@ -367,7 +367,7 @@ void CPU::RR_E() { RR(E); }
 void CPU::RR_H() { RR(H); }
 void CPU::RR_L() { RR(L); }
 
-void CPU::BIT(uint8_t b, uint8_t& r) {
+void CPU::BIT(uint8_t b, uint8_t r) {
 	(r & (1 << b)) ? FLAG_CLEAR(FLAG_ZERO) : FLAG_SET(FLAG_ZERO);
 
 	FLAG_SET(FLAG_HALFCARRY);
