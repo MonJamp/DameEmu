@@ -4,11 +4,17 @@ cmake_minimum_required(VERSION 3.10)
 project(DameEmu)
 set(SRC
     ${SRC}
-    ${CMAKE_SOURCE_DIR}/DameEmu/DameEmu.cpp
-	${CMAKE_SOURCE_DIR}/DameEmu/DameEmu.h
-    ${CMAKE_SOURCE_DIR}/DameEmu/main.cpp
-    ${CMAKE_SOURCE_DIR}/DameEmu/instructions.cpp
-    ${CMAKE_SOURCE_DIR}/DameEmu/cb_instructions.cpp
+    ${CMAKE_SOURCE_DIR}/main.cpp
+    ${CMAKE_SOURCE_DIR}/DameEmu.h
+    ${CMAKE_SOURCE_DIR}/DameEmu.cpp
+	${CMAKE_SOURCE_DIR}/CPU.h
+    ${CMAKE_SOURCE_DIR}/CPU.cpp
+    ${CMAKE_SOURCE_DIR}/instructions.cpp
+    ${CMAKE_SOURCE_DIR}/cb_instructions.cpp
+    ${CMAKE_SOURCE_DIR}/MMU.h
+    ${CMAKE_SOURCE_DIR}/MMU.cpp
+    ${CMAKE_SOURCE_DIR}/PPU.h
+    ${CMAKE_SOURCE_DIR}/PPU.cpp
 )
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
