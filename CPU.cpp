@@ -1,10 +1,10 @@
 #include "CPU.h"
 
-#ifdef _DEBUG
+#ifdef D_LOG_INS
 #include <cstdio>
 #define debug_msg(...) printf(__VA_ARGS__)
 #else
-#define debug_msg(x)
+#define debug_msg(...)
 #endif
 
 CPU::CPU(Memory::MMU& mmu) :
@@ -91,7 +91,7 @@ uint8_t CPU::Step() {
 	};
 
 	(this->*ins.execute)();
-	printf("\n");
+	debug_msg("\n");
 
 	return cycles;
 }
