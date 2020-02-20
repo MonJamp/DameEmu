@@ -8,10 +8,9 @@
 
 class DameEmu {
 public:
-	DameEmu(const char* ROM_DIR);
+	DameEmu(const char* rom_dir);
 	~DameEmu();
 
-	void BootUp(const char* ROM_DIR);
 	void Run();
 
 	uint8_t GetCycles() { return cpu.GetCycles(); }

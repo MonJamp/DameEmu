@@ -15,7 +15,6 @@ CPU::CPU(Memory::MMU& mmu) :
 
 void CPU::Reset() {
 	cycles = 0;
-	scanline_counter = 456;
 	interupt_master_enable = false;
 
 	//Gameboy boot state after bios

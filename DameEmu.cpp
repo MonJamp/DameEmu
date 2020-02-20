@@ -1,12 +1,12 @@
 #include "DameEmu.h"
 #include <fstream>
 
-DameEmu::DameEmu(const char* ROM_DIR) :
+DameEmu::DameEmu(const char* rom_dir) :
 	mmu(),
 	cpu(mmu),
 	ppu(mmu)
 {
-	BootUp(ROM_DIR);
+	mmu.LoadCartridge(rom_dir);
 }
 
 DameEmu::~DameEmu() {
@@ -15,10 +15,6 @@ DameEmu::~DameEmu() {
 	}
 
 	delete(app);
-}
-
-void DameEmu::BootUp(const char* ROM_DIR) {
-	mmu.LoadCartridge(ROM_DIR);
 }
 
 void DameEmu::Run() {

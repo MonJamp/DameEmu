@@ -43,7 +43,6 @@ private:
 	uint16_t operand;
 	//TODO: Implement cycles
 	uint8_t cycles;
-	int16_t scanline_counter;
 	bool interupt_master_enable;
 
 	Memory::MMU& mmu;
