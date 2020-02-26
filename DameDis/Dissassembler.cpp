@@ -4,270 +4,266 @@
 #include <iostream>
 
 
-#define nn (uint16_t)(memory[PC + 2] << 8 | memory[PC + 1])
-#define n (uint16_t)(memory[PC + 1])
-
-
-Instruction Dissassembler::instructions[256] = {
-	{"NOP;", 1},				//00
-	{"LD BC, nn; nn=", 3},		//01
-	{"LD (BC), A;", 1},			//02
-	{"INC BC;", 1},				//03
-	{"INC B;", 1},				//04
-	{"DEC B;", 1},				//05
-	{"LD B, n; n=", 2},			//06
-	{"RLCA;", 1},				//07
-	{"LD (nn), SP; nn=", 3},	//08
-	{"ADD HL, BC;", 1},			//09
-	{"LD A, (BC);", 1},			//0A
-	{"DEC BC;", 1},				//0B
-	{"INC C;", 1},				//0C
-	{"DEC C;", 1},				//0D
-	{"LD C, n; n=", 2},			//0E
-	{"RRCA;", 1},				//0F
-	{"STOP;", 1},				//10
-	{"LD DE, nn; nn=", 3},		//11
-	{"LD (DE), A;", 1},			//12
-	{"INC DE;", 1},				//13
-	{"INC D;", 1},				//14
-	{"DEC D;", 1},				//15
-	{"LD D, n; n=", 2},			//16
-	{"RLA;", 1},				//17
-	{"JR n; n=", 2},			//18
-	{"ADD HL, DE;", 1},			//19
-	{"LD A, (DE);", 1},			//1A
-	{"DEC DE;", 1},				//1B
-	{"INC E;", 1},				//1C
-	{"DEC E;", 1},				//1D
-	{"LD E, n; n=", 2},			//1E
-	{"RRA;", 1},				//1F
-	{"JR NZ, n; n=", 2},		//20
-	{"LD HL, nn; nn=", 3},		//21
-	{"LD (HL+), A;", 1},		//22
-	{"INC HL;", 1},				//23
-	{"INC H;", 1},				//24
-	{"DEC H;", 1},				//25
-	{"LD H, n; n=", 2},			//26
-	{"DAA;", 1},				//27
-	{"JR Z, n; n=", 2},			//28
-	{"ADD HL, HL;", 1},			//29
-	{"LD A, (HL+);", 1},		//2A
-	{"DEC HL;", 1},				//2B
-	{"INC L;", 1},				//2C
-	{"DEC L;", 1},				//2D
-	{"LD L, n; n=", 2},			//2E
-	{"CPL;", 1},				//2F
-	{"JR NC, n; n=", 2},		//30
-	{"LD SP, nn; nn=", 3},		//31
-	{"LD (HL-), A;", 1},		//32
-	{"INC SP;", 1},				//33
-	{"INC (HL);", 1},			//34
-	{"DEC (HL);", 1},			//35
-	{"LD (HL), n; n=", 2},		//36
-	{"SCF;", 1},				//37
-	{"JR C, n; n=", 2},			//38
-	{"ADD HL, SP;", 1},			//39
-	{"LD A, (HL-);", 1},		//3A
-	{"DEC SP;", 1},				//3B
-	{"INC A;", 1},				//3C
-	{"DEC A;", 1},				//3D
-	{"LD A, n; n=", 2},			//3E
-	{"CCF;", 1},				//3F
-	{"LD B, B;", 1},			//40
-	{"LD B, C;", 1},			//41
-	{"LD B, D;", 1},			//42
-	{"LD B, E;", 1},			//43
-	{"LD B, H;", 1},			//44
-	{"LD B, L;", 1},			//45
-	{"LD B, (HL);", 1},			//46
-	{"LD B, A;", 1},			//47
-	{"LD C, B;", 1},			//48
-	{"LD C, C;", 1},			//49
-	{"LD C, D;", 1},			//4A
-	{"LD C, E;", 1},			//4B
-	{"LD C, H;", 1},			//4C
-	{"LD C, L;", 1},			//4D
-	{"LD C, (HL);", 1},			//4E
-	{"LD C, A;", 1},			//4F
-	{"LD D, B;", 1},			//50
-	{"LD D, C;", 1},			//51
-	{"LD D, D;", 1},			//52
-	{"LD D, E;", 1},			//53
-	{"LD D, H;", 1},			//54
-	{"LD D, L;", 1},			//55
-	{"LD D, (HL);", 1},			//56
-	{"LD D, A;", 1},			//57
-	{"LD E, B;", 1},			//58
-	{"LD E, C;", 1},			//59
-	{"LD E, D;", 1},			//5A
-	{"LD E, E;", 1},			//5B
-	{"LD E, H;", 1},			//5C
-	{"LD E, L;", 1},			//5D
-	{"LD E, (HL);", 1},			//5E
-	{"LD E, A;", 1},			//5F
-	{"LD H, B;", 1},			//60
-	{"LD H, C;", 1},			//61
-	{"LD H, D;", 1},			//62
-	{"LD H, E;", 1},			//63
-	{"LD H, H;", 1},			//64
-	{"LD H, L;", 1},			//65
-	{"LD H, (HL);", 1},			//66
-	{"LD H, A;", 1},			//67
-	{"LD L, B;", 1},			//68
-	{"LD L, C;", 1},			//69
-	{"LD L, D;", 1},			//6A
-	{"LD L, E;", 1},			//6B
-	{"LD L, H;", 1},			//6C
-	{"LD L, L;", 1},			//6D
-	{"LD L, (HL);", 1},			//6E
-	{"LD L, A;", 1},			//6F
-	{"LD (HL), B;", 1},			//70
-	{"LD (HL), C;", 1},			//71
-	{"LD (HL), D;", 1},			//72
-	{"LD (HL), E;", 1},			//73
-	{"LD (HL), H;", 1},			//74
-	{"LD (HL), L;", 1},			//75
-	{"HALT;", 1},				//76
-	{"LD (HL), A;", 1},			//77
-	{"LD A, B;", 1},			//78
-	{"LD A, C;", 1},			//79
-	{"LD A, D;", 1},			//7A
-	{"LD A, E;", 1},			//7B
-	{"LD A, H;", 1},			//7C
-	{"LD A, L;", 1},			//7D
-	{"LD A, (HL);", 1},			//7E
-	{"LD A, A;", 1},			//7F
-	{"ADD B;", 1},				//80
-	{"ADD C;", 1},				//81
-	{"ADD D;", 1},				//82
-	{"ADD E;", 1},				//83
-	{"ADD H;", 1},				//84
-	{"ADD L;", 1},				//85
-	{"ADD (HL);", 1},			//86
-	{"ADD A;", 1},				//87
-	{"ADC B;", 1},				//88
-	{"ADC C;", 1},				//89
-	{"ADC D;", 1},				//8A
-	{"ADC E;", 1},				//8B
-	{"ADC H;", 1},				//8C
-	{"ADC L;", 1},				//8D
-	{"ADC (HL);", 1},			//8E
-	{"ADC A;", 1},				//8F
-	{"SUB B;", 1},				//90
-	{"SUB C;", 1},				//91
-	{"SUB D;", 1},				//92
-	{"SUB E;", 1},				//93
-	{"SUB H;", 1},				//94
-	{"SUB L;", 1},				//95
-	{"SUB (HL);", 1},			//96
-	{"SUB A;", 1},				//97
-	{"SBC B;", 1},				//98
-	{"SBC C;", 1},				//99
-	{"SBC D;", 1},				//9A
-	{"SBC E;", 1},				//9B
-	{"SBC H;", 1},				//9C
-	{"SBC L;", 1},				//9D
-	{"SBC (HL);", 1},			//9E
-	{"SBC A;", 1},				//9F
-	{"AND B;", 1},				//A0
-	{"AND C;", 1},				//A1
-	{"AND D;", 1},				//A2
-	{"AND E;", 1,},				//A3
-	{"AND H;", 1,},				//A4
-	{"AND L;", 1,},				//A5
-	{"AND (HL);", 1L},			//A6
-	{"AND A;", 1},				//A7
-	{"XOR B;", 1},				//A8
-	{"XOR C;", 1},				//A9
-	{"XOR D;", 1},				//AA
-	{"XOR E;", 1},				//AB
-	{"XOR H;", 1},				//AC
-	{"XOR L;", 1},				//AD
-	{"XOR (HL);", 1},			//AE
-	{"XOR A;", 1},				//AF
-	{"OR B;", 1},				//B0
-	{"OR C;", 1},				//B1
-	{"OR D;", 1},				//B2
-	{"OR E;", 1},				//B3
-	{"OR H;", 1},				//B4
-	{"OR L;", 1},				//B5
-	{"OR (HL);", 1},			//B6
-	{"OR A;", 1},				//B7
-	{"CP B;", 1},				//B8
-	{"CP C;", 1},				//B9
-	{"CP D;", 1},				//BA
-	{"CP E;", 1},				//BB
-	{"CP H;", 1},				//BC
-	{"CP L;", 1},				//BD
-	{"CP (HL);", 1},			//BE
-	{"CP A;", 1},				//BF
-	{"RET NZ;", 1},				//C0
-	{"POP BC;", 1},				//C1
-	{"JP NZ, nn; nn=", 3},		//C2
-	{"JP nn; nn=", 3},			//C3
-	{"CALL NZ, nn; nn=", 3},	//C4
-	{"PUSH BC;", 1},			//C5
-	{"ADD n; n=", 2},			//C6
-	{"RST 0x00;", 1},			//C7
-	{"RET Z;", 1},				//C8
-	{"RET;", 1},				//C9
-	{"JP Z, nn; nn=", 3},		//CA
-	{"CB n; n=", 2},			//CB
-	{"CALL Z, nn; nn=", 3},		//CC
-	{"CALL nn; nn=", 3},		//CD
-	{"ADC n; n=", 2},			//CE
-	{"RST 0x08;", 1},			//CF
-	{"RET NC;", 1},				//D0
-	{"POP DE;", 1},				//D1
-	{"JP NC, nn; nn=", 3},		//D2
-	{"Undefined OP;", 1},		//D3
-	{"CALL NC, nn; nn=", 3},	//D4
-	{"PUSH DE;", 1},			//D5
-	{"SUB n; n=", 2},			//D6
-	{"RST 0x10;", 1},			//D7
-	{"RET C;", 1},				//D8
-	{"RETI;", 1},				//D9
-	{"JP C, nn; nn=", 3},		//DA
-	{"Undefined OP;", 1},		//DB
-	{"CALL C, nn; nn=", 3},		//DC
-	{"Undefined OP;", 1},		//DD
-	{"SBC n; n=", 2},			//DE
-	{"RST 0x18;", 1},			//DF
-	{"LD (FF00+n), A; n=", 2},	//E0
-	{"POP HL;", 1},				//E1
-	{"LD (FF00+C), A;", 1},		//E2
-	{"Undefined OP;", 1},		//E3
-	{"Undefined OP;", 1},		//E4
-	{"PUSH HL;", 1},			//E5
-	{"AND n; n=", 2},			//E6
-	{"RST 0x20;", 1},			//E7
-	{"ADD SP, n; n=", 2},		//E8
-	{"JP HL;", 1},				//E9
-	{"LD (nn), A; nn=", 3},		//EA
-	{"Undefined OP;", 1},		//EB
-	{"Undefined OP;", 1},		//EC
-	{"Undefined OP;", 1},		//ED
-	{"XOR n; n=", 2},			//EE
-	{"RST 0x28;", 1},			//EF
-	{"LD A, (FF00+n); n=", 2},	//F0
-	{"POP AF;", 1},				//F1
-	{"LD A, (FF00+C);", 1},		//F2
-	{"DI;", 1},					//F3
-	{"Undefined OP;", 1},		//F4
-	{"PUSH AF;", 1},			//F5
-	{"OR n; n=", 2},			//F6
-	{"RST 0x30;", 1},			//F7
-	{"LD HL, SP+n; n=", 2},		//F8
-	{"LD SP, HL;", 1},			//F9
-	{"LD A, (nn); nn=", 3},		//FA
-	{"EI;", 1},					//FB
-	{"Undefined OP;", 1},		//FC
-	{"Undefined OP;", 1},		//FD
-	{"CP n; n=", 2},			//FE
-	{"RST 0x38;", 1},			//FF
+Opcode Dissassembler::opcodeTable[256] = {
+	{"NOP;", 0},				//00
+	{"LD BC, nn; nn=", 2},		//01
+	{"LD (BC), A;", 0},			//02
+	{"INC BC;", 0},				//03
+	{"INC B;", 0},				//04
+	{"DEC B;", 0},				//05
+	{"LD B, n; n=", 1},			//06
+	{"RLCA;", 0},				//07
+	{"LD (nn), SP; nn=", 2},	//08
+	{"ADD HL, BC;", 0},			//09
+	{"LD A, (BC);", 0},			//0A
+	{"DEC BC;", 0},				//0B
+	{"INC C;", 0},				//0C
+	{"DEC C;", 0},				//0D
+	{"LD C, n; n=", 1},			//0E
+	{"RRCA;", 0},				//0F
+	{"STOP;", 0},				//10
+	{"LD DE, nn; nn=", 2},		//11
+	{"LD (DE), A;", 0},			//12
+	{"INC DE;", 0},				//13
+	{"INC D;", 0},				//14
+	{"DEC D;", 0},				//15
+	{"LD D, n; n=", 1},			//16
+	{"RLA;", 0},				//17
+	{"JR n; n=", 1},			//18
+	{"ADD HL, DE;", 0},			//19
+	{"LD A, (DE);", 0},			//1A
+	{"DEC DE;", 0},				//1B
+	{"INC E;", 0},				//1C
+	{"DEC E;", 0},				//1D
+	{"LD E, n; n=", 1},			//1E
+	{"RRA;", 0},				//1F
+	{"JR NZ, n; n=", 1},		//20
+	{"LD HL, nn; nn=", 2},		//21
+	{"LD (HL+), A;", 0},		//22
+	{"INC HL;", 0},				//23
+	{"INC H;", 0},				//24
+	{"DEC H;", 0},				//25
+	{"LD H, n; n=", 1},			//26
+	{"DAA;", 0},				//27
+	{"JR Z, n; n=", 1},			//28
+	{"ADD HL, HL;", 0},			//29
+	{"LD A, (HL+);", 0},		//2A
+	{"DEC HL;", 0},				//2B
+	{"INC L;", 0},				//2C
+	{"DEC L;", 0},				//2D
+	{"LD L, n; n=", 1},			//2E
+	{"CPL;", 0},				//2F
+	{"JR NC, n; n=", 1},		//30
+	{"LD SP, nn; nn=", 2},		//31
+	{"LD (HL-), A;", 0},		//32
+	{"INC SP;", 0},				//33
+	{"INC (HL);", 0},			//34
+	{"DEC (HL);", 0},			//35
+	{"LD (HL), n; n=", 1},		//36
+	{"SCF;", 0},				//37
+	{"JR C, n; n=", 1},			//38
+	{"ADD HL, SP;", 0},			//39
+	{"LD A, (HL-);", 0},		//3A
+	{"DEC SP;", 0},				//3B
+	{"INC A;", 0},				//3C
+	{"DEC A;", 0},				//3D
+	{"LD A, n; n=", 1},			//3E
+	{"CCF;", 0},				//3F
+	{"LD B, B;", 0},			//40
+	{"LD B, C;", 0},			//41
+	{"LD B, D;", 0},			//42
+	{"LD B, E;", 0},			//43
+	{"LD B, H;", 0},			//44
+	{"LD B, L;", 0},			//45
+	{"LD B, (HL);", 0},			//46
+	{"LD B, A;", 0},			//47
+	{"LD C, B;", 0},			//48
+	{"LD C, C;", 0},			//49
+	{"LD C, D;", 0},			//4A
+	{"LD C, E;", 0},			//4B
+	{"LD C, H;", 0},			//4C
+	{"LD C, L;", 0},			//4D
+	{"LD C, (HL);", 0},			//4E
+	{"LD C, A;", 0},			//4F
+	{"LD D, B;", 0},			//50
+	{"LD D, C;", 0},			//51
+	{"LD D, D;", 0},			//52
+	{"LD D, E;", 0},			//53
+	{"LD D, H;", 0},			//54
+	{"LD D, L;", 0},			//55
+	{"LD D, (HL);", 0},			//56
+	{"LD D, A;", 0},			//57
+	{"LD E, B;", 0},			//58
+	{"LD E, C;", 0},			//59
+	{"LD E, D;", 0},			//5A
+	{"LD E, E;", 0},			//5B
+	{"LD E, H;", 0},			//5C
+	{"LD E, L;", 0},			//5D
+	{"LD E, (HL);", 0},			//5E
+	{"LD E, A;", 0},			//5F
+	{"LD H, B;", 0},			//60
+	{"LD H, C;", 0},			//61
+	{"LD H, D;", 0},			//62
+	{"LD H, E;", 0},			//63
+	{"LD H, H;", 0},			//64
+	{"LD H, L;", 0},			//65
+	{"LD H, (HL);", 0},			//66
+	{"LD H, A;", 0},			//67
+	{"LD L, B;", 0},			//68
+	{"LD L, C;", 0},			//69
+	{"LD L, D;", 0},			//6A
+	{"LD L, E;", 0},			//6B
+	{"LD L, H;", 0},			//6C
+	{"LD L, L;", 0},			//6D
+	{"LD L, (HL);", 0},			//6E
+	{"LD L, A;", 0},			//6F
+	{"LD (HL), B;", 0},			//70
+	{"LD (HL), C;", 0},			//71
+	{"LD (HL), D;", 0},			//72
+	{"LD (HL), E;", 0},			//73
+	{"LD (HL), H;", 0},			//74
+	{"LD (HL), L;", 0},			//75
+	{"HALT;", 0},				//76
+	{"LD (HL), A;", 0},			//77
+	{"LD A, B;", 0},			//78
+	{"LD A, C;", 0},			//79
+	{"LD A, D;", 0},			//7A
+	{"LD A, E;", 0},			//7B
+	{"LD A, H;", 0},			//7C
+	{"LD A, L;", 0},			//7D
+	{"LD A, (HL);", 0},			//7E
+	{"LD A, A;", 0},			//7F
+	{"ADD B;", 0},				//80
+	{"ADD C;", 0},				//81
+	{"ADD D;", 0},				//82
+	{"ADD E;", 0},				//83
+	{"ADD H;", 0},				//84
+	{"ADD L;", 0},				//85
+	{"ADD (HL);", 0},			//86
+	{"ADD A;", 0},				//87
+	{"ADC B;", 0},				//88
+	{"ADC C;", 0},				//89
+	{"ADC D;", 0},				//8A
+	{"ADC E;", 0},				//8B
+	{"ADC H;", 0},				//8C
+	{"ADC L;", 0},				//8D
+	{"ADC (HL);", 0},			//8E
+	{"ADC A;", 0},				//8F
+	{"SUB B;", 0},				//90
+	{"SUB C;", 0},				//91
+	{"SUB D;", 0},				//92
+	{"SUB E;", 0},				//93
+	{"SUB H;", 0},				//94
+	{"SUB L;", 0},				//95
+	{"SUB (HL);", 0},			//96
+	{"SUB A;", 0},				//97
+	{"SBC B;", 0},				//98
+	{"SBC C;", 0},				//99
+	{"SBC D;", 0},				//9A
+	{"SBC E;", 0},				//9B
+	{"SBC H;", 0},				//9C
+	{"SBC L;", 0},				//9D
+	{"SBC (HL);", 0},			//9E
+	{"SBC A;", 0},				//9F
+	{"AND B;", 0},				//A0
+	{"AND C;", 0},				//A1
+	{"AND D;", 0},				//A2
+	{"AND E;", 0,},				//A3
+	{"AND H;", 0,},				//A4
+	{"AND L;", 0,},				//A5
+	{"AND (HL);", 0L},			//A6
+	{"AND A;", 0},				//A7
+	{"XOR B;", 0},				//A8
+	{"XOR C;", 0},				//A9
+	{"XOR D;", 0},				//AA
+	{"XOR E;", 0},				//AB
+	{"XOR H;", 0},				//AC
+	{"XOR L;", 0},				//AD
+	{"XOR (HL);", 0},			//AE
+	{"XOR A;", 0},				//AF
+	{"OR B;", 0},				//B0
+	{"OR C;", 0},				//B1
+	{"OR D;", 0},				//B2
+	{"OR E;", 0},				//B3
+	{"OR H;", 0},				//B4
+	{"OR L;", 0},				//B5
+	{"OR (HL);", 0},			//B6
+	{"OR A;", 0},				//B7
+	{"CP B;", 0},				//B8
+	{"CP C;", 0},				//B9
+	{"CP D;", 0},				//BA
+	{"CP E;", 0},				//BB
+	{"CP H;", 0},				//BC
+	{"CP L;", 0},				//BD
+	{"CP (HL);", 0},			//BE
+	{"CP A;", 0},				//BF
+	{"RET NZ;", 0},				//C0
+	{"POP BC;", 0},				//C1
+	{"JP NZ, nn; nn=", 2},		//C2
+	{"JP nn; nn=", 2},			//C3
+	{"CALL NZ, nn; nn=", 2},	//C4
+	{"PUSH BC;", 0},			//C5
+	{"ADD n; n=", 1},			//C6
+	{"RST 0x00;", 0},			//C7
+	{"RET Z;", 0},				//C8
+	{"RET;", 0},				//C9
+	{"JP Z, nn; nn=", 2},		//CA
+	{"CB n; n=", 1},			//CB
+	{"CALL Z, nn; nn=", 2},		//CC
+	{"CALL nn; nn=", 2},		//CD
+	{"ADC n; n=", 1},			//CE
+	{"RST 0x08;", 0},			//CF
+	{"RET NC;", 0},				//D0
+	{"POP DE;", 0},				//D1
+	{"JP NC, nn; nn=", 2},		//D2
+	{"Undefined OP;", 0},		//D3
+	{"CALL NC, nn; nn=", 2},	//D4
+	{"PUSH DE;", 0},			//D5
+	{"SUB n; n=", 1},			//D6
+	{"RST 0x00;", 0},			//D7
+	{"RET C;", 0},				//D8
+	{"RETI;", 0},				//D9
+	{"JP C, nn; nn=", 2},		//DA
+	{"Undefined OP;", 0},		//DB
+	{"CALL C, nn; nn=", 2},		//DC
+	{"Undefined OP;", 0},		//DD
+	{"SBC n; n=", 1},			//DE
+	{"RST 0x08;", 0},			//DF
+	{"LD (FF00+n), A; n=", 1},	//E0
+	{"POP HL;", 0},				//E1
+	{"LD (FF00+C), A;", 0},		//E2
+	{"Undefined OP;", 0},		//E3
+	{"Undefined OP;", 0},		//E4
+	{"PUSH HL;", 0},			//E5
+	{"AND n; n=", 1},			//E6
+	{"RST 0x10;", 0},			//E7
+	{"ADD SP, n; n=", 1},		//E8
+	{"JP HL;", 0},				//E9
+	{"LD (nn), A; nn=", 2},		//EA
+	{"Undefined OP;", 0},		//EB
+	{"Undefined OP;", 0},		//EC
+	{"Undefined OP;", 0},		//ED
+	{"XOR n; n=", 1},			//EE
+	{"RST 0x18;", 0},			//EF
+	{"LD A, (FF00+n); n=", 1},	//F0
+	{"POP AF;", 0},				//F1
+	{"LD A, (FF00+C);", 0},		//F2
+	{"DI;", 0},					//F3
+	{"Undefined OP;", 0},		//F4
+	{"PUSH AF;", 0},			//F5
+	{"OR n; n=", 1},			//F6
+	{"RST 0x20;", 0},			//F7
+	{"LD HL, SP+n; n=", 1},		//F8
+	{"LD SP, HL;", 0},			//F9
+	{"LD A, (nn); nn=", 2},		//FA
+	{"EI;", 0},					//FB
+	{"Undefined OP;", 0},		//FC
+	{"Undefined OP;", 0},		//FD
+	{"CP n; n=", 1},			//FE
+	{"RST 0x28;", 0},			//FF
 };
 
-CB_Instruction Dissassembler::cb_instructions[256] = {
+CB_Opcode Dissassembler::cb_opcodeTable[256] = {
 	{"RLC B;"},			//00
 	{"RLC C;"},			//01
 	{"RLC D;"},			//02
@@ -526,84 +522,49 @@ CB_Instruction Dissassembler::cb_instructions[256] = {
 	{"SET 7, A;"},		//FF
 };
 
-Dissassembler::Dissassembler(std::string ROM_DIR) {
-	LoadROM(ROM_DIR);
+Dissassembler::Dissassembler()
+{
 	PC = 0;
+	cart = new Cartridge();
 }
 
-void Dissassembler::LoadROM(std::string ROM_DIR) {
-	std::ifstream ROM;
-	ROM.open(ROM_DIR, std::ios::binary);
-	
-	if (ROM.fail()) {
-		printf("Error! ROM could not be read!\n");
+void Dissassembler::LoadCartridge(const char* filename)
+{
+	cart->open(filename);
+}
+
+void Dissassembler::Disassemble()
+{
+	while (PC < ROM_MAX_SIZE)
+	{
+		StoreNextInstruction();
+	}
+}
+
+inline uint8_t Dissassembler::fetch()
+{
+	return cart->read(PC++);
+}
+
+void Dissassembler::StoreNextInstruction() {
+	uint16_t address = PC;
+	uint8_t opcode = fetch();
+	uint8_t operand_bytes = opcodeTable[opcode].operand_bytes;
+	uint32_t operand = NO_OPERAND;
+
+	if (operand_bytes == 1)
+	{
+		operand = fetch();
+	}
+	else if (operand_bytes == 2)
+	{
+		operand = fetch() | (fetch() << 8);
 	}
 
-	size_t fileSize;
+	Instruction ins;
+	ins.address = address;
+	ins.mnemonic = opcodeTable[opcode].mnemonic;
+	ins.operand = operand;
 
-	ROM.seekg(0, std::ios::end);
-	fileSize = ROM.tellg();
-	ROM.seekg(0, std::ios::beg);
-
-	memory.resize(fileSize);
-	ROM.read((char*)(&memory[0]), fileSize);
-
-	ROM.close();
-}
-
-void Dissassembler::PrintInstructions() {
-	std::cout << GetFullDissassembly();
-}
-
-void Dissassembler::DisassembleToFile(std::string OUTPUT_DIR) {
-	std::ofstream outputFile;
-	outputFile.open(OUTPUT_DIR, std::ofstream::trunc);
-
-	outputFile << GetFullDissassembly();
-
-	outputFile.close();
-}
-
-std::string Dissassembler::GetFullDissassembly() {
-	std::stringstream ss;
-
-	while (PC < memory.size()) {
-		ss << std::hex << std::showbase << (int)PC << ": ";
-		ss << GetNextInstruction();
-	}
-
-	return ss.str();
-}
-
-std::string Dissassembler::GetNextInstruction() {
-	uint8_t opcode = memory[PC];
-	Instruction ins = instructions[opcode];
-	std::stringstream ss;
-
-	if (opcode != 0xCB) {
-		switch (ins.length) {
-		case 1:
-			ss << ins.mnemonic;
-			break;
-		case 2:
-			ss << ins.mnemonic << std::hex << std::showbase << n;
-			break;
-		case 3:
-			ss << ins.mnemonic << std::hex << std::showbase << nn;
-			break;
-		default:
-			ss << "Error! Invalid OP!";
-			break;
-		}
-	}
-	else {
-		CB_Instruction cb_ins = cb_instructions[n];
-		ss << cb_ins.mnemonic;
-	}
-
-	PC += ins.length;
-
-	ss << std::endl;
-
-	return ss.str();
+	instructions.push_back(ins);
 }

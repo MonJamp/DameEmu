@@ -1,29 +1,40 @@
 #pragma once
+#include "Cartridge.h"
 #include <vector>
 #include <string>
 
-struct Instruction {
+struct Opcode {
 	std::string mnemonic;
-	uint8_t length;
+	uint8_t operand_bytes;
 };
 
-struct CB_Instruction {
+struct CB_Opcode : public Opcode {
+	CB_Opcode(std::string mnemonic) : Opcode{ mnemonic, 0 } {};
 	std::string mnemonic;
+};
+
+constexpr uint32_t NO_OPERAND = 0x10000;
+
+struct Instruction {
+	uint16_t address;
+	std::string mnemonic;
+	uint32_t operand;
 };
 
 class Dissassembler {
 public:
-	Dissassembler(std::string ROM_DIR);
-	void LoadROM(std::string ROM__DIR);
-	void PrintInstructions();
-	void DisassembleToFile(std::string OUTPUT_DIR);
+	Dissassembler();
 
-	static Instruction instructions[256];
-	static CB_Instruction cb_instructions[256];
+	void LoadCartridge(const char* filename);
+	void Disassemble();
+
+	static Opcode opcodeTable[256];
+	static CB_Opcode cb_opcodeTable[256];
 private:
-	std::string GetFullDissassembly();
-	std::string GetNextInstruction();
+	uint8_t fetch();
+	void StoreNextInstruction();
 
 	uint16_t PC;
-	std::vector<uint8_t> memory;
+	Cartridge* cart;
+	std::vector<Instruction> instructions;
 };
