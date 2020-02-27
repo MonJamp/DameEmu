@@ -528,6 +528,11 @@ Dissassembler::Dissassembler()
 	cart = new Cartridge();
 }
 
+Dissassembler::~Dissassembler()
+{
+	delete cart;
+}
+
 void Dissassembler::LoadCartridge(const char* filename)
 {
 	cart->open(filename);

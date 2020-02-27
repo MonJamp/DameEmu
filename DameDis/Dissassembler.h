@@ -24,6 +24,7 @@ struct Instruction {
 class Dissassembler {
 public:
 	Dissassembler();
+	~Dissassembler();
 
 	void LoadCartridge(const char* filename);
 	void Disassemble();
