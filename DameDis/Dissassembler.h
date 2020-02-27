@@ -13,12 +13,13 @@ struct CB_Opcode : public Opcode {
 	std::string mnemonic;
 };
 
-constexpr uint32_t NO_OPERAND = 0x10000;
+constexpr uint16_t NO_OPERAND = 0x10000;
 
 struct Instruction {
 	uint16_t address;
 	std::string mnemonic;
 	uint32_t operand;
+	uint8_t operand_bytes;
 };
 
 class Dissassembler {
@@ -28,6 +29,11 @@ public:
 
 	void LoadCartridge(const char* filename);
 	void Disassemble();
+
+	size_t GetNumOfInstructions();
+	std::string GetAddress(uint16_t index);
+	std::string GetMnemonic(uint16_t index);
+	std::string GetOperand(uint16_t index);
 
 	static Opcode opcodeTable[256];
 	static CB_Opcode cb_opcodeTable[256];

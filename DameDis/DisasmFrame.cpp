@@ -12,6 +12,7 @@ DisasmFrame::DisasmFrame()
 	disasm = new Dissassembler();
 
 	InitMenuBar();
+	InitDisassemblyList();
 }
 
 DisasmFrame::~DisasmFrame()
@@ -30,6 +31,53 @@ void DisasmFrame::InitMenuBar()
 	menuBar->Append(menuFile, "&File");
 	
 	SetMenuBar(menuBar);
+}
+
+void DisasmFrame::InitDisassemblyList()
+{
+	listDisasm = new wxListCtrl(
+		this,
+		wxID_ANY,
+		wxDefaultPosition,
+		wxDefaultSize,
+		wxLC_REPORT | wxLC_NO_HEADER
+	);
+
+	wxListItem itemCol;
+	// Empty
+	itemCol.SetId(0);
+	itemCol.SetWidth(20);
+	listDisasm->InsertColumn(0, itemCol);
+	// Address
+	itemCol.SetId(1);
+	itemCol.SetWidth(45);
+	listDisasm->InsertColumn(1, itemCol);
+	// Mnemonic
+	itemCol.SetId(2);
+	itemCol.SetWidth(70);
+	listDisasm->InsertColumn(2, itemCol);
+	// Operand
+	itemCol.SetId(3);
+	itemCol.SetWidth(60);
+	listDisasm->InsertColumn(3, itemCol);
+}
+
+void DisasmFrame::PopulateList()
+{
+	size_t numOfIns = disasm->GetNumOfInstructions();
+
+	for (unsigned int i = 0; i < numOfIns; i++) {
+		wxString address = disasm->GetAddress(i);
+		wxString mnemonic = disasm->GetMnemonic(i);
+		wxString operand = disasm->GetOperand(i);
+
+		listDisasm->InsertItem(i, "");
+		listDisasm->SetItem(i, 1, address);
+		listDisasm->SetItem(i, 2, mnemonic);
+		listDisasm->SetItem(i, 3, operand);
+
+		wxYieldIfNeeded();
+	}
 }
 
 void DisasmFrame::OnOpen(wxCommandEvent& evt)
@@ -59,6 +107,7 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	disasm->LoadCartridge(filename);
 	// TODO: Check validity of rom
 	disasm->Disassemble();
+	PopulateList();
 }
 
 void DisasmFrame::OnExit(wxCommandEvent& evt)
