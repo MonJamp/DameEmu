@@ -58,7 +58,7 @@ void DisasmFrame::InitDisassemblyList()
 	listDisasm->InsertColumn(2, itemCol);
 	// Operand
 	itemCol.SetId(3);
-	itemCol.SetWidth(60);
+	itemCol.SetWidth(150);
 	listDisasm->InsertColumn(3, itemCol);
 }
 
@@ -69,7 +69,7 @@ void DisasmFrame::PopulateList()
 	for (unsigned int i = 0; i < numOfIns; i++) {
 		wxString address = disasm->GetAddress(i);
 		wxString mnemonic = disasm->GetMnemonic(i);
-		wxString operand = disasm->GetOperand(i);
+		wxString operand = disasm->GetOperands(i);
 
 		listDisasm->InsertItem(i, "");
 		listDisasm->SetItem(i, 1, address);

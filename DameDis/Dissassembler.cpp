@@ -1,5 +1,4 @@
 #include "Dissassembler.h"
-#include "OpcodeTables.h"
 #include <sstream>
 #include <iomanip>
 #include <fstream>
@@ -33,43 +32,102 @@ void Dissassembler::Disassemble()
 
 size_t Dissassembler::GetNumOfInstructions()
 {
-	return instructions.size();
+	return disassembly.size();
 }
 
 
 template<typename T>
-std::string intToHex(T n, uint8_t bytes, const char* prefix = "")
+std::string intToHexString(T n, uint8_t bytes, const char* is_prefix = "")
 {
 	std::stringstream ss;
-	ss	<< prefix
+	ss	<< is_prefix
 		<< std::setfill('0') << std::setw(bytes * 2)
-		<< std::hex << std::uppercase << n;
+		<< std::hex << std::uppercase << (uint16_t)n;
 	return ss.str();
 }
 
 std::string Dissassembler::GetAddress(uint16_t index)
 {
-	uint16_t address = instructions[index].address;
-	return intToHex(address, 2);
+	uint16_t address = disassembly[index].address;
+	return intToHexString(address, 2);
 }
 
 std::string Dissassembler::GetMnemonic(uint16_t index)
 {
-	return instructions[index].mnemonic;
+	return disassembly[index].ins.mnemonic;
 }
 
-std::string Dissassembler::GetOperand(uint16_t index)
+std::string Dissassembler::GetOperands(uint16_t index)
 {
-	if (instructions[index].operand == NO_OPERAND)
+	if (disassembly[index].operand_values.size() > 0)
 	{
-		return std::string("");
+		std::stringstream ss;
+
+		for (auto i : disassembly[index].operand_values)
+		{
+			ss << i << ", ";
+		}
+
+		// Remove last 2 chars
+		return ss.str().substr(0, ss.str().size() - 2);
 	}
-	else
+
+	return "";
+}
+
+std::string Dissassembler::operandValueToString(Operand operand)
+{
+	std::stringstream ss;
+	std::string operand_str;
+
+	if (operand.isTypeRegister())
 	{
-		uint32_t operand = instructions[index].operand;
-		uint8_t bytes = instructions[index].operand_bytes;
-		return intToHex(operand, bytes, "0x");
+		std::string prefix = "%";
+		operand_str = prefix + Operand::typeToString(operand.type);
 	}
+	// TODO: Handle addressing modes
+	else if (operand.type == Operand::Type::u8)
+	{
+		std::string prefix = "0x";
+		uint8_t value = fetch();
+		operand_str = intToHexString(value, 1, prefix.c_str());
+	}
+	else if (operand.type == Operand::Type::u16)
+	{
+		std::string prefix = "0x";
+		uint16_t value = fetch() | (fetch() << 8);
+		operand_str = intToHexString(value, 2, prefix.c_str());
+	}
+
+	switch (operand.mode)
+	{
+	case Operand::Mode::Address:
+		ss << "(" << operand_str << ")";
+		break;
+	case Operand::Mode::Offset:
+	{
+		// TODO: Get offset instead of hardcoding
+		uint16_t offset = 0xFF00;
+		std::string offset_str = intToHexString(offset, 2, "0x");
+		ss << "(" << offset_str << " + " << operand_str << ")";
+		break;
+	}
+	case Operand::Mode::IndexInc:
+		ss << "(" << operand_str << "+)";
+		break;
+	case Operand::Mode::IndexDec:
+		ss << "(" << operand_str << "-)";
+		break;
+	case Operand::Mode::IndexOffset:
+		// TODO: Get index offset instead of hardcoding
+		ss << "(%sp + " << operand_str << ")";
+		break;
+	default:
+		ss << operand_str;
+		break;
+	}
+
+	return ss.str();
 }
 
 inline uint8_t Dissassembler::fetch()
@@ -79,24 +137,26 @@ inline uint8_t Dissassembler::fetch()
 
 void Dissassembler::StoreNextInstruction() {
 	uint16_t address = PC;
+	
 	uint8_t opcode = fetch();
-	uint8_t operand_bytes = opcodeTable[opcode].operand_bytes;
-	uint32_t operand = NO_OPERAND;
-
-	if (operand_bytes == 1)
+	Instruction ins = insTable[opcode];
+	if (ins.is_prefix)
 	{
-		operand = fetch();
-	}
-	else if (operand_bytes == 2)
-	{
-		operand = fetch() | (fetch() << 8);
+		opcode = fetch();
+		ins = cb_insTable[opcode];
 	}
 
-	Instruction ins;
-	ins.address = address;
-	ins.mnemonic = opcodeTable[opcode].mnemonic;
-	ins.operand = operand;
-	ins.operand_bytes = operand_bytes;
+	std::vector<std::string> operand_values;
+	for (auto i : ins.operands)
+	{
+		operand_values.push_back(operandValueToString(i));
+	}
 
-	instructions.push_back(ins);
+	Disassembly dis;
+	dis.address = address;
+	dis.opcode = opcode;
+	dis.ins = ins;
+	dis.operand_values = operand_values;
+
+	disassembly.push_back(dis);
 }

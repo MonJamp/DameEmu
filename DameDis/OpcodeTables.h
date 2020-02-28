@@ -1,531 +1,689 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <vector>
 
-struct Opcode {
+
+#define _o(x)	Operand(Operand::Type::x)
+#define _oa(x)	Operand(Operand::Type::x, Operand::Mode::Address)
+#define _oo(x)	Operand(Operand::Type::x, Operand::Mode::Offset)
+#define _oii(x)	Operand(Operand::Type::x, Operand::Mode::IndexInc)
+#define _oid(x)	Operand(Operand::Type::x, Operand::Mode::IndexDec)
+#define _oio(x)	Operand(Operand::Type::x, Operand::Mode::IndexOffset)
+
+
+struct Operand
+{
+public:
+	// TODO: Investigate type s8
+	static enum class Type
+	{
+		NONE,
+		A, B, C, D, E, H, L,
+		AF, BC, DE, HL, SP,
+		s8, u8, u16
+	};
+
+	static enum class Mode
+	{
+		Immediate,	// Operand data is immediate register or const
+		Address,	// Operand is a pointer
+		Offset,		// Operand is an offset to an address
+		IndexInc,	// Operand is a pointer which gets incremented after
+		IndexDec,	// Operand is a pointer which gets decremented after
+		IndexOffset	// Operand is an offset to an address stored in a register
+	};
+
+	static std::string typeToString(Type t)
+	{
+		switch (t)
+		{
+		case Type::A:	return "a";
+		case Type::B:	return "b";
+		case Type::C:	return "c";
+		case Type::D:	return "d";
+		case Type::E:	return "e";
+		case Type::H:	return "h";
+		case Type::L:	return "l";
+		case Type::AF:	return "af";
+		case Type::BC:	return "bc";
+		case Type::DE:	return "de";
+		case Type::HL:	return "hl";
+		case Type::SP:	return "sp";
+		case Type::s8:	return "s8";
+		case Type::u8:	return "u8";
+		case Type::u16:	return "u16";
+		default:		return "n/a";
+		}
+	}
+
+public:
+	Operand(Type t = Type::NONE, Mode m = Mode::Immediate)
+		: type(t), mode(m) { }
+
+	bool isTypeRegister()
+	{
+		switch (type) {
+		case Type::NONE:
+		case Type::s8:
+		case Type::u8:
+		case Type::u16:
+			return false;
+		default:
+			return true;
+		}
+	}
+
+public:
+	Type type;
+	Mode mode;
+};
+
+struct Instruction {
+public:
+	Instruction()
+	{
+		this->mnemonic = "N/A; this instruction obj was created using default cstor";
+	}
+
+	Instruction(std::string mnemonic, Operand o1 = Operand(), Operand o2 = Operand())
+	{
+		this->mnemonic = mnemonic;
+
+		if (o1.type != Operand::Type::NONE)
+		{
+			operands.push_back(o1);
+		}
+		
+		if (o2.type != Operand::Type::NONE)
+		{
+			operands.push_back(o2);
+		}
+	}
+
+	// For CB instructions
+	Instruction(std::string mnemonic, bool is_prefix)
+	{
+		this->mnemonic = mnemonic;
+		this->is_prefix = is_prefix;
+	}
+
+	Instruction(std::string mnemonic, Operand o1, Operand o2, uint16_t offset)
+	{
+		this->mnemonic = mnemonic;
+		operands.push_back(o1);
+		operands.push_back(o2);
+		this->offset = offset;
+	}
+
+	Instruction(std::string mnemonic, Operand o1, Operand o2, Operand::Type offset_reg)
+	{
+		this->mnemonic = mnemonic;
+		operands.push_back(o1);
+		operands.push_back(o2);
+		this->offset_reg = offset_reg;
+	}
+
+public:
+	std::string getMnemonic()
+	{
+		return mnemonic;
+	}
+
+	uint8_t getNumOfOperands()
+	{
+		return operands.size();
+	}
+
+	uint16_t getOffset()
+	{
+		return offset;
+	}
+
+	Operand::Type getOffsetRegister()
+	{
+		return offset_reg;
+	}
+
+public:
 	std::string mnemonic;
-	uint8_t operand_bytes;
+	std::vector<Operand> operands;
+	uint16_t offset = 0x000;
+	// There is only 1 instructions which uses IndexOffset
+	Operand::Type offset_reg = Operand::Type::NONE;
+	// Is this an instruction or a prefix
+	bool is_prefix = false;
+	// Is instruction prefixed
+	bool prefixed = false;
 };
 
-struct CB_Opcode : public Opcode {
-	CB_Opcode(std::string mnemonic) : Opcode{ mnemonic, 0 } {};
-	std::string mnemonic;
+struct CB_Instruction : public Instruction {
+	CB_Instruction(std::string mnemonic, Operand operand) : Instruction{ mnemonic, operand } {};
+	bool prefixed = true;
 };
 
-static Opcode opcodeTable[256] = {
-	{"nop", 0},					//00
-	{"ld BC, nn", 2},			//01
-	{"ld (BC), A", 0},			//02
-	{"inc BC", 0},				//03
-	{"inc B", 0},				//04
-	{"dec B", 0},				//05
-	{"ld B, n", 1},			//06
-	{"rlca", 0},				//07
-	{"ld (nn), SP", 2},	//08
-	{"add HL, BC", 0},			//09
-	{"ld A, (BC)", 0},			//0A
-	{"dec BC", 0},				//0B
-	{"inc C", 0},				//0C
-	{"dec C", 0},				//0D
-	{"ld C, n", 1},			//0E
-	{"rrca", 0},				//0F
-	{"stop", 0},				//10
-	{"ld DE, nn", 2},		//11
-	{"ld (DE), A", 0},			//12
-	{"inc DE", 0},				//13
-	{"inc D", 0},				//14
-	{"dec D", 0},				//15
-	{"ld D, n", 1},			//16
-	{"rla", 0},				//17
-	{"jr n", 1},			//18
-	{"add HL, DE", 0},			//19
-	{"ld A, (DE)", 0},			//1A
-	{"dec DE", 0},				//1B
-	{"inc E", 0},				//1C
-	{"dec E", 0},				//1D
-	{"ld E, n", 1},			//1E
-	{"rra", 0},				//1F
-	{"jr nz, n", 1},		//20
-	{"ld HL, nn", 2},		//21
-	{"ld (HL+), A", 0},		//22
-	{"inc HL", 0},				//23
-	{"inc H", 0},				//24
-	{"dec H", 0},				//25
-	{"ld H, n", 1},			//26
-	{"daa", 0},				//27
-	{"jr Z, n", 1},			//28
-	{"add HL, HL", 0},			//29
-	{"ld A, (HL+)", 0},		//2A
-	{"dec HL", 0},				//2B
-	{"inc L", 0},				//2C
-	{"dec L", 0},				//2D
-	{"ld L, n", 1},			//2E
-	{"cpl", 0},				//2F
-	{"jr NC, n", 1},		//30
-	{"ld SP, nn", 2},		//31
-	{"ld (HL-), A", 0},		//32
-	{"inc SP", 0},				//33
-	{"inc (HL)", 0},			//34
-	{"dec (HL)", 0},			//35
-	{"ld (HL), n", 1},		//36
-	{"SCF", 0},				//37
-	{"jr C, n", 1},			//38
-	{"add HL, SP", 0},			//39
-	{"ld A, (HL-)", 0},		//3A
-	{"dec SP", 0},				//3B
-	{"inc A", 0},				//3C
-	{"dec A", 0},				//3D
-	{"ld A, n", 1},			//3E
-	{"ccf", 0},				//3F
-	{"ld B, B", 0},			//40
-	{"ld B, C", 0},			//41
-	{"ld B, D", 0},			//42
-	{"ld B, E", 0},			//43
-	{"ld B, H", 0},			//44
-	{"ld B, L", 0},			//45
-	{"ld B, (HL)", 0},			//46
-	{"ld B, A", 0},			//47
-	{"ld C, B", 0},			//48
-	{"ld C, C", 0},			//49
-	{"ld C, D", 0},			//4A
-	{"ld C, E", 0},			//4B
-	{"ld C, H", 0},			//4C
-	{"ld C, L", 0},			//4D
-	{"ld C, (HL)", 0},			//4E
-	{"ld C, A", 0},			//4F
-	{"ld D, B", 0},			//50
-	{"ld D, C", 0},			//51
-	{"ld D, D", 0},			//52
-	{"ld D, E", 0},			//53
-	{"ld D, H", 0},			//54
-	{"ld D, L", 0},			//55
-	{"ld D, (HL)", 0},			//56
-	{"ld D, A", 0},			//57
-	{"ld E, B", 0},			//58
-	{"ld E, C", 0},			//59
-	{"ld E, D", 0},			//5A
-	{"ld E, E", 0},			//5B
-	{"ld E, H", 0},			//5C
-	{"ld E, L", 0},			//5D
-	{"ld E, (HL)", 0},			//5E
-	{"ld E, A", 0},			//5F
-	{"ld H, B", 0},			//60
-	{"ld H, C", 0},			//61
-	{"ld H, D", 0},			//62
-	{"ld H, E", 0},			//63
-	{"ld H, H", 0},			//64
-	{"ld H, L", 0},			//65
-	{"ld H, (HL)", 0},			//66
-	{"ld H, A", 0},			//67
-	{"ld L, B", 0},			//68
-	{"ld L, C", 0},			//69
-	{"ld L, D", 0},			//6A
-	{"ld L, E", 0},			//6B
-	{"ld L, H", 0},			//6C
-	{"ld L, L", 0},			//6D
-	{"ld L, (HL)", 0},			//6E
-	{"ld L, A", 0},			//6F
-	{"ld (HL), B", 0},			//70
-	{"ld (HL), C", 0},			//71
-	{"ld (HL), D", 0},			//72
-	{"ld (HL), E", 0},			//73
-	{"ld (HL), H", 0},			//74
-	{"ld (HL), L", 0},			//75
-	{"halt", 0},				//76
-	{"ld (HL), A", 0},			//77
-	{"ld A, B", 0},			//78
-	{"ld A, C", 0},			//79
-	{"ld A, D", 0},			//7A
-	{"ld A, E", 0},			//7B
-	{"ld A, H", 0},			//7C
-	{"ld A, L", 0},			//7D
-	{"ld A, (HL)", 0},			//7E
-	{"ld A, A", 0},			//7F
-	{"add B", 0},				//80
-	{"add C", 0},				//81
-	{"add D", 0},				//82
-	{"add E", 0},				//83
-	{"add H", 0},				//84
-	{"add L", 0},				//85
-	{"add (HL)", 0},			//86
-	{"add A", 0},				//87
-	{"adc B", 0},				//88
-	{"adc C", 0},				//89
-	{"adc D", 0},				//8A
-	{"adc E", 0},				//8B
-	{"adc H", 0},				//8C
-	{"adc L", 0},				//8D
-	{"adc (HL)", 0},			//8E
-	{"adc A", 0},				//8F
-	{"sub B", 0},				//90
-	{"sub C", 0},				//91
-	{"sub D", 0},				//92
-	{"sub E", 0},				//93
-	{"sub H", 0},				//94
-	{"sub L", 0},				//95
-	{"sub (HL)", 0},			//96
-	{"sub A", 0},				//97
-	{"sbc B", 0},				//98
-	{"sbc C", 0},				//99
-	{"sbc D", 0},				//9A
-	{"sbc E", 0},				//9B
-	{"sbc H", 0},				//9C
-	{"sbc L", 0},				//9D
-	{"sbc (HL)", 0},			//9E
-	{"sbc A", 0},				//9F
-	{"and B", 0},				//A0
-	{"and C", 0},				//A1
-	{"and D", 0},				//A2
-	{"and E", 0,},				//A3
-	{"and H", 0,},				//A4
-	{"and L", 0,},				//A5
-	{"and (HL)", 0L},			//A6
-	{"and A", 0},				//A7
-	{"xor B", 0},				//A8
-	{"xor C", 0},				//A9
-	{"xor D", 0},				//AA
-	{"xor E", 0},				//AB
-	{"xor H", 0},				//AC
-	{"xor L", 0},				//AD
-	{"xor (HL)", 0},			//AE
-	{"xor A", 0},				//AF
-	{"or B", 0},				//B0
-	{"or C", 0},				//B1
-	{"or D", 0},				//B2
-	{"or E", 0},				//B3
-	{"or H", 0},				//B4
-	{"or L", 0},				//B5
-	{"or (HL)", 0},			//B6
-	{"or A", 0},				//B7
-	{"cp B", 0},				//B8
-	{"cp C", 0},				//B9
-	{"cp D", 0},				//BA
-	{"cp E", 0},				//BB
-	{"cp H", 0},				//BC
-	{"cp L", 0},				//BD
-	{"cp (HL)", 0},			//BE
-	{"cp A", 0},				//BF
-	{"ret nz", 0},				//C0
-	{"pop BC", 0},				//C1
-	{"jp nz, nn", 2},		//C2
-	{"jp nn", 2},			//C3
-	{"call nz, nn", 2},	//C4
-	{"push BC", 0},			//C5
-	{"add n", 1},			//C6
-	{"rst 0x00", 0},			//C7
-	{"ret Z", 0},				//C8
-	{"ret", 0},				//C9
-	{"jp Z, nn", 2},		//CA
-	{"CB n", 1},			//CB
-	{"call Z, nn", 2},		//CC
-	{"call nn", 2},		//CD
-	{"adc n", 1},			//CE
-	{"rst 0x08", 0},			//CF
-	{"ret NC", 0},				//D0
-	{"pop DE", 0},				//D1
-	{"jp NC, nn", 2},		//D2
-	{"Undefined OP", 0},		//D3
-	{"call NC, nn", 2},	//D4
-	{"push DE", 0},			//D5
-	{"sub n", 1},			//D6
-	{"rst 0x00", 0},			//D7
-	{"ret C", 0},				//D8
-	{"reti", 0},				//D9
-	{"jp C, nn", 2},		//DA
-	{"Undefined OP", 0},		//DB
-	{"call C, nn", 2},		//DC
-	{"Undefined OP", 0},		//DD
-	{"sbc n", 1},			//DE
-	{"rst 0x08", 0},			//DF
-	{"ld (FF00+n), A", 1},	//E0
-	{"pop HL", 0},				//E1
-	{"ld (FF00+C), A", 0},		//E2
-	{"Undefined OP", 0},		//E3
-	{"Undefined OP", 0},		//E4
-	{"push HL", 0},			//E5
-	{"and n", 1},			//E6
-	{"rst 0x10", 0},			//E7
-	{"add SP, n", 1},		//E8
-	{"jp HL", 0},				//E9
-	{"ld (nn), A", 2},		//EA
-	{"Undefined OP", 0},		//EB
-	{"Undefined OP", 0},		//EC
-	{"Undefined OP", 0},		//ED
-	{"xor n", 1},			//EE
-	{"rst 0x18", 0},			//EF
-	{"ld A, (FF00+n)", 1},	//F0
-	{"pop AF", 0},				//F1
-	{"ld A, (FF00+C)", 0},		//F2
-	{"di", 0},					//F3
-	{"Undefined OP", 0},		//F4
-	{"push AF", 0},			//F5
-	{"or n", 1},			//F6
-	{"rst 0x20", 0},			//F7
-	{"ld HL, SP+n", 1},		//F8
-	{"ld SP, HL", 0},			//F9
-	{"ld A, (nn)", 2},		//FA
-	{"ei", 0},					//FB
-	{"Undefined OP", 0},		//FC
-	{"Undefined OP", 0},		//FD
-	{"cp n", 1},			//FE
-	{"rst 0x28", 0},			//FF
+static Instruction insTable[256] = {
+	{"nop"},									//00
+	{"ld", _o(BC), _o(u16)},					//01
+	{"ld", _oa(BC), _o(A)},						//02
+	{"inc", _o(BC)},							//03
+	{"inc", _o(B)},								//04
+	{"dec", _o(B)},								//05
+	{"ld", _o(B), _o(u8)},						//06
+	{"rlca"},									//07		
+	{"ld (nn), SP", _oa(u16), _o(SP)},			//08
+	{"add", _o(HL), _o(BC)},					//09
+	{"ld", _o(A), _oa(BC)},						//0A
+	{"dec", _o(BC)},							//0B
+	{"inc", _o(C)},								//0C
+	{"dec", _o(C)},								//0D
+	{"ld", _o(C), _o(u8)},						//0E
+	{"rrca"},									//0F
+	{"stop"},									//10
+	{"ld", _o(DE), _o(u16)},					//11
+	{"ld", _oa(DE), _o(A)},						//12
+	{"inc", _o(DE)},							//13
+	{"inc", _o(D)},								//14
+	{"dec", _o(D)},								//15
+	{"ld", _o(D), _o(u8)},						//16
+	{"rla"},									//17
+	{"jr", _o(u8)},								//18
+	{"add", _o(HL), _o(DE)},					//19
+	{"ld", _o(A), _oa(DE)},						//1A
+	{"dec", _o(DE)},							//1B
+	{"inc", _o(E)},								//1C
+	{"dec", _o(E)},								//1D
+	{"ld E,", _o(u8)},							//1E
+	{"rra"},									//1F
+	{"jr nz", _o(u8)},							//20
+	{"ld", _o(HL), _o(u16)},					//21
+	{"ldi", _oii(HL), _o(A)},					//22
+	{"inc", _o(HL)},							//23
+	{"inc", _o(H)},								//24
+	{"dec", _o(H)},								//25
+	{"ld", _o(H), _o(u8)},						//26
+	{"daa"},									//27
+	{"jr z", _o(u8)},							//28
+	{"add", _o(HL), _o(HL)},					//29
+	{"ldi", _o(A), _oii(HL)},					//2A
+	{"dec", _o(HL)},							//2B
+	{"inc", _o(L)},								//2C
+	{"dec", _o(L)},								//2D
+	{"ld", _o(L), _o(u8)},						//2E
+	{"cpl"},									//2F
+	{"jrnc", _o(u8)},							//30
+	{"ld", _o(SP), _o(u16)},					//31
+	{"ldd", _oid(HL), _o(A)},					//32
+	{"inc", _o(SP)},							//33
+	{"inc", _oa(HL)},							//34
+	{"dec", _oa(HL)},							//35
+	{"ld", _oa(HL), _o(u8)},					//36
+	{"SCF"},									//37
+	{"jr", _o(C), _o(u8)},						//38
+	{"add", _o(HL), _o(SP)},					//39
+	{"ldd", _o(A), _oid(HL)},					//3A
+	{"dec", _o(SP)},							//3B
+	{"inc", _o(A)},								//3C
+	{"dec", _o(A)},								//3D
+	{"ld", _o(A), _o(u8)},						//3E
+	{"ccf"},									//3F
+	{"ld", _o(B), _o(B)},						//40
+	{"ld", _o(B), _o(C)},						//41
+	{"ld", _o(B), _o(D)},						//42
+	{"ld", _o(B), _o(E)},						//43
+	{"ld", _o(B), _o(H)},						//44
+	{"ld", _o(B), _o(L)},						//45
+	{"ld", _o(B), _oa(HL)},						//46
+	{"ld", _o(B), _o(A)},						//47
+	{"ld", _o(C), _o(B)},						//48
+	{"ld", _o(C), _o(C)},						//49
+	{"ld", _o(C), _o(D)},						//4A
+	{"ld", _o(C), _o(E)},						//4B
+	{"ld", _o(C), _o(H)},						//4C
+	{"ld", _o(C), _o(L)},						//4D
+	{"ld", _o(C), _oa(HL)},						//4E
+	{"ld", _o(C), _o(A)},						//4F
+	{"ld", _o(D), _o(B)},						//50
+	{"ld", _o(D), _o(C)},						//51
+	{"ld", _o(D), _o(D)},						//52
+	{"ld", _o(D), _o(E)},						//53
+	{"ld", _o(D), _o(H)},						//54
+	{"ld", _o(D), _o(L)},						//55
+	{"ld", _o(D), _oa(HL)},						//56
+	{"ld", _o(D), _o(A)},						//57
+	{"ld", _o(E), _o(B)},						//58
+	{"ld", _o(E), _o(C)},						//59
+	{"ld", _o(E), _o(D)},						//5A
+	{"ld", _o(E), _o(E)},						//5B
+	{"ld", _o(E), _o(H)},						//5C
+	{"ld", _o(E), _o(L)},						//5D
+	{"ld", _o(E), _oa(HL)},						//5E
+	{"ld", _o(E), _o(A)},						//5F
+	{"ld", _o(H), _o(B)},						//60
+	{"ld", _o(H), _o(C)},						//61
+	{"ld", _o(H), _o(D)},						//62
+	{"ld", _o(H), _o(E)},						//63
+	{"ld", _o(H), _o(H)},						//64
+	{"ld", _o(H), _o(L)},						//65
+	{"ld", _o(H), _oa(HL)},						//66
+	{"ld", _o(H), _o(A)},						//67
+	{"ld", _o(L), _o(B)},						//68
+	{"ld", _o(L), _o(C)},						//69
+	{"ld", _o(L), _o(D)},						//6A
+	{"ld", _o(L), _o(E)},						//6B
+	{"ld", _o(L), _o(H)},						//6C
+	{"ld", _o(L), _o(L)},						//6D
+	{"ld", _o(L), _oa(HL)},						//6E
+	{"ld", _o(L), _o(A)},						//6F
+	{"ld", _oa(HL), _o(B)},						//70
+	{"ld", _oa(HL), _o(C)},						//71
+	{"ld", _oa(HL), _o(D)},						//72
+	{"ld", _oa(HL), _o(E)},						//73
+	{"ld", _oa(HL), _o(H)},						//74
+	{"ld", _oa(HL), _o(L)},						//75
+	{"halt"},									//76
+	{"ld", _oa(HL), _o(A)},						//77
+	{"ld", _o(A), _o(B)},						//78
+	{"ld", _o(A), _o(C)},						//79
+	{"ld", _o(A), _o(D)},						//7A
+	{"ld", _o(A), _o(E)},						//7B
+	{"ld", _o(A), _o(H)},						//7C
+	{"ld", _o(A), _o(L)},						//7D
+	{"ld", _o(A), _oa(HL)},						//7E
+	{"ld", _o(A), _o(A)},						//7F
+	{"add", _o(B)},								//80
+	{"add", _o(C)},								//81
+	{"add", _o(D)},								//82
+	{"add", _o(E)},								//83
+	{"add", _o(H)},								//84
+	{"add", _o(L)},								//85
+	{"add", _oa(HL)},							//86
+	{"add", _o(A)},								//87
+	{"adc", _o(B)},								//88
+	{"adc", _o(C)},								//89
+	{"adc", _o(D)},								//8A
+	{"adc", _o(E)},								//8B
+	{"adc", _o(H)},								//8C
+	{"adc", _o(L)},								//8D
+	{"adc", _oa(HL)},							//8E
+	{"adc", _o(A)},								//8F
+	{"sub", _o(B)},								//90
+	{"sub", _o(C)},								//91
+	{"sub", _o(D)},								//92
+	{"sub", _o(E)},								//93
+	{"sub", _o(H)},								//94
+	{"sub", _o(L)},								//95
+	{"sub", _oa(HL)},							//96
+	{"sub", _o(A)},								//97
+	{"sbc", _o(B)},								//98
+	{"sbc", _o(C)},								//99
+	{"sbc", _o(D)},								//9A
+	{"sbc", _o(E)},								//9B
+	{"sbc", _o(H)},								//9C
+	{"sbc", _o(L)},								//9D
+	{"sbc", _oa(HL)},							//9E
+	{"sbc", _o(A)},								//9F
+	{"and", _o(B)},								//A0
+	{"and", _o(C)},								//A1
+	{"and", _o(D)},								//A2
+	{"and", _o(E)},								//A3
+	{"and", _o(H)},								//A4
+	{"and", _o(L)},								//A5
+	{"and", _oa(HL)},							//A6
+	{"and", _o(A)},								//A7
+	{"xor", _o(B)},								//A8
+	{"xor", _o(C)},								//A9
+	{"xor", _o(D)},								//AA
+	{"xor", _o(E)},								//AB
+	{"xor", _o(H)},								//AC
+	{"xor", _o(L)},								//AD
+	{"xor", _oa(HL)},							//AE
+	{"xor", _o(A)},								//AF
+	{"or", _o(B)},								//B0
+	{"or", _o(C)},								//B1
+	{"or", _o(D)},								//B2
+	{"or", _o(E)},								//B3
+	{"or", _o(H)},								//B4
+	{"or", _o(L)},								//B5
+	{"or", _oa(HL)},							//B6
+	{"or", _o(A)},								//B7
+	{"cp", _o(B)},								//B8
+	{"cp", _o(C)},								//B9
+	{"cp", _o(D)},								//BA
+	{"cp", _o(E)},								//BB
+	{"cp", _o(H)},								//BC
+	{"cp", _o(L)},								//BD
+	{"cp", _oa(HL)},							//BE
+	{"cp", _o(A)},								//BF
+	{"ret nz"},									//C0
+	{"pop", _o(BC)},							//C1
+	{"jp nz", _o(u16)},							//C2
+	{"jp", _o(u16)},							//C3
+	{"call nz", _o(u16)},						//C4
+	{"push", _o(BC)},							//C5
+	{"add", _o(u8)},							//C6
+	{"rst 0x00"},								//C7
+	{"ret z"},									//C8
+	{"ret"},									//C9
+	{"jp z", _o(u16)},							//CA
+	{"CB", true},								//CB
+	{"call z", _o(u16)},						//CC
+	{"call", _o(u16)},							//CD
+	{"adc", _o(u8)},							//CE
+	{"rst 0x08"},								//CF
+	{"ret nc"},									//D0
+	{"pop", _o(DE)},							//D1
+	{"jp nc", _o(u16)},							//D2
+	{"Undefined OP"},							//D3
+	{"call nc", _o(u16)},						//D4
+	{"push", _o(DE)},							//D5
+	{"sub", _o(u8)},							//D6
+	{"rst 0x00"},								//D7
+	{"ret", _o(C)},								//D8
+	{"reti"},									//D9
+	{"jp c", _o(u16)},							//DA
+	{"Undefined OP"},							//DB
+	{"call c", _o(u16)},						//DC
+	{"Undefined OP"},							//DD
+	{"sbc", _o(u8)},							//DE
+	{"rst 0x08"},								//DF
+	{"ldh", _oo(u8), _o(A), 0xFF00},			//E0
+	{"pop", _o(HL)},							//E1
+	{"ldh", _oo(C), _o(A), 0xFF00},				//E2
+	{"Undefined OP"},							//E3
+	{"Undefined OP"},							//E4
+	{"push", _o(HL)},							//E5
+	{"and", _o(u8)},							//E6
+	{"rst 0x10"},								//E7
+	{"add SP, n", _o(SP), _o(u8)},				//E8
+	{"jp", _o(HL)},								//E9
+	{"ld", _oa(u16), _o(A)},					//EA
+	{"Undefined OP"},							//EB
+	{"Undefined OP"},							//EC
+	{"Undefined OP"},							//ED
+	{"xor", _o(u8)},							//EE
+	{"rst 0x18"},								//EF
+	{"ldh", _o(A), _oo(u8), 0xFF00},			//F0
+	{"pop", _o(AF)},							//F1
+	{"ldh", _o(A), _oo(C), 0xFF00},				//F2
+	{"di"},										//F3
+	{"Undefined OP"},							//F4
+	{"push", _o(AF)},							//F5
+	{"or", _o(u8)},								//F6
+	{"rst 0x20"},								//F7
+	{"ldhl", _o(HL), _oio(u8)},					//F8
+	{"ld", _o(SP), _o(HL)},						//F9
+	{"ld", _o(A), _oa(u16)},					//FA
+	{"ei"},										//FB
+	{"Undefined OP"},							//FC
+	{"Undefined OP"},							//FD
+	{"cp", _o(u8)},								//FE
+	{"rst 0x28"},								//FF
 };
 
-static CB_Opcode cb_opcodeTable[256] = {
-	{"rlc B"},			//00
-	{"rlc C"},			//01
-	{"rlc D"},			//02
-	{"rlc E"},			//03
-	{"rlc H"},			//04
-	{"rlc L"},			//05
-	{"rlc (HL)"},		//06
-	{"rlc A"},			//07
-	{"rrc B"},			//08
-	{"rrc C"},			//09
-	{"rrc D"},			//0A
-	{"rrc E"},			//0B
-	{"rrc H"},			//0C
-	{"rrc L"},			//0D
-	{"rrc (HL)"},		//0E
-	{"rrc A"},			//0F
-	{"rl B"},			//10
-	{"rl C"},			//11
-	{"rl D"},			//12
-	{"rl E"},			//13
-	{"rl H"},			//14
-	{"rl L"},			//15
-	{"rl (HL)"},		//16
-	{"rl A"},			//17
-	{"rr B"},			//18
-	{"rr C"},			//19
-	{"rr D"},			//1A
-	{"rr E"},			//1B
-	{"rr H"},			//1C
-	{"rr L"},			//1D
-	{"rr (HL)"},		//1E
-	{"rr A"},			//1F
-	{"sla B"},			//20
-	{"sla C"},			//21
-	{"sla D"},			//22
-	{"sla E"},			//23
-	{"sla H"},			//24
-	{"sla L"},			//25
-	{"sla (HL)"},		//26
-	{"sla A"},			//27
-	{"sra B"},			//28
-	{"sra C"},			//29
-	{"sra D"},			//2A
-	{"sra E"},			//2B
-	{"sra H"},			//2C
-	{"sra L"},			//2D
-	{"sra (HL)"},		//2E
-	{"sra A"},			//2F
-	{"swap B"},		//30
-	{"swap C"},		//31
-	{"swap D"},		//32
-	{"swap E"},		//33
-	{"swap H"},		//34
-	{"swap L"},		//35
-	{"swap (HL)"},		//36
-	{"swap A"},		//37
-	{"srl B"},			//38
-	{"srl C"},			//39
-	{"srl D"},			//3A
-	{"srl E"},			//3B
-	{"srl H"},			//3C
-	{"srl L"},			//3D
-	{"srl (HL)"},		//3E
-	{"srl A"},			//3F
-	{"bit 0, B"},		//40
-	{"bit 0, C"},		//41
-	{"bit 0, D"},		//42
-	{"bit 0, E"},		//43
-	{"bit 0, H"},		//44
-	{"bit 0, L"},		//45
-	{"bit 0, (HL)"},	//46
-	{"bit 0, A"},		//47
-	{"bit 1, B"},		//48
-	{"bit 1, C"},		//49
-	{"bit 1, D"},		//4A
-	{"bit 1, E"},		//4B
-	{"bit 1, H"},		//4C
-	{"bit 1, L"},		//4D
-	{"bit 1, (HL)"},	//4E
-	{"bit 1, A"},		//4F
-	{"bit 2, B"},		//50
-	{"bit 2, C"},		//51
-	{"bit 2, D"},		//52
-	{"bit 2, E"},		//53
-	{"bit 2, H"},		//54
-	{"bit 2, L"},		//55
-	{"bit 2, (HL)"},	//56
-	{"bit 2, A"},		//57
-	{"bit 3, B"},		//58
-	{"bit 3, C"},		//59
-	{"bit 3, D"},		//5A
-	{"bit 3, E"},		//5B
-	{"bit 3, H"},		//5C
-	{"bit 3, L"},		//5D
-	{"bit 3, (HL)"},	//5E
-	{"bit 3, A"},		//5F
-	{"bit 4, B"},		//60
-	{"bit 4, C"},		//61
-	{"bit 4, D"},		//62
-	{"bit 4, E"},		//63
-	{"bit 4, H"},		//64
-	{"bit 4, L"},		//65
-	{"bit 4, (HL)"},	//66
-	{"bit 4, A"},		//67
-	{"bit 5, B"},		//68
-	{"bit 5, C"},		//69
-	{"bit 5, D"},		//6A
-	{"bit 5, E"},		//6B
-	{"bit 5, H"},		//6C
-	{"bit 5, L"},		//6D
-	{"bit 5, (HL)"},	//6E
-	{"bit 5, A"},		//6F
-	{"bit 6, B"},		//70
-	{"bit 6, C"},		//71
-	{"bit 6, D"},		//72
-	{"bit 6, E"},		//73
-	{"bit 6, H"},		//74
-	{"bit 6, L"},		//75
-	{"bit 6, (HL)"},	//76
-	{"bit 6, A"},		//77
-	{"bit 7, B"},		//78
-	{"bit 7, C"},		//79
-	{"bit 7, D"},		//7A
-	{"bit 7, E"},		//7B
-	{"bit 7, H"},		//7C
-	{"bit 7, L"},		//7D
-	{"bit 7, (HL)"},	//7E
-	{"bit 7, A"},		//7F
-	{"res 0, B"},		//80
-	{"res 0, C"},		//81
-	{"res 0, D"},		//82
-	{"res 0, E"},		//83
-	{"res 0, H"},		//84
-	{"res 0, L"},		//85
-	{"res 0, (HL)"},	//86
-	{"res 0, A"},		//87
-	{"res 1, B"},		//88
-	{"res 1, C"},		//89
-	{"res 1, D"},		//8A
-	{"res 1, E"},		//8B
-	{"res 1, H"},		//8C
-	{"res 1, L"},		//8D
-	{"res 1, (HL)"},	//8E
-	{"res 1, A"},		//8F
-	{"res 2, B"},		//90
-	{"res 2, C"},		//91
-	{"res 2, D"},		//92
-	{"res 2, E"},		//93
-	{"res 2, H"},		//94
-	{"res 2, L"},		//95
-	{"res 2, (HL)"},	//96
-	{"res 2, A"},		//97
-	{"res 3, B"},		//98
-	{"res 3, C"},		//99
-	{"res 3, D"},		//9A
-	{"res 3, E"},		//9B
-	{"res 3, H"},		//9C
-	{"res 3, L"},		//9D
-	{"res 3, (HL)"},	//9E
-	{"res 3, A"},		//9F
-	{"res 4, B"},		//A0
-	{"res 4, C"},		//A1
-	{"res 4, D"},		//A2
-	{"res 4, E"},		//A3
-	{"res 4, H"},		//A4
-	{"res 4, L"},		//A5
-	{"res 4, (HL)"},	//A6
-	{"res 4, A"},		//A7
-	{"res 5, B"},		//A8
-	{"res 5, C"},		//A9
-	{"res 5, D"},		//AA
-	{"res 5, E"},		//AB
-	{"res 5, H"},		//AC
-	{"res 5, L"},		//AD
-	{"res 5, (HL)"},	//AE
-	{"res 5, A"},		//AF
-	{"res 6, B"},		//B0
-	{"res 6, C"},		//B1
-	{"res 6, D"},		//B2
-	{"res 6, E"},		//B3
-	{"res 6, H"},		//B4
-	{"res 6, L"},		//B5
-	{"res 6, (HL)"},	//B6
-	{"res 6, A"},		//B7
-	{"res 7, B"},		//B8
-	{"res 7, C"},		//B9
-	{"res 7, D"},		//BA
-	{"res 7, E"},		//BB
-	{"res 7, H"},		//BC
-	{"res 7, L"},		//BD
-	{"res 7, (HL)"},	//BE
-	{"res 7, A"},		//BF
-	{"set 0, B"},		//C0
-	{"set 0, C"},		//C1
-	{"set 0, D"},		//C2
-	{"set 0, E"},		//C3
-	{"set 0, H"},		//C4
-	{"set 0, L"},		//C5
-	{"set 0, (HL)"},	//C6
-	{"set 0, A"},		//C7
-	{"set 1, B"},		//C8
-	{"set 1, C"},		//C9
-	{"set 1, D"},		//CA
-	{"set 1, E"},		//CB
-	{"set 1, H"},		//CC
-	{"set 1, L"},		//CD
-	{"set 1, (HL)"},	//CE
-	{"set 1, A"},		//CF
-	{"set 2, B"},		//D0
-	{"set 2, C"},		//D1
-	{"set 2, D"},		//D2
-	{"set 2, E"},		//D3
-	{"set 2, H"},		//D4
-	{"set 2, L"},		//D5
-	{"set 2, (HL)"},	//D6
-	{"set 2, A"},		//D7
-	{"set 3, B"},		//D8
-	{"set 3, C"},		//D9
-	{"set 3, D"},		//DA
-	{"set 3, E"},		//DB
-	{"set 3, H"},		//DC
-	{"set 3, L"},		//DD
-	{"set 3, (HL)"},	//DE
-	{"set 3, A"},		//DF
-	{"set 4, B"},		//E0
-	{"set 4, C"},		//E1
-	{"set 4, D"},		//E2
-	{"set 4, E"},		//E3
-	{"set 4, H"},		//E4
-	{"set 4, L"},		//E5
-	{"set 4, (HL)"},	//E6
-	{"set 4, A"},		//E7
-	{"set 5, B"},		//E8
-	{"set 5, C"},		//E9
-	{"set 5, D"},		//EA
-	{"set 5, E"},		//EB
-	{"set 5, H"},		//EC
-	{"set 5, L"},		//ED
-	{"set 5, (HL)"},	//EE
-	{"set 5, A"},		//EF
-	{"set 6, B"},		//F0
-	{"set 6, C"},		//F1
-	{"set 6, D"},		//F2
-	{"set 6, E"},		//F3
-	{"set 6, H"},		//F4
-	{"set 6, L"},		//F5
-	{"set 6, (HL)"},	//F6
-	{"set 6, A"},		//F7
-	{"set 7, B"},		//F8
-	{"set 7, C"},		//F9
-	{"set 7, D"},		//FA
-	{"set 7, E"},		//FB
-	{"set 7, H"},		//FC
-	{"set 7, L"},		//FD
-	{"set 7, (HL)"},	//FE
-	{"set 7, A"},		//FF
+static CB_Instruction cb_insTable[256] = {
+	{"rlc", _o(B)},			//00
+	{"rlc", _o(C)},			//01
+	{"rlc", _o(D)},			//02
+	{"rlc", _o(E)},			//03
+	{"rlc", _o(H)},			//04
+	{"rlc", _o(L)},			//05
+	{"rlc", _oa(HL)},		//06
+	{"rlc ", _o(A)},		//07
+	{"rrc", _o(B)},			//08
+	{"rrc", _o(C)},			//09
+	{"rrc", _o(D)},			//0A
+	{"rrc", _o(E)},			//0B
+	{"rrc", _o(H)},			//0C
+	{"rrc", _o(L)},			//0D
+	{"rrc", _oa(HL)},		//0E
+	{"rrc ", _o(A)},		//0F
+	{"rl", _o(B)},			//10
+	{"rl", _o(C)},			//11
+	{"rl", _o(D)},			//12
+	{"rl", _o(E)},			//13
+	{"rl", _o(H)},			//14
+	{"rl", _o(L)},			//15
+	{"rl", _oa(HL)},		//16
+	{"rl ", _o(A)},			//17
+	{"rr", _o(B)},			//18
+	{"rr", _o(C)},			//19
+	{"rr", _o(D)},			//1A
+	{"rr", _o(E)},			//1B
+	{"rr", _o(H)},			//1C
+	{"rr", _o(L)},			//1D
+	{"rr", _oa(HL)},		//1E
+	{"rr ", _o(A)},			//1F
+	{"sla", _o(B)},			//20
+	{"sla", _o(C)},			//21
+	{"sla", _o(D)},			//22
+	{"sla", _o(E)},			//23
+	{"sla", _o(H)},			//24
+	{"sla", _o(L)},			//25
+	{"sla", _oa(HL)},		//26
+	{"sla ", _o(A)},		//27
+	{"sra", _o(B)},			//28
+	{"sra", _o(C)},			//29
+	{"sra", _o(D)},			//2A
+	{"sra", _o(E)},			//2B
+	{"sra", _o(H)},			//2C
+	{"sra", _o(L)},			//2D
+	{"sra", _oa(HL)},		//2E
+	{"sra ", _o(A)},		//2F
+	{"swap", _o(B)},		//30
+	{"swap", _o(C)},		//31
+	{"swap", _o(D)},		//32
+	{"swap", _o(E)},		//33
+	{"swap", _o(H)},		//34
+	{"swap", _o(L)},		//35
+	{"swap", _oa(HL)},		//36
+	{"swap ", _o(A)},		//37
+	{"srl", _o(B)},			//38
+	{"srl", _o(C)},			//39
+	{"srl", _o(D)},			//3A
+	{"srl", _o(E)},			//3B
+	{"srl", _o(H)},			//3C
+	{"srl", _o(L)},			//3D
+	{"srl", _oa(HL)},		//3E
+	{"srl ", _o(A)},		//3F
+	{"bit 0,", _o(B)},		//40
+	{"bit 0,", _o(C)},		//41
+	{"bit 0,", _o(D)},		//42
+	{"bit 0,", _o(E)},		//43
+	{"bit 0,", _o(H)},		//44
+	{"bit 0,", _o(L)},		//45
+	{"bit 0,", _oa(HL)},	//46
+	{"bit 0, ", _o(A)},		//47
+	{"bit 1,", _o(B)},		//48
+	{"bit 1,", _o(C)},		//49
+	{"bit 1,", _o(D)},		//4A
+	{"bit 1,", _o(E)},		//4B
+	{"bit 1,", _o(H)},		//4C
+	{"bit 1,", _o(L)},		//4D
+	{"bit 1,", _oa(HL)},	//4E
+	{"bit 1, ", _o(A)},		//4F
+	{"bit 2,", _o(B)},		//50
+	{"bit 2,", _o(C)},		//51
+	{"bit 2,", _o(D)},		//52
+	{"bit 2,", _o(E)},		//53
+	{"bit 2,", _o(H)},		//54
+	{"bit 2,", _o(L)},		//55
+	{"bit 2,", _oa(HL)},	//56
+	{"bit 2, ", _o(A)},		//57
+	{"bit 3,", _o(B)},		//58
+	{"bit 3,", _o(C)},		//59
+	{"bit 3,", _o(D)},		//5A
+	{"bit 3,", _o(E)},		//5B
+	{"bit 3,", _o(H)},		//5C
+	{"bit 3,", _o(L)},		//5D
+	{"bit 3,", _oa(HL)},	//5E
+	{"bit 3, ", _o(A)},		//5F
+	{"bit 4,", _o(B)},		//60
+	{"bit 4,", _o(C)},		//61
+	{"bit 4,", _o(D)},		//62
+	{"bit 4,", _o(E)},		//63
+	{"bit 4,", _o(H)},		//64
+	{"bit 4,", _o(L)},		//65
+	{"bit 4,", _oa(HL)},	//66
+	{"bit 4, ", _o(A)},		//67
+	{"bit 5,", _o(B)},		//68
+	{"bit 5,", _o(C)},		//69
+	{"bit 5,", _o(D)},		//6A
+	{"bit 5,", _o(E)},		//6B
+	{"bit 5,", _o(H)},		//6C
+	{"bit 5,", _o(L)},		//6D
+	{"bit 5,", _oa(HL)},	//6E
+	{"bit 5, ", _o(A)},		//6F
+	{"bit 6,", _o(B)},		//70
+	{"bit 6,", _o(C)},		//71
+	{"bit 6,", _o(D)},		//72
+	{"bit 6,", _o(E)},		//73
+	{"bit 6,", _o(H)},		//74
+	{"bit 6,", _o(L)},		//75
+	{"bit 6,", _oa(HL)},	//76
+	{"bit 6, ", _o(A)},		//77
+	{"bit 7,", _o(B)},		//78
+	{"bit 7,", _o(C)},		//79
+	{"bit 7,", _o(D)},		//7A
+	{"bit 7,", _o(E)},		//7B
+	{"bit 7,", _o(H)},		//7C
+	{"bit 7,", _o(L)},		//7D
+	{"bit 7,", _oa(HL)},	//7E
+	{"bit 7, ", _o(A)},		//7F
+	{"res 0,", _o(B)},		//80
+	{"res 0,", _o(C)},		//81
+	{"res 0,", _o(D)},		//82
+	{"res 0,", _o(E)},		//83
+	{"res 0,", _o(H)},		//84
+	{"res 0,", _o(L)},		//85
+	{"res 0,", _oa(HL)},	//86
+	{"res 0, ", _o(A)},		//87
+	{"res 1,", _o(B)},		//88
+	{"res 1,", _o(C)},		//89
+	{"res 1,", _o(D)},		//8A
+	{"res 1,", _o(E)},		//8B
+	{"res 1,", _o(H)},		//8C
+	{"res 1,", _o(L)},		//8D
+	{"res 1,", _oa(HL)},	//8E
+	{"res 1, ", _o(A)},		//8F
+	{"res 2,", _o(B)},		//90
+	{"res 2,", _o(C)},		//91
+	{"res 2,", _o(D)},		//92
+	{"res 2,", _o(E)},		//93
+	{"res 2,", _o(H)},		//94
+	{"res 2,", _o(L)},		//95
+	{"res 2,", _oa(HL)},	//96
+	{"res 2, ", _o(A)},		//97
+	{"res 3,", _o(B)},		//98
+	{"res 3,", _o(C)},		//99
+	{"res 3,", _o(D)},		//9A
+	{"res 3,", _o(E)},		//9B
+	{"res 3,", _o(H)},		//9C
+	{"res 3,", _o(L)},		//9D
+	{"res 3,", _oa(HL)},	//9E
+	{"res 3, ", _o(A)},		//9F
+	{"res 4,", _o(B)},		//A0
+	{"res 4,", _o(C)},		//A1
+	{"res 4,", _o(D)},		//A2
+	{"res 4,", _o(E)},		//A3
+	{"res 4,", _o(H)},		//A4
+	{"res 4,", _o(L)},		//A5
+	{"res 4,", _oa(HL)},	//A6
+	{"res 4, ", _o(A)},		//A7
+	{"res 5,", _o(B)},		//A8
+	{"res 5,", _o(C)},		//A9
+	{"res 5,", _o(D)},		//AA
+	{"res 5,", _o(E)},		//AB
+	{"res 5,", _o(H)},		//AC
+	{"res 5,", _o(L)},		//AD
+	{"res 5,", _oa(HL)},	//AE
+	{"res 5, ", _o(A)},		//AF
+	{"res 6,", _o(B)},		//B0
+	{"res 6,", _o(C)},		//B1
+	{"res 6,", _o(D)},		//B2
+	{"res 6,", _o(E)},		//B3
+	{"res 6,", _o(H)},		//B4
+	{"res 6,", _o(L)},		//B5
+	{"res 6,", _oa(HL)},	//B6
+	{"res 6, ", _o(A)},		//B7
+	{"res 7,", _o(B)},		//B8
+	{"res 7,", _o(C)},		//B9
+	{"res 7,", _o(D)},		//BA
+	{"res 7,", _o(E)},		//BB
+	{"res 7,", _o(H)},		//BC
+	{"res 7,", _o(L)},		//BD
+	{"res 7,", _oa(HL)},	//BE
+	{"res 7, ", _o(A)},		//BF
+	{"set 0,", _o(B)},		//C0
+	{"set 0,", _o(C)},		//C1
+	{"set 0,", _o(D)},		//C2
+	{"set 0,", _o(E)},		//C3
+	{"set 0,", _o(H)},		//C4
+	{"set 0,", _o(L)},		//C5
+	{"set 0,", _oa(HL)},	//C6
+	{"set 0, ", _o(A)},		//C7
+	{"set 1,", _o(B)},		//C8
+	{"set 1,", _o(C)},		//C9
+	{"set 1,", _o(D)},		//CA
+	{"set 1,", _o(E)},		//CB
+	{"set 1,", _o(H)},		//CC
+	{"set 1,", _o(L)},		//CD
+	{"set 1,", _oa(HL)},	//CE
+	{"set 1, ", _o(A)},		//CF
+	{"set 2,", _o(B)},		//D0
+	{"set 2,", _o(C)},		//D1
+	{"set 2,", _o(D)},		//D2
+	{"set 2,", _o(E)},		//D3
+	{"set 2,", _o(H)},		//D4
+	{"set 2,", _o(L)},		//D5
+	{"set 2,", _oa(HL)},	//D6
+	{"set 2, ", _o(A)},		//D7
+	{"set 3,", _o(B)},		//D8
+	{"set 3,", _o(C)},		//D9
+	{"set 3,", _o(D)},		//DA
+	{"set 3,", _o(E)},		//DB
+	{"set 3,", _o(H)},		//DC
+	{"set 3,", _o(L)},		//DD
+	{"set 3,", _oa(HL)},	//DE
+	{"set 3, ", _o(A)},		//DF
+	{"set 4,", _o(B)},		//E0
+	{"set 4,", _o(C)},		//E1
+	{"set 4,", _o(D)},		//E2
+	{"set 4,", _o(E)},		//E3
+	{"set 4,", _o(H)},		//E4
+	{"set 4,", _o(L)},		//E5
+	{"set 4,", _oa(HL)},	//E6
+	{"set 4, ", _o(A)},		//E7
+	{"set 5,", _o(B)},		//E8
+	{"set 5,", _o(C)},		//E9
+	{"set 5,", _o(D)},		//EA
+	{"set 5,", _o(E)},		//EB
+	{"set 5,", _o(H)},		//EC
+	{"set 5,", _o(L)},		//ED
+	{"set 5,", _oa(HL)},	//EE
+	{"set 5, ", _o(A)},		//EF
+	{"set 6,", _o(B)},		//F0
+	{"set 6,", _o(C)},		//F1
+	{"set 6,", _o(D)},		//F2
+	{"set 6,", _o(E)},		//F3
+	{"set 6,", _o(H)},		//F4
+	{"set 6,", _o(L)},		//F5
+	{"set 6,", _oa(HL)},	//F6
+	{"set 6, ", _o(A)},		//F7
+	{"set 7,", _o(B)},		//F8
+	{"set 7,", _o(C)},		//F9
+	{"set 7,", _o(D)},		//FA
+	{"set 7,", _o(E)},		//FB
+	{"set 7,", _o(H)},		//FC
+	{"set 7,", _o(L)},		//FD
+	{"set 7,", _oa(HL)},	//FE
+	{"set 7, ", _o(A)},		//FF
 };
+
+
+#undef _o
+#undef _oa
+#undef _oo
+#undef _oii
+#undef _oid
+#undef _oio
