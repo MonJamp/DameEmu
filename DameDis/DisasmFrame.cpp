@@ -9,8 +9,6 @@ wxEND_EVENT_TABLE()
 DisasmFrame::DisasmFrame()
 	: wxFrame(nullptr, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400))
 {
-	disasm = new Dissassembler();
-
 	InitMenuBar();
 	InitDisassemblyList();
 }
@@ -64,6 +62,9 @@ void DisasmFrame::InitDisassemblyList()
 
 void DisasmFrame::PopulateList()
 {
+	// HACK: This whole function will probably need to be rewritten
+	listDisasm->DeleteAllItems();
+
 	size_t numOfIns = disasm->GetNumOfInstructions();
 
 	for (unsigned int i = 0; i < numOfIns; i++) {
@@ -76,6 +77,8 @@ void DisasmFrame::PopulateList()
 		listDisasm->SetItem(i, 2, mnemonic);
 		listDisasm->SetItem(i, 3, operand);
 
+		// If program closes while in loop, exceptions are thrown
+		// TODO: Safely close program even if list is still being populated
 		wxYieldIfNeeded();
 	}
 }
@@ -104,6 +107,9 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	}
 
 	wxString filename = fileDialog.GetPath();
+	if (disasm != nullptr)
+		delete disasm;
+	disasm = new Dissassembler();
 	disasm->LoadCartridge(filename);
 	// TODO: Check validity of rom
 	disasm->Disassemble();
