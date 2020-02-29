@@ -471,7 +471,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"rlc", _o(H)},			//04
 	{"rlc", _o(L)},			//05
 	{"rlc", _oa(HL)},		//06
-	{"rlc ", _o(A)},		//07
+	{"rlc", _o(A)},		//07
 	{"rrc", _o(B)},			//08
 	{"rrc", _o(C)},			//09
 	{"rrc", _o(D)},			//0A
@@ -479,7 +479,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"rrc", _o(H)},			//0C
 	{"rrc", _o(L)},			//0D
 	{"rrc", _oa(HL)},		//0E
-	{"rrc ", _o(A)},		//0F
+	{"rrc", _o(A)},		//0F
 	{"rl", _o(B)},			//10
 	{"rl", _o(C)},			//11
 	{"rl", _o(D)},			//12
@@ -487,7 +487,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"rl", _o(H)},			//14
 	{"rl", _o(L)},			//15
 	{"rl", _oa(HL)},		//16
-	{"rl ", _o(A)},			//17
+	{"rl", _o(A)},			//17
 	{"rr", _o(B)},			//18
 	{"rr", _o(C)},			//19
 	{"rr", _o(D)},			//1A
@@ -495,7 +495,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"rr", _o(H)},			//1C
 	{"rr", _o(L)},			//1D
 	{"rr", _oa(HL)},		//1E
-	{"rr ", _o(A)},			//1F
+	{"rr", _o(A)},			//1F
 	{"sla", _o(B)},			//20
 	{"sla", _o(C)},			//21
 	{"sla", _o(D)},			//22
@@ -503,7 +503,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"sla", _o(H)},			//24
 	{"sla", _o(L)},			//25
 	{"sla", _oa(HL)},		//26
-	{"sla ", _o(A)},		//27
+	{"sla", _o(A)},		//27
 	{"sra", _o(B)},			//28
 	{"sra", _o(C)},			//29
 	{"sra", _o(D)},			//2A
@@ -511,7 +511,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"sra", _o(H)},			//2C
 	{"sra", _o(L)},			//2D
 	{"sra", _oa(HL)},		//2E
-	{"sra ", _o(A)},		//2F
+	{"sra", _o(A)},		//2F
 	{"swap", _o(B)},		//30
 	{"swap", _o(C)},		//31
 	{"swap", _o(D)},		//32
@@ -519,7 +519,7 @@ static CB_Instruction cb_insTable[256] = {
 	{"swap", _o(H)},		//34
 	{"swap", _o(L)},		//35
 	{"swap", _oa(HL)},		//36
-	{"swap ", _o(A)},		//37
+	{"swap", _o(A)},		//37
 	{"srl", _o(B)},			//38
 	{"srl", _o(C)},			//39
 	{"srl", _o(D)},			//3A
@@ -527,199 +527,199 @@ static CB_Instruction cb_insTable[256] = {
 	{"srl", _o(H)},			//3C
 	{"srl", _o(L)},			//3D
 	{"srl", _oa(HL)},		//3E
-	{"srl ", _o(A)},		//3F
-	{"bit 0,", _o(B)},		//40
-	{"bit 0,", _o(C)},		//41
-	{"bit 0,", _o(D)},		//42
-	{"bit 0,", _o(E)},		//43
-	{"bit 0,", _o(H)},		//44
-	{"bit 0,", _o(L)},		//45
-	{"bit 0,", _oa(HL)},	//46
-	{"bit 0, ", _o(A)},		//47
-	{"bit 1,", _o(B)},		//48
-	{"bit 1,", _o(C)},		//49
-	{"bit 1,", _o(D)},		//4A
-	{"bit 1,", _o(E)},		//4B
-	{"bit 1,", _o(H)},		//4C
-	{"bit 1,", _o(L)},		//4D
-	{"bit 1,", _oa(HL)},	//4E
-	{"bit 1, ", _o(A)},		//4F
-	{"bit 2,", _o(B)},		//50
-	{"bit 2,", _o(C)},		//51
-	{"bit 2,", _o(D)},		//52
-	{"bit 2,", _o(E)},		//53
-	{"bit 2,", _o(H)},		//54
-	{"bit 2,", _o(L)},		//55
-	{"bit 2,", _oa(HL)},	//56
-	{"bit 2, ", _o(A)},		//57
-	{"bit 3,", _o(B)},		//58
-	{"bit 3,", _o(C)},		//59
-	{"bit 3,", _o(D)},		//5A
-	{"bit 3,", _o(E)},		//5B
-	{"bit 3,", _o(H)},		//5C
-	{"bit 3,", _o(L)},		//5D
-	{"bit 3,", _oa(HL)},	//5E
-	{"bit 3, ", _o(A)},		//5F
-	{"bit 4,", _o(B)},		//60
-	{"bit 4,", _o(C)},		//61
-	{"bit 4,", _o(D)},		//62
-	{"bit 4,", _o(E)},		//63
-	{"bit 4,", _o(H)},		//64
-	{"bit 4,", _o(L)},		//65
-	{"bit 4,", _oa(HL)},	//66
-	{"bit 4, ", _o(A)},		//67
-	{"bit 5,", _o(B)},		//68
-	{"bit 5,", _o(C)},		//69
-	{"bit 5,", _o(D)},		//6A
-	{"bit 5,", _o(E)},		//6B
-	{"bit 5,", _o(H)},		//6C
-	{"bit 5,", _o(L)},		//6D
-	{"bit 5,", _oa(HL)},	//6E
-	{"bit 5, ", _o(A)},		//6F
-	{"bit 6,", _o(B)},		//70
-	{"bit 6,", _o(C)},		//71
-	{"bit 6,", _o(D)},		//72
-	{"bit 6,", _o(E)},		//73
-	{"bit 6,", _o(H)},		//74
-	{"bit 6,", _o(L)},		//75
-	{"bit 6,", _oa(HL)},	//76
-	{"bit 6, ", _o(A)},		//77
-	{"bit 7,", _o(B)},		//78
-	{"bit 7,", _o(C)},		//79
-	{"bit 7,", _o(D)},		//7A
-	{"bit 7,", _o(E)},		//7B
-	{"bit 7,", _o(H)},		//7C
-	{"bit 7,", _o(L)},		//7D
-	{"bit 7,", _oa(HL)},	//7E
-	{"bit 7, ", _o(A)},		//7F
-	{"res 0,", _o(B)},		//80
-	{"res 0,", _o(C)},		//81
-	{"res 0,", _o(D)},		//82
-	{"res 0,", _o(E)},		//83
-	{"res 0,", _o(H)},		//84
-	{"res 0,", _o(L)},		//85
-	{"res 0,", _oa(HL)},	//86
-	{"res 0, ", _o(A)},		//87
-	{"res 1,", _o(B)},		//88
-	{"res 1,", _o(C)},		//89
-	{"res 1,", _o(D)},		//8A
-	{"res 1,", _o(E)},		//8B
-	{"res 1,", _o(H)},		//8C
-	{"res 1,", _o(L)},		//8D
-	{"res 1,", _oa(HL)},	//8E
-	{"res 1, ", _o(A)},		//8F
-	{"res 2,", _o(B)},		//90
-	{"res 2,", _o(C)},		//91
-	{"res 2,", _o(D)},		//92
-	{"res 2,", _o(E)},		//93
-	{"res 2,", _o(H)},		//94
-	{"res 2,", _o(L)},		//95
-	{"res 2,", _oa(HL)},	//96
-	{"res 2, ", _o(A)},		//97
-	{"res 3,", _o(B)},		//98
-	{"res 3,", _o(C)},		//99
-	{"res 3,", _o(D)},		//9A
-	{"res 3,", _o(E)},		//9B
-	{"res 3,", _o(H)},		//9C
-	{"res 3,", _o(L)},		//9D
-	{"res 3,", _oa(HL)},	//9E
-	{"res 3, ", _o(A)},		//9F
-	{"res 4,", _o(B)},		//A0
-	{"res 4,", _o(C)},		//A1
-	{"res 4,", _o(D)},		//A2
-	{"res 4,", _o(E)},		//A3
-	{"res 4,", _o(H)},		//A4
-	{"res 4,", _o(L)},		//A5
-	{"res 4,", _oa(HL)},	//A6
-	{"res 4, ", _o(A)},		//A7
-	{"res 5,", _o(B)},		//A8
-	{"res 5,", _o(C)},		//A9
-	{"res 5,", _o(D)},		//AA
-	{"res 5,", _o(E)},		//AB
-	{"res 5,", _o(H)},		//AC
-	{"res 5,", _o(L)},		//AD
-	{"res 5,", _oa(HL)},	//AE
-	{"res 5, ", _o(A)},		//AF
-	{"res 6,", _o(B)},		//B0
-	{"res 6,", _o(C)},		//B1
-	{"res 6,", _o(D)},		//B2
-	{"res 6,", _o(E)},		//B3
-	{"res 6,", _o(H)},		//B4
-	{"res 6,", _o(L)},		//B5
-	{"res 6,", _oa(HL)},	//B6
-	{"res 6, ", _o(A)},		//B7
-	{"res 7,", _o(B)},		//B8
-	{"res 7,", _o(C)},		//B9
-	{"res 7,", _o(D)},		//BA
-	{"res 7,", _o(E)},		//BB
-	{"res 7,", _o(H)},		//BC
-	{"res 7,", _o(L)},		//BD
-	{"res 7,", _oa(HL)},	//BE
-	{"res 7, ", _o(A)},		//BF
-	{"set 0,", _o(B)},		//C0
-	{"set 0,", _o(C)},		//C1
-	{"set 0,", _o(D)},		//C2
-	{"set 0,", _o(E)},		//C3
-	{"set 0,", _o(H)},		//C4
-	{"set 0,", _o(L)},		//C5
-	{"set 0,", _oa(HL)},	//C6
-	{"set 0, ", _o(A)},		//C7
-	{"set 1,", _o(B)},		//C8
-	{"set 1,", _o(C)},		//C9
-	{"set 1,", _o(D)},		//CA
-	{"set 1,", _o(E)},		//CB
-	{"set 1,", _o(H)},		//CC
-	{"set 1,", _o(L)},		//CD
-	{"set 1,", _oa(HL)},	//CE
-	{"set 1, ", _o(A)},		//CF
-	{"set 2,", _o(B)},		//D0
-	{"set 2,", _o(C)},		//D1
-	{"set 2,", _o(D)},		//D2
-	{"set 2,", _o(E)},		//D3
-	{"set 2,", _o(H)},		//D4
-	{"set 2,", _o(L)},		//D5
-	{"set 2,", _oa(HL)},	//D6
-	{"set 2, ", _o(A)},		//D7
-	{"set 3,", _o(B)},		//D8
-	{"set 3,", _o(C)},		//D9
-	{"set 3,", _o(D)},		//DA
-	{"set 3,", _o(E)},		//DB
-	{"set 3,", _o(H)},		//DC
-	{"set 3,", _o(L)},		//DD
-	{"set 3,", _oa(HL)},	//DE
-	{"set 3, ", _o(A)},		//DF
-	{"set 4,", _o(B)},		//E0
-	{"set 4,", _o(C)},		//E1
-	{"set 4,", _o(D)},		//E2
-	{"set 4,", _o(E)},		//E3
-	{"set 4,", _o(H)},		//E4
-	{"set 4,", _o(L)},		//E5
-	{"set 4,", _oa(HL)},	//E6
-	{"set 4, ", _o(A)},		//E7
-	{"set 5,", _o(B)},		//E8
-	{"set 5,", _o(C)},		//E9
-	{"set 5,", _o(D)},		//EA
-	{"set 5,", _o(E)},		//EB
-	{"set 5,", _o(H)},		//EC
-	{"set 5,", _o(L)},		//ED
-	{"set 5,", _oa(HL)},	//EE
-	{"set 5, ", _o(A)},		//EF
-	{"set 6,", _o(B)},		//F0
-	{"set 6,", _o(C)},		//F1
-	{"set 6,", _o(D)},		//F2
-	{"set 6,", _o(E)},		//F3
-	{"set 6,", _o(H)},		//F4
-	{"set 6,", _o(L)},		//F5
-	{"set 6,", _oa(HL)},	//F6
-	{"set 6, ", _o(A)},		//F7
-	{"set 7,", _o(B)},		//F8
-	{"set 7,", _o(C)},		//F9
-	{"set 7,", _o(D)},		//FA
-	{"set 7,", _o(E)},		//FB
-	{"set 7,", _o(H)},		//FC
-	{"set 7,", _o(L)},		//FD
-	{"set 7,", _oa(HL)},	//FE
-	{"set 7, ", _o(A)},		//FF
+	{"srl", _o(A)},		//3F
+	{"bit 0", _o(B)},		//40
+	{"bit 0", _o(C)},		//41
+	{"bit 0", _o(D)},		//42
+	{"bit 0", _o(E)},		//43
+	{"bit 0", _o(H)},		//44
+	{"bit 0", _o(L)},		//45
+	{"bit 0", _oa(HL)},		//46
+	{"bit 0", _o(A)},		//47
+	{"bit 1", _o(B)},		//48
+	{"bit 1", _o(C)},		//49
+	{"bit 1", _o(D)},		//4A
+	{"bit 1", _o(E)},		//4B
+	{"bit 1", _o(H)},		//4C
+	{"bit 1", _o(L)},		//4D
+	{"bit 1", _oa(HL)},		//4E
+	{"bit 1", _o(A)},		//4F
+	{"bit 2", _o(B)},		//50
+	{"bit 2", _o(C)},		//51
+	{"bit 2", _o(D)},		//52
+	{"bit 2", _o(E)},		//53
+	{"bit 2", _o(H)},		//54
+	{"bit 2", _o(L)},		//55
+	{"bit 2", _oa(HL)},		//56
+	{"bit 2", _o(A)},		//57
+	{"bit 3", _o(B)},		//58
+	{"bit 3", _o(C)},		//59
+	{"bit 3", _o(D)},		//5A
+	{"bit 3", _o(E)},		//5B
+	{"bit 3", _o(H)},		//5C
+	{"bit 3", _o(L)},		//5D
+	{"bit 3", _oa(HL)},		//5E
+	{"bit 3", _o(A)},		//5F
+	{"bit 4", _o(B)},		//60
+	{"bit 4", _o(C)},		//61
+	{"bit 4", _o(D)},		//62
+	{"bit 4", _o(E)},		//63
+	{"bit 4", _o(H)},		//64
+	{"bit 4", _o(L)},		//65
+	{"bit 4", _oa(HL)},		//66
+	{"bit 4", _o(A)},		//67
+	{"bit 5", _o(B)},		//68
+	{"bit 5", _o(C)},		//69
+	{"bit 5", _o(D)},		//6A
+	{"bit 5", _o(E)},		//6B
+	{"bit 5", _o(H)},		//6C
+	{"bit 5", _o(L)},		//6D
+	{"bit 5", _oa(HL)},		//6E
+	{"bit 5", _o(A)},		//6F
+	{"bit 6", _o(B)},		//70
+	{"bit 6", _o(C)},		//71
+	{"bit 6", _o(D)},		//72
+	{"bit 6", _o(E)},		//73
+	{"bit 6", _o(H)},		//74
+	{"bit 6", _o(L)},		//75
+	{"bit 6", _oa(HL)},		//76
+	{"bit 6", _o(A)},		//77
+	{"bit 7", _o(B)},		//78
+	{"bit 7", _o(C)},		//79
+	{"bit 7", _o(D)},		//7A
+	{"bit 7", _o(E)},		//7B
+	{"bit 7", _o(H)},		//7C
+	{"bit 7", _o(L)},		//7D
+	{"bit 7", _oa(HL)},		//7E
+	{"bit 7", _o(A)},		//7F
+	{"res 0", _o(B)},		//80
+	{"res 0", _o(C)},		//81
+	{"res 0", _o(D)},		//82
+	{"res 0", _o(E)},		//83
+	{"res 0", _o(H)},		//84
+	{"res 0", _o(L)},		//85
+	{"res 0", _oa(HL)},	//86
+	{"res 0", _o(A)},		//87
+	{"res 1", _o(B)},		//88
+	{"res 1", _o(C)},		//89
+	{"res 1", _o(D)},		//8A
+	{"res 1", _o(E)},		//8B
+	{"res 1", _o(H)},		//8C
+	{"res 1", _o(L)},		//8D
+	{"res 1", _oa(HL)},	//8E
+	{"res 1", _o(A)},		//8F
+	{"res 2", _o(B)},		//90
+	{"res 2", _o(C)},		//91
+	{"res 2", _o(D)},		//92
+	{"res 2", _o(E)},		//93
+	{"res 2", _o(H)},		//94
+	{"res 2", _o(L)},		//95
+	{"res 2", _oa(HL)},	//96
+	{"res 2", _o(A)},		//97
+	{"res 3", _o(B)},		//98
+	{"res 3", _o(C)},		//99
+	{"res 3", _o(D)},		//9A
+	{"res 3", _o(E)},		//9B
+	{"res 3", _o(H)},		//9C
+	{"res 3", _o(L)},		//9D
+	{"res 3", _oa(HL)},	//9E
+	{"res 3", _o(A)},		//9F
+	{"res 4", _o(B)},		//A0
+	{"res 4", _o(C)},		//A1
+	{"res 4", _o(D)},		//A2
+	{"res 4", _o(E)},		//A3
+	{"res 4", _o(H)},		//A4
+	{"res 4", _o(L)},		//A5
+	{"res 4", _oa(HL)},	//A6
+	{"res 4", _o(A)},		//A7
+	{"res 5", _o(B)},		//A8
+	{"res 5", _o(C)},		//A9
+	{"res 5", _o(D)},		//AA
+	{"res 5", _o(E)},		//AB
+	{"res 5", _o(H)},		//AC
+	{"res 5", _o(L)},		//AD
+	{"res 5", _oa(HL)},	//AE
+	{"res 5", _o(A)},		//AF
+	{"res 6", _o(B)},		//B0
+	{"res 6", _o(C)},		//B1
+	{"res 6", _o(D)},		//B2
+	{"res 6", _o(E)},		//B3
+	{"res 6", _o(H)},		//B4
+	{"res 6", _o(L)},		//B5
+	{"res 6", _oa(HL)},	//B6
+	{"res 6", _o(A)},		//B7
+	{"res 7", _o(B)},		//B8
+	{"res 7", _o(C)},		//B9
+	{"res 7", _o(D)},		//BA
+	{"res 7", _o(E)},		//BB
+	{"res 7", _o(H)},		//BC
+	{"res 7", _o(L)},		//BD
+	{"res 7", _oa(HL)},	//BE
+	{"res 7", _o(A)},		//BF
+	{"set 0", _o(B)},		//C0
+	{"set 0", _o(C)},		//C1
+	{"set 0", _o(D)},		//C2
+	{"set 0", _o(E)},		//C3
+	{"set 0", _o(H)},		//C4
+	{"set 0", _o(L)},		//C5
+	{"set 0", _oa(HL)},	//C6
+	{"set 0", _o(A)},		//C7
+	{"set 1", _o(B)},		//C8
+	{"set 1", _o(C)},		//C9
+	{"set 1", _o(D)},		//CA
+	{"set 1", _o(E)},		//CB
+	{"set 1", _o(H)},		//CC
+	{"set 1", _o(L)},		//CD
+	{"set 1", _oa(HL)},	//CE
+	{"set 1", _o(A)},		//CF
+	{"set 2", _o(B)},		//D0
+	{"set 2", _o(C)},		//D1
+	{"set 2", _o(D)},		//D2
+	{"set 2", _o(E)},		//D3
+	{"set 2", _o(H)},		//D4
+	{"set 2", _o(L)},		//D5
+	{"set 2", _oa(HL)},	//D6
+	{"set 2", _o(A)},		//D7
+	{"set 3", _o(B)},		//D8
+	{"set 3", _o(C)},		//D9
+	{"set 3", _o(D)},		//DA
+	{"set 3", _o(E)},		//DB
+	{"set 3", _o(H)},		//DC
+	{"set 3", _o(L)},		//DD
+	{"set 3", _oa(HL)},	//DE
+	{"set 3", _o(A)},		//DF
+	{"set 4", _o(B)},		//E0
+	{"set 4", _o(C)},		//E1
+	{"set 4", _o(D)},		//E2
+	{"set 4", _o(E)},		//E3
+	{"set 4", _o(H)},		//E4
+	{"set 4", _o(L)},		//E5
+	{"set 4", _oa(HL)},	//E6
+	{"set 4", _o(A)},		//E7
+	{"set 5", _o(B)},		//E8
+	{"set 5", _o(C)},		//E9
+	{"set 5", _o(D)},		//EA
+	{"set 5", _o(E)},		//EB
+	{"set 5", _o(H)},		//EC
+	{"set 5", _o(L)},		//ED
+	{"set 5", _oa(HL)},	//EE
+	{"set 5", _o(A)},		//EF
+	{"set 6", _o(B)},		//F0
+	{"set 6", _o(C)},		//F1
+	{"set 6", _o(D)},		//F2
+	{"set 6", _o(E)},		//F3
+	{"set 6", _o(H)},		//F4
+	{"set 6", _o(L)},		//F5
+	{"set 6", _oa(HL)},	//F6
+	{"set 6", _o(A)},		//F7
+	{"set 7", _o(B)},		//F8
+	{"set 7", _o(C)},		//F9
+	{"set 7", _o(D)},		//FA
+	{"set 7", _o(E)},		//FB
+	{"set 7", _o(H)},		//FC
+	{"set 7", _o(L)},		//FD
+	{"set 7", _oa(HL)},	//FE
+	{"set 7", _o(A)},		//FF
 };
 
 
