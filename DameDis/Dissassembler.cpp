@@ -274,9 +274,16 @@ void Dissassembler::StoreNextInstruction() {
 
 
 		// Find out if instruction target I/O port
-		if (ins.mnemonic == "ldh" && !i.isTypeRegister())
+		if (!i.isTypeRegister())
 		{
-			comment = GetIORegister(i.value);
+			if (ins.mnemonic == "ldh")
+			{
+				comment = GetIORegister(i.value);
+			}
+			else if (ins.mnemonic == "ld" && i.size() == 2)
+			{
+				comment = GetIORegister(i.value);
+			}
 		}
 	}
 
