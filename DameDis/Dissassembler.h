@@ -28,10 +28,12 @@ public:
 	
 
 private:
+	void Reset();
 	std::string GetOperandValues(Operand operand);
 	uint8_t fetch();
 	void StoreNextInstruction();
 
+	bool disassembled;
 	uint16_t pc;
 	uint32_t ir; // ir aka instruction registers stores full instruction
 	Cartridge* cart;

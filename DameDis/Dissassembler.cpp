@@ -7,10 +7,7 @@
 
 Dissassembler::Dissassembler()
 {
-	pc = 0x0000;
-	ir = 0x00;
-	cart = new Cartridge();
-
+	Reset();
 }
 
 Dissassembler::~Dissassembler()
@@ -18,8 +15,18 @@ Dissassembler::~Dissassembler()
 	delete cart;
 }
 
+void Dissassembler::Reset()
+{
+	delete cart;
+	disassembled = false;
+	pc = 0x0000;
+	ir = 0x00;
+	cart = new Cartridge();
+}
+
 void Dissassembler::LoadCartridge(const char* filename)
 {
+	Reset();
 	cart->open(filename);
 }
 
