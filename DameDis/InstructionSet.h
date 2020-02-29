@@ -723,9 +723,11 @@ static CB_Instruction cb_insTable[256] = {
 };
 
 
+#undef _o_t
+#undef _o_or
 #undef _o
 #undef _oa
-#undef _oo
 #undef _oii
 #undef _oid
+#undef _oo
 #undef _oio
