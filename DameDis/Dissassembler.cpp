@@ -97,7 +97,9 @@ std::string Dissassembler::GetOperands(uint16_t index)
 	return "";
 }
 
-std::string Dissassembler::GetOperandValues(Operand operand)
+
+// Store operand values and return it in a string
+std::string Dissassembler::GetOperandValues(Operand& operand)
 {
 	std::stringstream ss;
 	std::string operand_str;
@@ -111,6 +113,7 @@ std::string Dissassembler::GetOperandValues(Operand operand)
 	{
 		std::string prefix = "0x";
 		uint8_t value = fetch();
+		operand.value = value;
 		if (value > INT8_MAX)
 		{
 			prefix = "-0x";
@@ -122,12 +125,14 @@ std::string Dissassembler::GetOperandValues(Operand operand)
 	{
 		std::string prefix = "0x";
 		uint8_t value = fetch();
+		operand.value = value;
 		operand_str = intToHexString(value, 1, prefix.c_str());
 	}
 	else if (operand.type == Operand::Type::u16)
 	{
 		std::string prefix = "0x";
 		uint16_t value = fetch() | (fetch() << 8);
+		operand.value = value;
 		operand_str = intToHexString(value, 2, prefix.c_str());
 	}
 
@@ -145,6 +150,7 @@ std::string Dissassembler::GetOperandValues(Operand operand)
 	case Operand::Mode::Offset:
 	{
 		uint16_t offset = operand.offset;
+		operand.value += offset;
 		std::string offset_str = intToHexString(offset, 2, "0x");
 		ss << "(" << offset_str << " + " << operand_str << ")";
 		break;
@@ -194,7 +200,7 @@ void Dissassembler::StoreNextInstruction() {
 	}
 
 	std::vector<std::string> operand_values;
-	for (auto i : ins.operands)
+	for (auto& i : ins.operands)
 	{
 		operand_values.push_back(GetOperandValues(i));
 	}

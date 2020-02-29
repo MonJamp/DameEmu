@@ -130,6 +130,7 @@ public:
 public:
 	Type type;
 	Mode mode;
+	int32_t value = 0;
 	uint16_t offset = 0x0000;
 	OffsetReg offset_reg = OffsetReg::NONE;
 };
