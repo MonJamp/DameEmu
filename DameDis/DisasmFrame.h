@@ -14,6 +14,8 @@ private:
 	void InitDisassemblyList();
 	void PopulateList();
 
+	void OnDisassemble(wxIdleEvent& evt);
+
 	void OnOpen(wxCommandEvent& evt);
 	void OnExit(wxCommandEvent& evt);
 

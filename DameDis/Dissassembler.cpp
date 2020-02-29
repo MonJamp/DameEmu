@@ -36,9 +36,13 @@ void Dissassembler::LoadCartridge(const char* filename)
 
 void Dissassembler::Disassemble()
 {
-	while (pc < ROM_MAX_SIZE && pc < cart->size())
+	if (pc < ROM_MAX_SIZE && pc < cart->size())
 	{
 		StoreNextInstruction();
+	}
+	else
+	{
+		disassembled = true;
 	}
 }
 

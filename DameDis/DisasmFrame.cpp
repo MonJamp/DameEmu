@@ -89,6 +89,20 @@ void DisasmFrame::PopulateList()
 	}
 }
 
+void DisasmFrame::OnDisassemble(wxIdleEvent& evt)
+{
+	if (!disasm->isDisassembled())
+	{
+		disasm->Disassemble();
+		evt.RequestMore();
+	}
+	else
+	{
+		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::OnDisassemble));
+		PopulateList();
+	}
+}
+
 void DisasmFrame::OnOpen(wxCommandEvent& evt)
 {
 	wxFileDialog fileDialog(
@@ -118,8 +132,7 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	disasm = new Dissassembler();
 	disasm->LoadCartridge(filename);
 	// TODO: Check validity of rom
-	disasm->Disassemble();
-	PopulateList();
+	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::OnDisassemble));
 }
 
 void DisasmFrame::OnExit(wxCommandEvent& evt)
