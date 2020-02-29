@@ -33,7 +33,8 @@ private:
 		Address,
 		Opcode,
 		Mnemonic,
-		Operand
+		Operand,
+		Comment
 	};
 };
 

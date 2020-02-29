@@ -26,6 +26,7 @@ public:
 	std::string GetOpcode(uint16_t index);
 	std::string GetMnemonic(uint16_t index);
 	std::string GetOperands(uint16_t index);
+	std::string GetComment(uint16_t index);
 	bool isDisassembled() { return disassembled; }
 
 private:
