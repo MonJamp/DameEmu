@@ -37,7 +37,7 @@ size_t Dissassembler::GetNumOfInstructions()
 
 
 template<typename T>
-std::string intToHexString(T n, uint8_t bytes, const char* is_prefix = "")
+std::string intToHexString(T n, std::streamsize bytes, const char* is_prefix = "")
 {
 	std::stringstream ss;
 	ss	<< is_prefix

@@ -18,7 +18,7 @@ struct Operand
 {
 public:
 	// TODO: Investigate type s8
-	static enum class Type
+	enum class Type
 	{
 		NONE,
 		A, B, C, D, E, H, L,
@@ -26,13 +26,13 @@ public:
 		s8, u8, u16
 	};
 
-	static enum class OffsetReg
+	enum class OffsetReg
 	{
 		NONE,
 		SP, PC
 	};
 
-	static enum class Mode
+	enum class Mode
 	{
 		Immediate,	// Operand data is immediate register or const
 		Address,	// Operand is a pointer
@@ -141,7 +141,7 @@ public:
 
 	uint8_t getNumOfOperands()
 	{
-		return operands.size();
+		return static_cast<uint8_t>(operands.size());
 	}
 
 public:

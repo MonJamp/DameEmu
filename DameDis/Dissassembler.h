@@ -4,11 +4,10 @@
 #include <vector>
 #include <string>
 
-constexpr uint16_t NO_OPERAND = 0x10000;
 
 struct Disassembly {
-	uint16_t address;
-	uint8_t opcode;
+	uint16_t address = 0x0000;
+	uint8_t opcode = 0x0;
 	Instruction ins;
 	std::vector<std::string> operand_values;
 };

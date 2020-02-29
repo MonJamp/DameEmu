@@ -2,11 +2,9 @@
 #include <fstream>
 
 Cartridge::Cartridge()
+	: rom{0}
 {
-	for (uint32_t i = 0; i < ROM_MAX_SIZE; i++)
-	{
-		rom[i] = 0x00;
-	}
+
 }
 
 Cartridge::~Cartridge()
