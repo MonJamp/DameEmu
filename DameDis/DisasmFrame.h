@@ -11,8 +11,9 @@ public:
 
 private:
 	void InitMenuBar();
-	void InitDisassemblyList();
-	void PopulateList();
+	void ResetDisassemblyList();
+	void ReserveListItems(unsigned int size);
+	void PopulateList(wxIdleEvent& evt);
 
 	void OnDisassemble(wxIdleEvent& evt);
 
@@ -22,6 +23,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 	wxListCtrl* listDisasm;
+	unsigned int listIterator;
 
 	Dissassembler* disasm;
 

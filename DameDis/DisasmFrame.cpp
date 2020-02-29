@@ -9,8 +9,16 @@ wxEND_EVENT_TABLE()
 DisasmFrame::DisasmFrame()
 	: wxFrame(nullptr, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400))
 {
+	listDisasm = new wxListCtrl(
+		this,
+		wxID_ANY,
+		wxDefaultPosition,
+		wxDefaultSize,
+		wxLC_REPORT | wxLC_NO_HEADER
+	);
+
 	InitMenuBar();
-	InitDisassemblyList();
+	ResetDisassemblyList();
 }
 
 DisasmFrame::~DisasmFrame()
@@ -31,15 +39,10 @@ void DisasmFrame::InitMenuBar()
 	SetMenuBar(menuBar);
 }
 
-void DisasmFrame::InitDisassemblyList()
+void DisasmFrame::ResetDisassemblyList()
 {
-	listDisasm = new wxListCtrl(
-		this,
-		wxID_ANY,
-		wxDefaultPosition,
-		wxDefaultSize,
-		wxLC_REPORT | wxLC_NO_HEADER
-	);
+	listIterator = 0;
+	listDisasm->ClearAll();
 
 	wxListItem itemCol;
 	// Empty
@@ -64,28 +67,49 @@ void DisasmFrame::InitDisassemblyList()
 	listDisasm->InsertColumn(4, itemCol);
 }
 
-void DisasmFrame::PopulateList()
+// Reserves space in the list, fixes moving scroll bar
+void DisasmFrame::ReserveListItems(unsigned int size)
 {
-	// HACK: This whole function will probably need to be rewritten
-	listDisasm->DeleteAllItems();
-
-	size_t numOfIns = disasm->GetNumOfInstructions();
-
-	for (unsigned int i = 0; i < numOfIns; i++) {
-		wxString address = disasm->GetAddress(i);
-		wxString opcode = disasm->GetOpcode(i);
-		wxString mnemonic = disasm->GetMnemonic(i);
-		wxString operand = disasm->GetOperands(i);
-
+	// TODO: Make class derived from listctrl for better performance
+	// This function shows that listctrl is very slow when inserting items
+	// After reserving list items then populating list, the item are
+	// loaded much faster than before but the initial reserve stage
+	// takes a while to finish
+	for (unsigned int i = 0; i < size; i++) {
 		listDisasm->InsertItem(i, "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Address), address);
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Opcode), opcode);
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Mnemonic), mnemonic);
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), operand);
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Address), "");
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Opcode), "");
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Mnemonic), "");
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), "Loading...");
 
-		// If program closes while in loop, exceptions are thrown
-		// TODO: Safely close program even if list is still being populated
+		// HACK: Other events could result in list being corrupted
+		// wxYield should not be used while inserting to list
 		wxYieldIfNeeded();
+	}
+}
+
+void DisasmFrame::PopulateList(wxIdleEvent& evt)
+{
+	// Perhaps it would be best to stall program until insertion finishes
+	// Need to investigate performance options
+	if (listIterator < disasm->GetNumOfInstructions()) {
+		wxString address = disasm->GetAddress(listIterator);
+		wxString opcode = disasm->GetOpcode(listIterator);
+		wxString mnemonic = disasm->GetMnemonic(listIterator);
+		wxString operand = disasm->GetOperands(listIterator);
+
+		//listDisasm->InsertItem(listIterator, "");
+		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Address), address);
+		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Opcode), opcode);
+		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Mnemonic), mnemonic);
+		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Operand), operand);
+
+		listIterator++;
+		evt.RequestMore();
+	}
+	else
+	{
+		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::PopulateList));
 	}
 }
 
@@ -99,7 +123,9 @@ void DisasmFrame::OnDisassemble(wxIdleEvent& evt)
 	else
 	{
 		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::OnDisassemble));
-		PopulateList();
+		ResetDisassemblyList();
+		ReserveListItems(disasm->GetNumOfInstructions());
+		Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::PopulateList));
 	}
 }
 
