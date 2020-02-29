@@ -22,5 +22,14 @@ private:
 	wxListCtrl* listDisasm;
 
 	Dissassembler* disasm;
+
+	enum class ColumnID
+	{
+		Empty,
+		Address,
+		Opcode,
+		Mnemonic,
+		Operand
+	};
 };
 

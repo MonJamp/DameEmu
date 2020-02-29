@@ -43,23 +43,23 @@ void DisasmFrame::InitDisassemblyList()
 
 	wxListItem itemCol;
 	// Empty
-	itemCol.SetId(0);
+	itemCol.SetId(static_cast<long>(ColumnID::Empty));
 	itemCol.SetWidth(20);
 	listDisasm->InsertColumn(0, itemCol);
 	// Address
-	itemCol.SetId(1);
+	itemCol.SetId(static_cast<long>(ColumnID::Address));
 	itemCol.SetWidth(45);
 	listDisasm->InsertColumn(1, itemCol);
 	// Opcode
-	itemCol.SetId(2);
+	itemCol.SetId(static_cast<long>(ColumnID::Opcode));
 	itemCol.SetWidth(70);
 	listDisasm->InsertColumn(2, itemCol);
 	// Mnemonic
-	itemCol.SetId(3);
+	itemCol.SetId(static_cast<long>(ColumnID::Mnemonic));
 	itemCol.SetWidth(70);
 	listDisasm->InsertColumn(3, itemCol);
 	// Operand
-	itemCol.SetId(4);
+	itemCol.SetId(static_cast<long>(ColumnID::Operand));
 	itemCol.SetWidth(150);
 	listDisasm->InsertColumn(4, itemCol);
 }
@@ -78,10 +78,10 @@ void DisasmFrame::PopulateList()
 		wxString operand = disasm->GetOperands(i);
 
 		listDisasm->InsertItem(i, "");
-		listDisasm->SetItem(i, 1, address);
-		listDisasm->SetItem(i, 2, opcode);
-		listDisasm->SetItem(i, 3, mnemonic);
-		listDisasm->SetItem(i, 4, operand);
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Address), address);
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Opcode), opcode);
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Mnemonic), mnemonic);
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), operand);
 
 		// If program closes while in loop, exceptions are thrown
 		// TODO: Safely close program even if list is still being populated
