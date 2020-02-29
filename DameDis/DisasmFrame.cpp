@@ -48,29 +48,29 @@ void DisasmFrame::ResetDisassemblyList()
 
 	wxListItem itemCol;
 	// Empty
-	itemCol.SetId(static_cast<long>(ColumnID::Empty));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(20);
-	listDisasm->InsertColumn(0, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Empty), itemCol);
 	// Address
-	itemCol.SetId(static_cast<long>(ColumnID::Address));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(45);
-	listDisasm->InsertColumn(1, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Address), itemCol);
 	// Opcode
-	itemCol.SetId(static_cast<long>(ColumnID::Opcode));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(70);
-	listDisasm->InsertColumn(2, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Opcode), itemCol);
 	// Mnemonic
-	itemCol.SetId(static_cast<long>(ColumnID::Mnemonic));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(70);
-	listDisasm->InsertColumn(3, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Mnemonic), itemCol);
 	// Operand
-	itemCol.SetId(static_cast<long>(ColumnID::Operand));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(150);
-	listDisasm->InsertColumn(4, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Operand), itemCol);
 	// Operand
-	itemCol.SetId(static_cast<long>(ColumnID::Comment));
+	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(150);
-	listDisasm->InsertColumn(5, itemCol);
+	listDisasm->InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 }
 
 // Reserves space in the list, fixes moving scroll bar
