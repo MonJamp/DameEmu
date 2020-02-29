@@ -17,10 +17,14 @@ Dissassembler::~Dissassembler()
 
 void Dissassembler::Reset()
 {
-	delete cart;
 	disassembled = false;
 	pc = 0x0000;
 	ir = 0x00;
+
+	if (cart != nullptr)
+	{
+		delete cart;
+	}
 	cart = new Cartridge();
 }
 
@@ -32,7 +36,7 @@ void Dissassembler::LoadCartridge(const char* filename)
 
 void Dissassembler::Disassemble()
 {
-	while (pc < ROM_MAX_SIZE)
+	while (pc < ROM_MAX_SIZE && pc < cart->size())
 	{
 		StoreNextInstruction();
 	}

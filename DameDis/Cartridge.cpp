@@ -2,7 +2,7 @@
 #include <fstream>
 
 Cartridge::Cartridge()
-	: rom{0}
+	: rom{0}, romSize(0)
 {
 
 }
@@ -19,10 +19,10 @@ void Cartridge::open(const char* filename)
 	file.open(filename, std::ios::binary);
 
 	file.seekg(0, file.end);
-	size_t fileSize = static_cast<size_t>(file.tellg());
+	romSize = static_cast<size_t>(file.tellg());
 	file.seekg(0, file.beg);
 
-	file.read((char*)(&rom[0]), fileSize);
+	file.read((char*)(&rom[0]), romSize);
 
 	file.close();
 }
@@ -30,4 +30,9 @@ void Cartridge::open(const char* filename)
 uint8_t Cartridge::read(const uint16_t& address)
 {
 	return rom[address];
+}
+
+size_t Cartridge::size()
+{
+	return romSize;
 }

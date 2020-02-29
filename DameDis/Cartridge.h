@@ -15,8 +15,10 @@ public:
 
 	void open(const char* filename);
 	uint8_t read(const uint16_t& address);
+	size_t size();
 
 private:
+	size_t romSize;
 	std::array<uint8_t, ROM_MAX_SIZE> rom;
 
 };
