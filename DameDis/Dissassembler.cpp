@@ -114,24 +114,26 @@ std::string Dissassembler::operandValueToString(Operand operand)
 	case Operand::Mode::Address:
 		ss << "(" << operand_str << ")";
 		break;
+	case Operand::Mode::AutoInc:
+		ss << "(" << operand_str << "+)";
+		break;
+	case Operand::Mode::AutoDec:
+		ss << "(" << operand_str << "-)";
+		break;
 	case Operand::Mode::Offset:
 	{
-		// TODO: Get offset instead of hardcoding
-		uint16_t offset = 0xFF00;
+		uint16_t offset = operand.offset;
 		std::string offset_str = intToHexString(offset, 2, "0x");
 		ss << "(" << offset_str << " + " << operand_str << ")";
 		break;
 	}
-	case Operand::Mode::IndexInc:
-		ss << "(" << operand_str << "+)";
-		break;
-	case Operand::Mode::IndexDec:
-		ss << "(" << operand_str << "-)";
-		break;
 	case Operand::Mode::IndexOffset:
-		// TODO: Get index offset instead of hardcoding
-		ss << "(%sp + " << operand_str << ")";
+	{
+		std::string prefix = "%";
+		std::string offreg_str = Operand::typeToString(operand.offset_reg);
+		ss << "(" << prefix << offreg_str << " + " << operand_str << ")";
 		break;
+	}
 	default:
 		ss << operand_str;
 		break;

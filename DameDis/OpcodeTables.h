@@ -4,12 +4,14 @@
 #include <vector>
 
 
-#define _o(x)	Operand(Operand::Type::x)
-#define _oa(x)	Operand(Operand::Type::x, Operand::Mode::Address)
-#define _oo(x)	Operand(Operand::Type::x, Operand::Mode::Offset)
-#define _oii(x)	Operand(Operand::Type::x, Operand::Mode::IndexInc)
-#define _oid(x)	Operand(Operand::Type::x, Operand::Mode::IndexDec)
-#define _oio(x)	Operand(Operand::Type::x, Operand::Mode::IndexOffset)
+#define _o_t(x)		Operand::Type::x
+#define _o_or(o)	Operand::OffsetReg::o
+#define _o(x)		Operand(_o_t(x))
+#define _oa(x)		Operand(_o_t(x), Operand::Mode::Address)
+#define _oii(x)		Operand(_o_t(x), Operand::Mode::AutoInc)
+#define _oid(x)		Operand(_o_t(x), Operand::Mode::AutoDec)
+#define _oo(x, o)	Operand(_o_t(x), o, Operand::Mode::Offset)
+#define _oio(x, o)	Operand(_o_t(x), _o_or(o), Operand::Mode::IndexOffset)
 
 
 struct Operand
@@ -20,17 +22,23 @@ public:
 	{
 		NONE,
 		A, B, C, D, E, H, L,
-		AF, BC, DE, HL, SP,
+		AF, BC, DE, HL, SP, PC,
 		s8, u8, u16
+	};
+
+	static enum class OffsetReg
+	{
+		NONE,
+		SP, PC
 	};
 
 	static enum class Mode
 	{
 		Immediate,	// Operand data is immediate register or const
 		Address,	// Operand is a pointer
+		AutoInc,	// Operand is a pointer which gets incremented after
+		AutoDec,	// Operand is a pointer which gets decremented after
 		Offset,		// Operand is an offset to an address
-		IndexInc,	// Operand is a pointer which gets incremented after
-		IndexDec,	// Operand is a pointer which gets decremented after
 		IndexOffset	// Operand is an offset to an address stored in a register
 	};
 
@@ -57,9 +65,24 @@ public:
 		}
 	}
 
+	static std::string typeToString(OffsetReg o)
+	{
+		switch (o) {
+		case OffsetReg::PC: return "pc";
+		case OffsetReg::SP: return "sp";
+		default:			return "n/a";
+		}
+	}
+
 public:
 	Operand(Type t = Type::NONE, Mode m = Mode::Immediate)
 		: type(t), mode(m) { }
+
+	Operand(Type t, uint16_t off, Mode m = Mode::Offset)
+		: offset(off), type(t), mode(m) { }
+
+	Operand(Type t, OffsetReg off, Mode m = Mode::IndexOffset)
+		: offset_reg(off), type(t), mode(m) { }
 
 	bool isTypeRegister()
 	{
@@ -77,6 +100,8 @@ public:
 public:
 	Type type;
 	Mode mode;
+	uint16_t offset = 0x0000;
+	OffsetReg offset_reg = OffsetReg::NONE;
 };
 
 struct Instruction {
@@ -108,22 +133,6 @@ public:
 		this->is_prefix = is_prefix;
 	}
 
-	Instruction(std::string mnemonic, Operand o1, Operand o2, uint16_t offset)
-	{
-		this->mnemonic = mnemonic;
-		operands.push_back(o1);
-		operands.push_back(o2);
-		this->offset = offset;
-	}
-
-	Instruction(std::string mnemonic, Operand o1, Operand o2, Operand::Type offset_reg)
-	{
-		this->mnemonic = mnemonic;
-		operands.push_back(o1);
-		operands.push_back(o2);
-		this->offset_reg = offset_reg;
-	}
-
 public:
 	std::string getMnemonic()
 	{
@@ -135,22 +144,9 @@ public:
 		return operands.size();
 	}
 
-	uint16_t getOffset()
-	{
-		return offset;
-	}
-
-	Operand::Type getOffsetRegister()
-	{
-		return offset_reg;
-	}
-
 public:
 	std::string mnemonic;
 	std::vector<Operand> operands;
-	uint16_t offset = 0x000;
-	// There is only 1 instructions which uses IndexOffset
-	Operand::Type offset_reg = Operand::Type::NONE;
 	// Is this an instruction or a prefix
 	bool is_prefix = false;
 	// Is instruction prefixed
@@ -187,7 +183,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(D)},								//15
 	{"ld", _o(D), _o(u8)},						//16
 	{"rla"},									//17
-	{"jr", _o(s8)},								//18
+	{"jr", _oio(s8, PC)},						//18
 	{"add", _o(HL), _o(DE)},					//19
 	{"ld", _o(A), _oa(DE)},						//1A
 	{"dec", _o(DE)},							//1B
@@ -195,7 +191,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(E)},								//1D
 	{"ld", _o(E), _o(u8)},						//1E
 	{"rra"},									//1F
-	{"jr nz", _o(s8)},							//20
+	{"jr nz", _oio(s8, PC)},					//20
 	{"ld", _o(HL), _o(u16)},					//21
 	{"ldi", _oii(HL), _o(A)},					//22
 	{"inc", _o(HL)},							//23
@@ -203,7 +199,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(H)},								//25
 	{"ld", _o(H), _o(u8)},						//26
 	{"daa"},									//27
-	{"jr z", _o(s8)},							//28
+	{"jr z", _oio(s8, PC)},						//28
 	{"add", _o(HL), _o(HL)},					//29
 	{"ldi", _o(A), _oii(HL)},					//2A
 	{"dec", _o(HL)},							//2B
@@ -211,7 +207,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(L)},								//2D
 	{"ld", _o(L), _o(u8)},						//2E
 	{"cpl"},									//2F
-	{"jr nc", _o(s8)},							//30
+	{"jr nc", _oio(s8, PC)},					//30
 	{"ld", _o(SP), _o(u16)},					//31
 	{"ldd", _oid(HL), _o(A)},					//32
 	{"inc", _o(SP)},							//33
@@ -219,7 +215,7 @@ static Instruction insTable[256] = {
 	{"dec", _oa(HL)},							//35
 	{"ld", _oa(HL), _o(u8)},					//36
 	{"SCF"},									//37
-	{"jr c", _o(s8)},							//38
+	{"jr c", _oio(s8, PC)},						//38
 	{"add", _o(HL), _o(SP)},					//39
 	{"ldd", _o(A), _oid(HL)},					//3A
 	{"dec", _o(SP)},							//3B
@@ -387,9 +383,9 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//DD
 	{"sbc", _o(u8)},							//DE
 	{"rst 0x18"},								//DF
-	{"ldh", _oo(u8), _o(A), 0xFF00},			//E0
+	{"ldh", _oo(u8, 0xFF00), _o(A)},			//E0
 	{"pop", _o(HL)},							//E1
-	{"ldh", _oo(C), _o(A), 0xFF00},				//E2
+	{"ldh", _oo(C, 0xFF00), _o(A)},				//E2
 	{"Undefined OP"},							//E3
 	{"Undefined OP"},							//E4
 	{"push", _o(HL)},							//E5
@@ -403,15 +399,15 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//ED
 	{"xor", _o(u8)},							//EE
 	{"rst 0x28"},								//EF
-	{"ldh", _o(A), _oo(u8), 0xFF00},			//F0
+	{"ldh", _o(A), _oo(u8, 0xFF00)},			//F0
 	{"pop", _o(AF)},							//F1
-	{"ldh", _o(A), _oo(C), 0xFF00},				//F2
+	{"ldh", _o(A), _oo(C, 0xFF00)},				//F2
 	{"di"},										//F3
 	{"Undefined OP"},							//F4
 	{"push", _o(AF)},							//F5
 	{"or", _o(u8)},								//F6
 	{"rst 0x30"},								//F7
-	{"ldhl", _o(HL), _oio(s8)},					//F8
+	{"ldhl", _o(HL), _oio(s8, SP)},				//F8
 	{"ld", _o(SP), _o(HL)},						//F9
 	{"ld", _o(A), _oa(u16)},					//FA
 	{"ei"},										//FB
