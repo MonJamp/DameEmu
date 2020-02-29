@@ -144,6 +144,13 @@ public:
 		return static_cast<uint8_t>(operands.size());
 	}
 
+	uint8_t getLength()
+	{
+		uint8_t length = 1 + getNumOfOperands();
+		prefixed ? length++ : length;
+		return  length;
+	}
+
 public:
 	std::string mnemonic;
 	std::vector<Operand> operands;

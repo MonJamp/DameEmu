@@ -7,7 +7,7 @@
 
 struct Disassembly {
 	uint16_t address = 0x0000;
-	uint8_t opcode = 0x0;
+	uint32_t opcode = 0x0;
 	Instruction ins;
 	std::vector<std::string> operand_values;
 };
@@ -22,16 +22,18 @@ public:
 
 	size_t GetNumOfInstructions();
 	std::string GetAddress(uint16_t index);
+	std::string GetOpcode(uint16_t index);
 	std::string GetMnemonic(uint16_t index);
 	std::string GetOperands(uint16_t index);
 	
 
 private:
-	std::string operandValueToString(Operand operand);
+	std::string GetOperandValues(Operand operand);
 	uint8_t fetch();
 	void StoreNextInstruction();
 
-	uint16_t PC;
+	uint16_t pc;
+	uint32_t ir; // ir aka instruction registers stores full instruction
 	Cartridge* cart;
 	std::vector<Disassembly> disassembly;
 };
