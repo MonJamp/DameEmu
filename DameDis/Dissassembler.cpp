@@ -42,7 +42,7 @@ std::string intToHexString(T n, uint8_t bytes, const char* is_prefix = "")
 	std::stringstream ss;
 	ss	<< is_prefix
 		<< std::setfill('0') << std::setw(bytes * 2)
-		<< std::hex << std::uppercase << (uint16_t)n;
+		<< std::hex << std::uppercase << +n;
 	return ss.str();
 }
 
@@ -85,7 +85,17 @@ std::string Dissassembler::operandValueToString(Operand operand)
 		std::string prefix = "%";
 		operand_str = prefix + Operand::typeToString(operand.type);
 	}
-	// TODO: Handle addressing modes
+	else if (operand.type == Operand::Type::s8)
+	{
+		std::string prefix = "0x";
+		uint8_t value = fetch();
+		if (value > INT8_MAX)
+		{
+			prefix = "-0x";
+			value = UINT8_MAX - value + 1;
+		}
+		operand_str = intToHexString(value, 1, prefix.c_str());
+	}
 	else if (operand.type == Operand::Type::u8)
 	{
 		std::string prefix = "0x";

@@ -187,7 +187,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(D)},								//15
 	{"ld", _o(D), _o(u8)},						//16
 	{"rla"},									//17
-	{"jr", _o(u8)},								//18
+	{"jr", _o(s8)},								//18
 	{"add", _o(HL), _o(DE)},					//19
 	{"ld", _o(A), _oa(DE)},						//1A
 	{"dec", _o(DE)},							//1B
@@ -195,7 +195,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(E)},								//1D
 	{"ld E,", _o(u8)},							//1E
 	{"rra"},									//1F
-	{"jr nz", _o(u8)},							//20
+	{"jr nz", _o(s8)},							//20
 	{"ld", _o(HL), _o(u16)},					//21
 	{"ldi", _oii(HL), _o(A)},					//22
 	{"inc", _o(HL)},							//23
@@ -203,7 +203,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(H)},								//25
 	{"ld", _o(H), _o(u8)},						//26
 	{"daa"},									//27
-	{"jr z", _o(u8)},							//28
+	{"jr z", _o(s8)},							//28
 	{"add", _o(HL), _o(HL)},					//29
 	{"ldi", _o(A), _oii(HL)},					//2A
 	{"dec", _o(HL)},							//2B
@@ -211,7 +211,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(L)},								//2D
 	{"ld", _o(L), _o(u8)},						//2E
 	{"cpl"},									//2F
-	{"jrnc", _o(u8)},							//30
+	{"jr nc", _o(s8)},							//30
 	{"ld", _o(SP), _o(u16)},					//31
 	{"ldd", _oid(HL), _o(A)},					//32
 	{"inc", _o(SP)},							//33
@@ -395,7 +395,7 @@ static Instruction insTable[256] = {
 	{"push", _o(HL)},							//E5
 	{"and", _o(u8)},							//E6
 	{"rst 0x10"},								//E7
-	{"add SP, n", _o(SP), _o(u8)},				//E8
+	{"add SP, n", _o(SP), _o(s8)},				//E8
 	{"jp", _o(HL)},								//E9
 	{"ld", _oa(u16), _o(A)},					//EA
 	{"Undefined OP"},							//EB
@@ -411,7 +411,7 @@ static Instruction insTable[256] = {
 	{"push", _o(AF)},							//F5
 	{"or", _o(u8)},								//F6
 	{"rst 0x20"},								//F7
-	{"ldhl", _o(HL), _oio(u8)},					//F8
+	{"ldhl", _o(HL), _oio(s8)},					//F8
 	{"ld", _o(SP), _o(HL)},						//F9
 	{"ld", _o(A), _oa(u16)},					//FA
 	{"ei"},										//FB
