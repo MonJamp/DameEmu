@@ -1,4 +1,6 @@
 #include "DisasmFrame.h"
+#include <sstream>
+#include <iomanip>
 #include "wx/wfstream.h"
 
 wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
@@ -74,6 +76,7 @@ void DisasmFrame::ResetDisassemblyList()
 // Reserves space in the list, fixes moving scroll bar
 void DisasmFrame::ReserveListItems(unsigned int size)
 {
+	int x = 0;
 	// TODO: Make class derived from listctrl for better performance
 	// This function shows that listctrl is very slow when inserting items
 	// After reserving list items then populating list, the item are
@@ -81,16 +84,26 @@ void DisasmFrame::ReserveListItems(unsigned int size)
 	// takes a while to finish
 	for (unsigned int i = 0; i < size; i++) {
 		listDisasm->InsertItem(i, "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Address), "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Opcode), "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Mnemonic), "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), "");
 		listDisasm->SetItem(i, static_cast<long>(ColumnID::Comment), "Loading...");
+
+		// Show progress
+		// TODO: Placeholder for progress bar
+		std::stringstream ss;
+		char p[4] = {'\\', '|', '/', '-'};
+		(i % 1000) ? x : x++;
+		(x >= 4) ? x = 0 : x;
+		ss << "Initializing list " << p[x % 4];
+		listDisasm->SetItem(0, static_cast<long>(ColumnID::Operand), ss.str());
+		ss.str("");
+		ss << i << " of " << size;
+		listDisasm->SetItem(0, static_cast<long>(ColumnID::Comment), ss.str());
 
 		// HACK: Other events could result in list being corrupted
 		// wxYield should not be used while inserting to list
 		wxYieldIfNeeded();
 	}
+
+	listDisasm->SetItem(0, static_cast<long>(ColumnID::Operand), "Populating list...");
 }
 
 void DisasmFrame::PopulateList(wxIdleEvent& evt)
