@@ -50,14 +50,18 @@ void DisasmFrame::InitDisassemblyList()
 	itemCol.SetId(1);
 	itemCol.SetWidth(45);
 	listDisasm->InsertColumn(1, itemCol);
-	// Mnemonic
+	// Opcode
 	itemCol.SetId(2);
 	itemCol.SetWidth(70);
 	listDisasm->InsertColumn(2, itemCol);
-	// Operand
+	// Mnemonic
 	itemCol.SetId(3);
-	itemCol.SetWidth(150);
+	itemCol.SetWidth(70);
 	listDisasm->InsertColumn(3, itemCol);
+	// Operand
+	itemCol.SetId(4);
+	itemCol.SetWidth(150);
+	listDisasm->InsertColumn(4, itemCol);
 }
 
 void DisasmFrame::PopulateList()
@@ -69,13 +73,15 @@ void DisasmFrame::PopulateList()
 
 	for (unsigned int i = 0; i < numOfIns; i++) {
 		wxString address = disasm->GetAddress(i);
+		wxString opcode = disasm->GetOpcode(i);
 		wxString mnemonic = disasm->GetMnemonic(i);
 		wxString operand = disasm->GetOperands(i);
 
 		listDisasm->InsertItem(i, "");
 		listDisasm->SetItem(i, 1, address);
-		listDisasm->SetItem(i, 2, mnemonic);
-		listDisasm->SetItem(i, 3, operand);
+		listDisasm->SetItem(i, 2, opcode);
+		listDisasm->SetItem(i, 3, mnemonic);
+		listDisasm->SetItem(i, 4, operand);
 
 		// If program closes while in loop, exceptions are thrown
 		// TODO: Safely close program even if list is still being populated

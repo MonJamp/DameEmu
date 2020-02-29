@@ -56,7 +56,7 @@ std::string Dissassembler::GetAddress(uint16_t index)
 std::string Dissassembler::GetOpcode(uint16_t index)
 {
 	uint8_t ins_length = disassembly[index].ins.getLength();
-	return intToHexString(ir, ins_length);
+	return intToHexString(disassembly[index].opcode, ins_length);
 }
 
 std::string Dissassembler::GetMnemonic(uint16_t index)
