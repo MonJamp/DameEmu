@@ -1,5 +1,5 @@
 #pragma once
-#include "OpcodeTables.h"
+#include "InstructionSet.h"
 #include "Cartridge.h"
 #include <vector>
 #include <string>

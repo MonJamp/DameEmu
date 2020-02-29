@@ -27,7 +27,7 @@
     <ClCompile Include="Cartridge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OpcodeTables.h">
+    <ClCompile Include="InstructionSet.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
