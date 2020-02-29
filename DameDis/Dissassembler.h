@@ -10,6 +10,7 @@ struct Disassembly {
 	uint32_t opcode = 0x0;
 	Instruction ins;
 	std::vector<std::string> operand_values;
+	std::string comment;
 };
 
 class Dissassembler {
@@ -25,11 +26,12 @@ public:
 	std::string GetOpcode(uint16_t index);
 	std::string GetMnemonic(uint16_t index);
 	std::string GetOperands(uint16_t index);
+	std::string GetComment(uint16_t index);
 	bool isDisassembled() { return disassembled; }
 
 private:
 	void Reset();
-	std::string GetOperandValues(Operand operand);
+	std::string GetOperandValues(Operand& operand);
 	uint8_t fetch();
 	void StoreNextInstruction();
 

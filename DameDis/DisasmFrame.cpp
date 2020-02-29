@@ -65,6 +65,10 @@ void DisasmFrame::ResetDisassemblyList()
 	itemCol.SetId(static_cast<long>(ColumnID::Operand));
 	itemCol.SetWidth(150);
 	listDisasm->InsertColumn(4, itemCol);
+	// Operand
+	itemCol.SetId(static_cast<long>(ColumnID::Comment));
+	itemCol.SetWidth(150);
+	listDisasm->InsertColumn(5, itemCol);
 }
 
 // Reserves space in the list, fixes moving scroll bar
@@ -80,7 +84,8 @@ void DisasmFrame::ReserveListItems(unsigned int size)
 		listDisasm->SetItem(i, static_cast<long>(ColumnID::Address), "");
 		listDisasm->SetItem(i, static_cast<long>(ColumnID::Opcode), "");
 		listDisasm->SetItem(i, static_cast<long>(ColumnID::Mnemonic), "");
-		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), "Loading...");
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Operand), "");
+		listDisasm->SetItem(i, static_cast<long>(ColumnID::Comment), "Loading...");
 
 		// HACK: Other events could result in list being corrupted
 		// wxYield should not be used while inserting to list
@@ -97,12 +102,14 @@ void DisasmFrame::PopulateList(wxIdleEvent& evt)
 		wxString opcode = disasm->GetOpcode(listIterator);
 		wxString mnemonic = disasm->GetMnemonic(listIterator);
 		wxString operand = disasm->GetOperands(listIterator);
+		wxString comment = disasm->GetComment(listIterator);
 
 		//listDisasm->InsertItem(listIterator, "");
 		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Address), address);
 		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Opcode), opcode);
 		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Mnemonic), mnemonic);
 		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Operand), operand);
+		listDisasm->SetItem(listIterator, static_cast<long>(ColumnID::Comment), comment);
 
 		listIterator++;
 		evt.RequestMore();
