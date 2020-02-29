@@ -7,7 +7,8 @@
 
 Dissassembler::Dissassembler()
 {
-	PC = 0;
+	pc = 0x0000;
+	ir = 0x00;
 	cart = new Cartridge();
 
 }
@@ -24,7 +25,7 @@ void Dissassembler::LoadCartridge(const char* filename)
 
 void Dissassembler::Disassemble()
 {
-	while (PC < ROM_MAX_SIZE)
+	while (pc < ROM_MAX_SIZE)
 	{
 		StoreNextInstruction();
 	}
@@ -52,6 +53,12 @@ std::string Dissassembler::GetAddress(uint16_t index)
 	return intToHexString(address, 2);
 }
 
+std::string Dissassembler::GetOpcode(uint16_t index)
+{
+	uint8_t ins_length = disassembly[index].ins.getLength();
+	return intToHexString(disassembly[index].opcode, ins_length);
+}
+
 std::string Dissassembler::GetMnemonic(uint16_t index)
 {
 	return disassembly[index].ins.mnemonic;
@@ -75,7 +82,7 @@ std::string Dissassembler::GetOperands(uint16_t index)
 	return "";
 }
 
-std::string Dissassembler::operandValueToString(Operand operand)
+std::string Dissassembler::GetOperandValues(Operand operand)
 {
 	std::stringstream ss;
 	std::string operand_str;
@@ -144,13 +151,26 @@ std::string Dissassembler::operandValueToString(Operand operand)
 
 inline uint8_t Dissassembler::fetch()
 {
-	return cart->read(PC++);
+	uint8_t op = cart->read(pc++);
+
+	if (ir == 0)
+	{
+		ir = op;
+	}
+	else
+	{
+		ir = (ir << 8) | op;
+	}
+
+	return op;
 }
 
 void Dissassembler::StoreNextInstruction() {
-	uint16_t address = PC;
-	
+	ir = 0x00;
+
+	uint16_t address = pc;
 	uint8_t opcode = fetch();
+
 	Instruction ins = insTable[opcode];
 	if (ins.is_prefix)
 	{
@@ -161,12 +181,12 @@ void Dissassembler::StoreNextInstruction() {
 	std::vector<std::string> operand_values;
 	for (auto i : ins.operands)
 	{
-		operand_values.push_back(operandValueToString(i));
+		operand_values.push_back(GetOperandValues(i));
 	}
 
 	Disassembly dis;
 	dis.address = address;
-	dis.opcode = opcode;
+	dis.opcode = ir;
 	dis.ins = ins;
 	dis.operand_values = operand_values;
 

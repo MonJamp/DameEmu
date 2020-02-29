@@ -65,6 +65,30 @@ public:
 		}
 	}
 
+	// Return how many bytes the type of operand is
+	static uint8_t bytesOfType(Type t)
+	{
+		switch (t)
+		{
+		case Type::A:	return 1;
+		case Type::B:	return 1;
+		case Type::C:	return 1;
+		case Type::D:	return 1;
+		case Type::E:	return 1;
+		case Type::H:	return 1;
+		case Type::L:	return 1;
+		case Type::AF:	return 2;
+		case Type::BC:	return 2;
+		case Type::DE:	return 2;
+		case Type::HL:	return 2;
+		case Type::SP:	return 2;
+		case Type::s8:	return 1;
+		case Type::u8:	return 1;
+		case Type::u16:	return 2;
+		default:		return 0;
+		}
+	}
+
 	static std::string typeToString(OffsetReg o)
 	{
 		switch (o) {
@@ -95,6 +119,12 @@ public:
 		default:
 			return true;
 		}
+	}
+
+	// Get size of operand in bytes
+	uint8_t size()
+	{
+		return bytesOfType(type);
 	}
 
 public:
@@ -142,6 +172,22 @@ public:
 	uint8_t getNumOfOperands()
 	{
 		return static_cast<uint8_t>(operands.size());
+	}
+
+	uint8_t getLength()
+	{
+		uint8_t length = 1;
+
+		for (auto i : operands)
+		{
+			if (!i.isTypeRegister())
+			{
+				length += i.size();
+			}
+		}
+
+		prefixed ? length++ : length;
+		return  length;
 	}
 
 public:
