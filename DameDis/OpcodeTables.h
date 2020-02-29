@@ -193,7 +193,7 @@ static Instruction insTable[256] = {
 	{"dec", _o(DE)},							//1B
 	{"inc", _o(E)},								//1C
 	{"dec", _o(E)},								//1D
-	{"ld E,", _o(u8)},							//1E
+	{"ld", _o(E), _o(u8)},						//1E
 	{"rra"},									//1F
 	{"jr nz", _o(s8)},							//20
 	{"ld", _o(HL), _o(u16)},					//21
@@ -219,7 +219,7 @@ static Instruction insTable[256] = {
 	{"dec", _oa(HL)},							//35
 	{"ld", _oa(HL), _o(u8)},					//36
 	{"SCF"},									//37
-	{"jr", _o(C), _o(u8)},						//38
+	{"jr c", _o(s8)},							//38
 	{"add", _o(HL), _o(SP)},					//39
 	{"ldd", _o(A), _oid(HL)},					//3A
 	{"dec", _o(SP)},							//3B
@@ -378,15 +378,15 @@ static Instruction insTable[256] = {
 	{"call nc", _o(u16)},						//D4
 	{"push", _o(DE)},							//D5
 	{"sub", _o(u8)},							//D6
-	{"rst 0x00"},								//D7
-	{"ret", _o(C)},								//D8
+	{"rst 0x10"},								//D7
+	{"ret c"},									//D8
 	{"reti"},									//D9
 	{"jp c", _o(u16)},							//DA
 	{"Undefined OP"},							//DB
 	{"call c", _o(u16)},						//DC
 	{"Undefined OP"},							//DD
 	{"sbc", _o(u8)},							//DE
-	{"rst 0x08"},								//DF
+	{"rst 0x18"},								//DF
 	{"ldh", _oo(u8), _o(A), 0xFF00},			//E0
 	{"pop", _o(HL)},							//E1
 	{"ldh", _oo(C), _o(A), 0xFF00},				//E2
@@ -394,7 +394,7 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//E4
 	{"push", _o(HL)},							//E5
 	{"and", _o(u8)},							//E6
-	{"rst 0x10"},								//E7
+	{"rst 0x20"},								//E7
 	{"add SP, n", _o(SP), _o(s8)},				//E8
 	{"jp", _o(HL)},								//E9
 	{"ld", _oa(u16), _o(A)},					//EA
@@ -402,7 +402,7 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//EC
 	{"Undefined OP"},							//ED
 	{"xor", _o(u8)},							//EE
-	{"rst 0x18"},								//EF
+	{"rst 0x28"},								//EF
 	{"ldh", _o(A), _oo(u8), 0xFF00},			//F0
 	{"pop", _o(AF)},							//F1
 	{"ldh", _o(A), _oo(C), 0xFF00},				//F2
@@ -410,7 +410,7 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//F4
 	{"push", _o(AF)},							//F5
 	{"or", _o(u8)},								//F6
-	{"rst 0x20"},								//F7
+	{"rst 0x30"},								//F7
 	{"ldhl", _o(HL), _oio(s8)},					//F8
 	{"ld", _o(SP), _o(HL)},						//F9
 	{"ld", _o(A), _oa(u16)},					//FA
@@ -418,7 +418,7 @@ static Instruction insTable[256] = {
 	{"Undefined OP"},							//FC
 	{"Undefined OP"},							//FD
 	{"cp", _o(u8)},								//FE
-	{"rst 0x28"},								//FF
+	{"rst 0x38"},								//FF
 };
 
 static CB_Instruction cb_insTable[256] = {
