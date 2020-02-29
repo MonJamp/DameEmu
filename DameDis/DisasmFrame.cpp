@@ -9,8 +9,6 @@ wxEND_EVENT_TABLE()
 DisasmFrame::DisasmFrame()
 	: wxFrame(nullptr, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400))
 {
-	disasm = new Dissassembler();
-
 	InitMenuBar();
 	InitDisassemblyList();
 }
@@ -58,24 +56,29 @@ void DisasmFrame::InitDisassemblyList()
 	listDisasm->InsertColumn(2, itemCol);
 	// Operand
 	itemCol.SetId(3);
-	itemCol.SetWidth(60);
+	itemCol.SetWidth(150);
 	listDisasm->InsertColumn(3, itemCol);
 }
 
 void DisasmFrame::PopulateList()
 {
+	// HACK: This whole function will probably need to be rewritten
+	listDisasm->DeleteAllItems();
+
 	size_t numOfIns = disasm->GetNumOfInstructions();
 
 	for (unsigned int i = 0; i < numOfIns; i++) {
 		wxString address = disasm->GetAddress(i);
 		wxString mnemonic = disasm->GetMnemonic(i);
-		wxString operand = disasm->GetOperand(i);
+		wxString operand = disasm->GetOperands(i);
 
 		listDisasm->InsertItem(i, "");
 		listDisasm->SetItem(i, 1, address);
 		listDisasm->SetItem(i, 2, mnemonic);
 		listDisasm->SetItem(i, 3, operand);
 
+		// If program closes while in loop, exceptions are thrown
+		// TODO: Safely close program even if list is still being populated
 		wxYieldIfNeeded();
 	}
 }
@@ -104,6 +107,9 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	}
 
 	wxString filename = fileDialog.GetPath();
+	if (disasm != nullptr)
+		delete disasm;
+	disasm = new Dissassembler();
 	disasm->LoadCartridge(filename);
 	// TODO: Check validity of rom
 	disasm->Disassemble();
