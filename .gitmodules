@@ -1,0 +1,4 @@
+[submodule "DameDis"]
+	path = DameDis
+	url = https://github.com/MonJamp/DameDis
+	branch = static
