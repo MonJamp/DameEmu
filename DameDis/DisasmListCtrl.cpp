@@ -34,6 +34,8 @@ DisasmListCtrl::DisasmListCtrl(wxWindow* parent)
 
 void DisasmListCtrl::StoreDisassembly(Dissassembler* disasm)
 {
+	disasmData.clear();
+
 	for (unsigned int i = 0; i < disasm->GetNumOfInstructions(); i++)
 	{
 		InsData data;
@@ -47,6 +49,7 @@ void DisasmListCtrl::StoreDisassembly(Dissassembler* disasm)
 	}
 
 	SetItemCount(disasmData.size());
+	Refresh();
 }
 
 wxString DisasmListCtrl::OnGetItemText(long item, long column) const
