@@ -155,7 +155,7 @@
     <ClCompile Include="Cartridge.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="DisasmListCtrl.cpp" />
-    <ClCompile Include="Dissassembler.cpp" />
+    <ClCompile Include="Disassembler.cpp" />
     <ClCompile Include="MainApp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -166,7 +166,7 @@
     <ClInclude Include="Cartridge.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="DisasmListCtrl.h" />
-    <ClInclude Include="Dissassembler.h" />
+    <ClInclude Include="Disassembler.h" />
     <ClInclude Include="MainApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
