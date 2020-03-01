@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="Cartridge.cpp" />
     <ClCompile Include="DisasmFrame.cpp" />
+    <ClCompile Include="DisasmListCtrl.cpp" />
     <ClCompile Include="Dissassembler.cpp" />
     <ClCompile Include="MainApp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -164,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="Cartridge.h" />
     <ClInclude Include="DisasmFrame.h" />
+    <ClInclude Include="DisasmListCtrl.h" />
     <ClInclude Include="Dissassembler.h" />
     <ClInclude Include="MainApp.h" />
   </ItemGroup>

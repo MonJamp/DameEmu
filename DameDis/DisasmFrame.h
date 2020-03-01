@@ -1,7 +1,8 @@
 #pragma once
 #include "Dissassembler.h"
+#include "DisasmListCtrl.h"
 #include <wx/wx.h>
-#include <wx\listctrl.h>
+
 
 class DisasmFrame : public wxFrame
 {
@@ -11,9 +12,6 @@ public:
 
 private:
 	void InitMenuBar();
-	void ResetDisassemblyList();
-	void ReserveListItems(unsigned int size);
-	void PopulateList(wxIdleEvent& evt);
 
 	void OnDisassemble(wxIdleEvent& evt);
 
@@ -22,7 +20,7 @@ private:
 
 	wxDECLARE_EVENT_TABLE();
 
-	wxListCtrl* listDisasm;
+	DisasmListCtrl disasmList;
 	unsigned int listIterator;
 
 	Dissassembler* disasm;
