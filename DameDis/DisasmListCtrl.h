@@ -18,7 +18,7 @@ class DisasmListCtrl : public wxListCtrl
 public:
 	DisasmListCtrl(wxWindow* parent);
 
-	void StoreDisassembly(Dissassembler* disassembler);
+	void StoreDisassembly(std::shared_ptr<Disassembly> disasm);
 
 protected:
 	wxString OnGetItemText(long item, long column) const;

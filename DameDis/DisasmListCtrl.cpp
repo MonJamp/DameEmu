@@ -32,18 +32,18 @@ DisasmListCtrl::DisasmListCtrl(wxWindow* parent)
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 }
 
-void DisasmListCtrl::StoreDisassembly(Dissassembler* disasm)
+void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
 {
 	disasmData.clear();
 
-	for (unsigned int i = 0; i < disasm->GetNumOfInstructions(); i++)
+	for (auto i : *disasm)
 	{
 		InsData data;
-		data.address = disasm->GetAddress(i);
-		data.opcode = disasm->GetOpcode(i);
-		data.mnemonic = disasm->GetMnemonic(i);
-		data.operand = disasm->GetOperands(i);
-		data.comment = disasm->GetComment(i);
+		data.address = i.addressToStr();
+		data.opcode = i.opcodeToStr();
+		data.mnemonic = i.mnemonicToStr();
+		data.operand = i.operandsToStr();
+		data.comment = i.commentToStr();
 
 		disasmData.push_back(data);
 	}
@@ -54,7 +54,7 @@ void DisasmListCtrl::StoreDisassembly(Dissassembler* disasm)
 
 wxString DisasmListCtrl::OnGetItemText(long item, long column) const
 {
-	if (item > disasmData.size())
+	if (static_cast<size_t>(item) > disasmData.size())
 	{
 		return "";
 	}

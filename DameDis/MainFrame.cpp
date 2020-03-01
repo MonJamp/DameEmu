@@ -1,26 +1,25 @@
-#include "DisasmFrame.h"
-#include <sstream>
-#include <iomanip>
+#include "MainFrame.h"
 #include "wx/wfstream.h"
 
-wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
-	EVT_MENU(wxID_OPEN, DisasmFrame::OnOpen)
-	EVT_MENU(wxID_EXIT, DisasmFrame::OnExit)
+
+wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
+	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
+	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 wxEND_EVENT_TABLE()
 
-DisasmFrame::DisasmFrame()
+MainFrame::MainFrame()
 	: wxFrame(nullptr, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
 	  disasmList(this)
 {
 	InitMenuBar();
 }
 
-DisasmFrame::~DisasmFrame()
+MainFrame::~MainFrame()
 {
-	delete disasm;
+	
 }
 
-void DisasmFrame::InitMenuBar()
+void MainFrame::InitMenuBar()
 {
 	wxMenu* menuFile = new wxMenu();
 	menuFile->Append(wxID_OPEN, "&Open ROM File\tCtrl-O");
@@ -33,7 +32,7 @@ void DisasmFrame::InitMenuBar()
 	SetMenuBar(menuBar);
 }
 
-void DisasmFrame::OnOpen(wxCommandEvent& evt)
+void MainFrame::OnOpen(wxCommandEvent& evt)
 {
 	wxFileDialog fileDialog(
 		this,
@@ -57,17 +56,16 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	}
 
 	wxString filename = fileDialog.GetPath();
-	if (disasm != nullptr)
-		delete disasm;
-	disasm = new Dissassembler();
+
+	std::unique_ptr<Disassembler> disasm(new Disassembler);
 	// TODO: Check validity of rom
-	disasm->LoadCartridge(filename);
+	disasm->LoadCartridge(std::string(filename.mb_str()));
 	// TODO: Show progress bar
 	disasm->Disassemble();
-	disasmList.StoreDisassembly(disasm);
+	disasmList.StoreDisassembly(disasm->GetDisassembly());
 }
 
-void DisasmFrame::OnExit(wxCommandEvent& evt)
+void MainFrame::OnExit(wxCommandEvent& evt)
 {
 	Close(true);
 }

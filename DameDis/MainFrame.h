@@ -4,11 +4,11 @@
 #include <wx/wx.h>
 
 
-class DisasmFrame : public wxFrame
+class MainFrame : public wxFrame
 {
 public:
-	DisasmFrame();
-	~DisasmFrame();
+	MainFrame();
+	~MainFrame();
 
 private:
 	void InitMenuBar();
@@ -19,18 +19,5 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 	DisasmListCtrl disasmList;
-	unsigned int listIterator;
-
-	Dissassembler* disasm;
-
-	enum class ColumnID
-	{
-		Empty,
-		Address,
-		Opcode,
-		Mnemonic,
-		Operand,
-		Comment
-	};
 };
 

@@ -5,175 +5,161 @@
 #include <iostream>
 
 
-Dissassembler::Dissassembler()
-{
-	Reset();
-}
-
-Dissassembler::~Dissassembler()
-{
-	delete cart;
-}
-
-void Dissassembler::Reset()
-{
-	disassembled = false;
-	pc = 0x0000;
-	ir = 0x00;
-
-	if (cart != nullptr)
-	{
-		delete cart;
-	}
-	cart = new Cartridge();
-}
-
-void Dissassembler::LoadCartridge(const char* filename)
-{
-	Reset();
-	cart->open(filename);
-}
-
-void Dissassembler::Disassemble()
-{
-	while (pc < ROM_MAX_SIZE && pc < cart->size())
-	{
-		StoreNextInstruction();
-	}
-}
-
-size_t Dissassembler::GetNumOfInstructions()
-{
-	return disassembly.size();
-}
-
-
-template<typename T>
+template<
+	typename T,
+	typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
+>
 std::string intToHexString(T n, std::streamsize bytes, const char* is_prefix = "")
 {
 	std::stringstream ss;
-	ss	<< is_prefix
+	ss << is_prefix
 		<< std::setfill('0') << std::setw(bytes * 2)
 		<< std::hex << std::uppercase << +n;
 	return ss.str();
 }
 
-std::string Dissassembler::GetAddress(uint16_t index)
+std::string DisasmData::addressToStr()
 {
-	uint16_t address = disassembly[index].address;
 	return intToHexString(address, 2);
 }
 
-std::string Dissassembler::GetOpcode(uint16_t index)
+std::string DisasmData::opcodeToStr()
 {
-	uint8_t ins_length = disassembly[index].ins.getLength();
-	return intToHexString(disassembly[index].opcode, ins_length);
+	return intToHexString(opcode, ins.getLength());
 }
 
-std::string Dissassembler::GetMnemonic(uint16_t index)
+std::string DisasmData::mnemonicToStr()
 {
-	return disassembly[index].ins.mnemonic;
+	return ins.mnemonic;
 }
 
-std::string Dissassembler::GetOperands(uint16_t index)
-{
-	if (disassembly[index].operand_values.size() > 0)
-	{
-		std::stringstream ss;
-
-		for (auto i : disassembly[index].operand_values)
-		{
-			ss << i << ", ";
-		}
-
-		// Remove last 2 chars
-		return ss.str().substr(0, ss.str().size() - 2);
-	}
-
-	return "";
-}
-
-std::string Dissassembler::GetComment(uint16_t index)
-{
-	return disassembly[index].comment;
-}
-
-
-// Store operand values and return it in a string
-std::string Dissassembler::GetOperandValues(Operand& operand)
+std::string DisasmData::operandsToStr()
 {
 	std::stringstream ss;
-	std::string operand_str;
 
-	if (operand.isTypeRegister())
+	for (auto i : ins.operands)
 	{
-		std::string prefix = "%";
-		operand_str = prefix + Operand::typeToString(operand.type);
-	}
-	else if (operand.type == Operand::Type::s8)
-	{
-		std::string prefix = "0x";
-		uint8_t value = fetch();
-		operand.value = value;
-		if (value > INT8_MAX)
+		std::string operand_str;
+
+		if (i.isTypeRegister())
 		{
-			prefix = "-0x";
-			value = UINT8_MAX - value + 1;
+			std::string prefix = "%";
+			operand_str = prefix + Operand::typeToString(i.type);
 		}
-		operand_str = intToHexString(value, 1, prefix.c_str());
-	}
-	else if (operand.type == Operand::Type::u8)
-	{
-		std::string prefix = "0x";
-		uint8_t value = fetch();
-		operand.value = value;
-		operand_str = intToHexString(value, 1, prefix.c_str());
-	}
-	else if (operand.type == Operand::Type::u16)
-	{
-		std::string prefix = "0x";
-		uint16_t value = fetch() | (fetch() << 8);
-		operand.value = value;
-		operand_str = intToHexString(value, 2, prefix.c_str());
-	}
+		else if (i.type == Operand::Type::s8)
+		{
+			std::string prefix = "0x";
+			uint16_t value = i.value;
+			if (value > INT8_MAX)
+			{
+				prefix = "-0x";
+				value = UINT8_MAX - value + 1;
+			}
+			operand_str = intToHexString(value, 1, prefix.c_str());
+		}
+		else if (i.type == Operand::Type::u8)
+		{
+			std::string prefix = "0x";
+			operand_str = intToHexString(i.value, 1, prefix.c_str());
+		}
+		else if (i.type == Operand::Type::u16)
+		{
+			std::string prefix = "0x";
+			operand_str = intToHexString(i.value, 2, prefix.c_str());
+		}
 
-	switch (operand.mode)
-	{
-	case Operand::Mode::Address:
-		ss << "(" << operand_str << ")";
-		break;
-	case Operand::Mode::AutoInc:
-		ss << "(" << operand_str << "+)";
-		break;
-	case Operand::Mode::AutoDec:
-		ss << "(" << operand_str << "-)";
-		break;
-	case Operand::Mode::Offset:
-	{
-		uint16_t offset = operand.offset;
-		operand.value += offset;
-		std::string offset_str = intToHexString(offset, 2, "0x");
-		ss << "(" << offset_str << " + " << operand_str << ")";
-		break;
-	}
-	case Operand::Mode::IndexOffset:
-	{
-		std::string prefix = "%";
-		std::string offreg_str = Operand::typeToString(operand.offset_reg);
-		ss << "(" << prefix << offreg_str << " + " << operand_str << ")";
-		break;
-	}
-	default:
-		ss << operand_str;
-		break;
-	}
+		switch (i.mode)
+		{
+		case Operand::Mode::Address:
+			ss << "(" << operand_str << ")";
+			break;
+		case Operand::Mode::AutoInc:
+			ss << "(" << operand_str << "+)";
+			break;
+		case Operand::Mode::AutoDec:
+			ss << "(" << operand_str << "-)";
+			break;
+		case Operand::Mode::Offset:
+		{
+			uint16_t offset = i.offset;
+			std::string offset_str = intToHexString(offset, 2, "0x");
+			ss << "(" << offset_str << " + " << operand_str << ")";
+			break;
+		}
+		case Operand::Mode::IndexOffset:
+		{
+			std::string prefix = "%";
+			std::string offreg_str = Operand::typeToString(i.offset_reg);
+			ss << "(" << prefix << offreg_str << " + " << operand_str << ")";
+			break;
+		}
+		default:
+			ss << operand_str;
+			break;
+		}
 
-	return ss.str();
+		ss << ", ";
+	}
+	// Remove last 2 chars
+	return ss.str().substr(0, ss.str().size() - 2);
 }
 
-inline uint8_t Dissassembler::fetch()
+std::string DisasmData::commentToStr()
 {
-	uint8_t op = cart->read(pc++);
+	return comment;
+}
+
+Disassembler::Disassembler()
+{
+	Reset();
+}
+
+Disassembler::~Disassembler()
+{
+	
+}
+
+void Disassembler::Reset()
+{
+	pc = 0x0000;
+	ir = 0x00;
+	disassembly.reset(new std::vector<DisasmData>());
+}
+
+void Disassembler::LoadCartridge(const std::string& filename)
+{
+	Reset();
+	cart.open(filename);
+}
+
+void Disassembler::Disassemble()
+{
+	while (pc < ROM_MAX_SIZE && pc < cart.size())
+	{
+		disassembly->push_back(DisassembleInstruction());
+	}
+}
+
+
+// Store operand values
+inline void Disassembler::CacheConstOperands(Operand& operand)
+{
+	switch (operand.type)
+	{
+	case Operand::Type::s8:
+	case Operand::Type::u8:
+		operand.value = fetch();
+		return;
+	case Operand::Type::u16:
+		operand.value = fetch() | (fetch() << 8);
+		return;
+	default: return;
+	}
+}
+
+inline uint8_t Disassembler::fetch()
+{
+	uint8_t op = cart.read(pc++);
 
 	if (ir == 0)
 	{
@@ -249,7 +235,7 @@ std::string GetIORegister(uint16_t address)
 	}
 }
 
-void Dissassembler::StoreNextInstruction() {
+DisasmData Disassembler::DisassembleInstruction() {
 	ir = 0x00;
 
 	uint16_t address = pc;
@@ -263,18 +249,16 @@ void Dissassembler::StoreNextInstruction() {
 	}
 
 	std::string comment = "";
-	std::vector<std::string> operand_values;
 	for (auto& i : ins.operands)
 	{
-		operand_values.push_back(GetOperandValues(i));
-
+		CacheConstOperands(i);
 
 		// Find out if instruction target I/O port
 		if (!i.isTypeRegister())
 		{
 			if (ins.mnemonic == "ldh")
 			{
-				comment = GetIORegister(i.value);
+				comment = GetIORegister(0xFF00 + i.value);
 			}
 			else if (ins.mnemonic == "ld" && i.size() == 2)
 			{
@@ -283,12 +267,11 @@ void Dissassembler::StoreNextInstruction() {
 		}
 	}
 
-	Disassembly dis;
+	DisasmData dis;
 	dis.address = address;
 	dis.opcode = ir;
 	dis.ins = ins;
-	dis.operand_values = operand_values;
 	dis.comment = comment;
 
-	disassembly.push_back(dis);
+	return dis;
 }

@@ -153,7 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cartridge.cpp" />
-    <ClCompile Include="DisasmFrame.cpp" />
+    <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="DisasmListCtrl.cpp" />
     <ClCompile Include="Dissassembler.cpp" />
     <ClCompile Include="MainApp.cpp">
@@ -164,7 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cartridge.h" />
-    <ClInclude Include="DisasmFrame.h" />
+    <ClInclude Include="MainFrame.h" />
     <ClInclude Include="DisasmListCtrl.h" />
     <ClInclude Include="Dissassembler.h" />
     <ClInclude Include="MainApp.h" />

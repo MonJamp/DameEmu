@@ -5,39 +5,41 @@
 #include <string>
 
 
-struct Disassembly {
+struct DisasmData {
+	std::string addressToStr();
+	std::string opcodeToStr();
+	std::string mnemonicToStr();
+	std::string operandsToStr();
+	std::string commentToStr();
+
 	uint16_t address = 0x0000;
 	uint32_t opcode = 0x0;
 	Instruction ins;
-	std::vector<std::string> operand_values;
 	std::string comment;
 };
 
-class Dissassembler {
-public:
-	Dissassembler();
-	~Dissassembler();
+using Disassembly = std::vector<DisasmData>;
 
-	void LoadCartridge(const char* filename);
+
+class Disassembler {
+public:
+	Disassembler();
+	~Disassembler();
+
+	void LoadCartridge(const std::string& filename);
 	void Disassemble();
 
-	size_t GetNumOfInstructions();
-	std::string GetAddress(uint16_t index);
-	std::string GetOpcode(uint16_t index);
-	std::string GetMnemonic(uint16_t index);
-	std::string GetOperands(uint16_t index);
-	std::string GetComment(uint16_t index);
-	bool isDisassembled() { return disassembled; }
+	std::shared_ptr<std::vector<DisasmData>> GetDisassembly() { return disassembly; }
 
 private:
 	void Reset();
-	std::string GetOperandValues(Operand& operand);
+	void CacheConstOperands(Operand& operand);
 	uint8_t fetch();
-	void StoreNextInstruction();
+	DisasmData DisassembleInstruction();
 
-	bool disassembled;
+	Instruction curr_ins;
 	uint16_t pc;
 	uint32_t ir; // ir aka instruction registers stores full instruction
-	Cartridge* cart;
-	std::vector<Disassembly> disassembly;
+	Cartridge cart;
+	std::shared_ptr<Disassembly> disassembly;
 };
