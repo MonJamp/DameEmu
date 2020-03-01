@@ -13,8 +13,6 @@ public:
 private:
 	void InitMenuBar();
 
-	void OnDisassemble(wxIdleEvent& evt);
-
 	void OnOpen(wxCommandEvent& evt);
 	void OnExit(wxCommandEvent& evt);
 

@@ -33,20 +33,6 @@ void DisasmFrame::InitMenuBar()
 	SetMenuBar(menuBar);
 }
 
-void DisasmFrame::OnDisassemble(wxIdleEvent& evt)
-{
-	if (!disasm->isDisassembled())
-	{
-		disasm->Disassemble();
-		evt.RequestMore();
-	}
-	else
-	{
-		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::OnDisassemble));
-		disasmList.StoreDisassembly(disasm);
-	}
-}
-
 void DisasmFrame::OnOpen(wxCommandEvent& evt)
 {
 	wxFileDialog fileDialog(
@@ -74,9 +60,11 @@ void DisasmFrame::OnOpen(wxCommandEvent& evt)
 	if (disasm != nullptr)
 		delete disasm;
 	disasm = new Dissassembler();
-	disasm->LoadCartridge(filename);
 	// TODO: Check validity of rom
-	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::OnDisassemble));
+	disasm->LoadCartridge(filename);
+	// TODO: Show progress bar
+	disasm->Disassemble();
+	disasmList.StoreDisassembly(disasm);
 }
 
 void DisasmFrame::OnExit(wxCommandEvent& evt)
