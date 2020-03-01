@@ -1,5 +1,5 @@
 #include "MainApp.h"
-#include "DisasmFrame.h"
+#include "MainFrame.h"
 
 // Disable warning causes by wxWidget's implementation of WinMain
 #pragma warning(push)
@@ -19,7 +19,7 @@ MainApp::~MainApp()
 
 bool MainApp::OnInit()
 {
-	DisasmFrame* frame = new DisasmFrame();
+	MainFrame* frame = new MainFrame();
 	frame->Show();
 	return true;
 }
