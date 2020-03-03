@@ -96,8 +96,16 @@ void MainFrame::OnSettings(wxCommandEvent& evt)
 
 void MainFrame::OnDebugger(wxCommandEvent& evt)
 {
-	//TODO: Implement debugger
-	wxMessageBox("TODO");
+	if (wxWindow::FindWindowByName("DisasmFrame"))
+	{
+		disasmFrame->Raise();
+	}
+	else
+	{
+		disasmFrame = new DisasmFrame(this);
+		disasmFrame->SetName("DisasmFrame");
+		disasmFrame->Show();
+	}
 }
 
 void MainFrame::OnAbout(wxCommandEvent& evt)

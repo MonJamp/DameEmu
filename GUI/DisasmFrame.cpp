@@ -1,25 +1,25 @@
-#include "MainFrame.h"
+#include "DisasmFrame.h"
 #include "wx/wfstream.h"
 
 
-wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-	EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
-	EVT_MENU(wxID_EXIT, MainFrame::OnExit)
+wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
+	EVT_MENU(wxID_OPEN, DisasmFrame::OnOpen)
+	EVT_MENU(wxID_EXIT, DisasmFrame::OnExit)
 wxEND_EVENT_TABLE()
 
-MainFrame::MainFrame()
-	: wxFrame(nullptr, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
+DisasmFrame::DisasmFrame(wxWindow* parent)
+	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
 	  disasmList(this)
 {
 	InitMenuBar();
 }
 
-MainFrame::~MainFrame()
+DisasmFrame::~DisasmFrame()
 {
 	
 }
 
-void MainFrame::InitMenuBar()
+void DisasmFrame::InitMenuBar()
 {
 	wxMenu* menuFile = new wxMenu();
 	menuFile->Append(wxID_OPEN, "&Open ROM File\tCtrl-O");
@@ -32,7 +32,7 @@ void MainFrame::InitMenuBar()
 	SetMenuBar(menuBar);
 }
 
-void MainFrame::OnOpen(wxCommandEvent& evt)
+void DisasmFrame::OnOpen(wxCommandEvent& evt)
 {
 	wxFileDialog fileDialog(
 		this,
@@ -65,7 +65,7 @@ void MainFrame::OnOpen(wxCommandEvent& evt)
 	disasmList.StoreDisassembly(disasm->GetDisassembly());
 }
 
-void MainFrame::OnExit(wxCommandEvent& evt)
+void DisasmFrame::OnExit(wxCommandEvent& evt)
 {
 	Close(true);
 }

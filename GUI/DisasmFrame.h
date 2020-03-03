@@ -1,14 +1,14 @@
 #pragma once
-#include "Disassembler.h"
+#include "../Disassembler.h"
 #include "DisasmListCtrl.h"
 #include <wx/wx.h>
 
 
-class MainFrame : public wxFrame
+class DisasmFrame : public wxFrame
 {
 public:
-	MainFrame();
-	~MainFrame();
+	DisasmFrame(wxWindow* parent);
+	~DisasmFrame();
 
 private:
 	void InitMenuBar();

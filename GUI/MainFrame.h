@@ -1,5 +1,6 @@
 #pragma once
 #include "../DameEmu.h"
+#include "DisasmFrame.h"
 #include "wx_header.h"
 
 class MainFrame : public wxFrame
@@ -39,6 +40,8 @@ private:
 	wxMenuItem* settingsItem;
 	wxMenuItem* debuggerItem;
 	wxMenuItem* aboutItem;
+
+	DisasmFrame* disasmFrame = NULL;
 
 	wxString rom_dir;
 	DameEmu* dameEmu = nullptr;
