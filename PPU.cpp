@@ -1,13 +1,14 @@
 #include "PPU.h"
+#include "Bus.h"
 
-PPU::PPU(Memory::MMU& mmu) :
-	mmu(mmu)
+PPU::PPU(Bus* b)
+	: bus(b)
 {
 	scanline_counter = 456;
 }
 
 void PPU::UpdateScreen(uint8_t cycles) {
-	if (!mmu.lcd->lcdc.field->lcd_on) {
+	if (bus->regs.lcd.lcdc.lcd_on) {
 		return;
 	}
 
@@ -18,12 +19,12 @@ void PPU::UpdateScreen(uint8_t cycles) {
 
 	scanline_counter = 456;
 
-	mmu.lcd->ly++;
-	if (mmu.lcd->ly == 144) {
-		mmu.interupt_flag->field->vblank = 1;
+	bus->regs.lcd.ly++;
+	if (bus->regs.lcd.ly == 144) {
+		bus->regs.int_request.vblank = 1;
 	}
-	else if (mmu.lcd->ly > 153) {
-		mmu.lcd->ly = 0;
+	else if (bus->regs.lcd.ly > 153) {
+		bus->regs.lcd.ly = 0;
 	}
 	else {
 		//DrawLine

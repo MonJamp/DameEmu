@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "Bus.h"
 
 CPU::Instruction CPU::cb_instructions[256] = {
 	{"RLC B", 1, &CPU::RLC_B},					//00
@@ -272,9 +273,9 @@ void CPU::RLC(uint8_t& r) {
 }
 
 void CPU::RLC_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	RLC(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -298,9 +299,9 @@ void CPU::RRC(uint8_t& r) {
 }
 
 void CPU::RRC_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	RRC(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -325,9 +326,9 @@ void CPU::RL(uint8_t& r) {
 }
 
 void CPU::RL_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	RL(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -352,9 +353,9 @@ void CPU::RR(uint8_t& r) {
 }
 
 void CPU::RR_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	RR(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -377,9 +378,9 @@ void CPU::BIT(uint8_t b, uint8_t r) {
 }
 
 void CPU::BIT_HL(uint8_t b) {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	BIT(b, value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 3;
 }
@@ -456,9 +457,9 @@ void CPU::SET(uint8_t b, uint8_t& r) {
 }
 
 void CPU::SET_HL(uint8_t b) {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	SET(b, value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -535,9 +536,9 @@ void CPU::RES(uint8_t b, uint8_t& r) {
 }
 
 void CPU::RES_HL(uint8_t b) {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	RES(b, value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -625,9 +626,9 @@ void CPU::SLA_H() { SLA(H); }
 void CPU::SLA_L() { SLA(L); }
 
 void CPU::SLA_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	SLA(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -651,9 +652,9 @@ void CPU::SRA_H() { SRA(H); }
 void CPU::SRA_L() { SRA(L); }
 
 void CPU::SRA_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	SRA(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -676,9 +677,9 @@ void CPU::SRL_H() { SRL(H); }
 void CPU::SRL_L() { SRL(L); }
 
 void CPU::SRL_HL() {
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	SRL(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 2;
 }
@@ -701,9 +702,9 @@ void CPU::SWAP_H() { SWAP(H); }
 void CPU::SWAP_L() { SWAP(L); }
 
 void CPU::SWAP_HL() { 
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	SWAP(value);
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 	
 	cycles += 2;
 }

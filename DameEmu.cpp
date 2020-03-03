@@ -1,12 +1,12 @@
 #include "DameEmu.h"
+#include "Cartridge.h"
 #include <fstream>
 
-DameEmu::DameEmu(const char* rom_dir) :
-	mmu(),
-	cpu(mmu),
-	ppu(mmu)
+DameEmu::DameEmu(const char* rom_dir)
 {
-	mmu.LoadCartridge(rom_dir);
+	std::shared_ptr<Cartridge> cart;
+	cart->open(rom_dir);
+	bus.InsertCartridge(cart);
 }
 
 DameEmu::~DameEmu()
@@ -14,17 +14,6 @@ DameEmu::~DameEmu()
 
 }
 
-void DameEmu::Run() {
-	//while (true) {
-		uint8_t cycles = cpu.Step();
-		ppu.UpdateScreen(cycles);
-
-#ifdef D_SERIAL_OUT
-		// Get serial output from blargg tests
-		if (mmu.Read(REG_SC) == 0x81) {
-			printf("%c", mmu.Read(REG_SB));
-			mmu.Write(REG_SC, 0x00);
-		}
-#endif
-	//}
+void DameEmu::Step() {
+	bus.Clock();
 }
