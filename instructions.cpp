@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "Bus.h"
 
 #ifdef _DEBUG
 #include <cstdio>
@@ -324,13 +325,13 @@ void CPU::LD_r_r(uint8_t& r1, uint8_t r2) {
 }
 
 void CPU::LD_r_HL(uint8_t& r) {
-	r = mmu.Read(HL);
+	r = bus->Read(HL);
 
 	cycles += 2;
 }
 
 void CPU::LD_HL_r(uint8_t r) {
-	mmu.Write(HL, r);
+	bus->Write(HL, r);
 
 	cycles += 2;
 }
@@ -381,7 +382,7 @@ void CPU::ADD_D() { ADD(D); }
 void CPU::ADD_E() { ADD(E); }
 void CPU::ADD_H() { ADD(H); }
 void CPU::ADD_L() { ADD(L); }
-void CPU::ADD_HL() { ADD(mmu.Read(HL)); cycles += 1; }
+void CPU::ADD_HL() { ADD(bus->Read(HL)); cycles += 1; }
 void CPU::ADD_n() { ADD(n);  cycles += 1; }
 
 void CPU::ADC(uint8_t r) {
@@ -403,7 +404,7 @@ void CPU::ADC_D() { ADC(D); }
 void CPU::ADC_E() { ADC(E); }
 void CPU::ADC_H() { ADC(H); }
 void CPU::ADC_L() { ADC(L); }
-void CPU::ADC_HL() { ADC(mmu.Read(HL)); cycles += 1; }
+void CPU::ADC_HL() { ADC(bus->Read(HL)); cycles += 1; }
 void CPU::ADC_n() { ADC(n);  cycles += 1; }
 
 void CPU::SUB(uint8_t r) {
@@ -424,7 +425,7 @@ void CPU::SUB_D() { SUB(D); }
 void CPU::SUB_E() { SUB(E); }
 void CPU::SUB_H() { SUB(H); }
 void CPU::SUB_L() { SUB(L); }
-void CPU::SUB_HL() { SUB(mmu.Read(HL)); cycles += 1; }
+void CPU::SUB_HL() { SUB(bus->Read(HL)); cycles += 1; }
 void CPU::SUB_n() { SUB(n);  cycles += 1; }
 
 void CPU::SBC(uint8_t r) {
@@ -445,7 +446,7 @@ void CPU::SBC_D() { SBC(D); }
 void CPU::SBC_E() { SBC(E); }
 void CPU::SBC_H() { SBC(H); }
 void CPU::SBC_L() { SBC(L); }
-void CPU::SBC_HL() { SBC(mmu.Read(HL)); cycles += 1; }
+void CPU::SBC_HL() { SBC(bus->Read(HL)); cycles += 1; }
 void CPU::SBC_n() { SBC(n);  cycles += 1; }
 
 void CPU::CP(uint8_t r) {
@@ -466,7 +467,7 @@ void CPU::CP_H() { CP(H); }
 void CPU::CP_L() { CP(L); }
 void CPU::CP_A() { CP(A); }
 void CPU::CP_n() { CP(n);  cycles += 1; }
-void CPU::CP_HL() { CP(mmu.Read(HL)); cycles += 1; }
+void CPU::CP_HL() { CP(bus->Read(HL)); cycles += 1; }
 
 void CPU::DAA() {
 	debug_msg("\nDAA instruction not implemnted...\n");
@@ -534,23 +535,23 @@ void CPU::DEC_HL() { DEC(HL); }
 void CPU::DEC_SP() { DEC(SP); }
 
 void CPU::INC_HLP() { 
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	value++;
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 4; 
 }
 void CPU::DEC_HLP() { 
-	uint8_t value = mmu.Read(HL);
+	uint8_t value = bus->Read(HL);
 	value--;
-	mmu.Write(HL, value);
+	bus->Write(HL, value);
 
 	cycles += 4; 
 }
 
 void CPU::POP(uint16_t& rr) {
-	rr = static_cast<uint16_t>(mmu.Read(SP));
-	rr |= static_cast<uint16_t>(mmu.Read(SP + 1) << 8);
+	rr = static_cast<uint16_t>(bus->Read(SP));
+	rr |= static_cast<uint16_t>(bus->Read(SP + 1) << 8);
 	SP += 2;
 
 	cycles += 3;
@@ -559,16 +560,16 @@ void CPU::POP(uint16_t& rr) {
 void CPU::PUSH(uint16_t rr) {
 	uint8_t hi = static_cast<uint8_t>((rr & 0xFF00) >> 8);
 	uint8_t lo = static_cast<uint8_t>(rr & 0x00FF);
-	mmu.Write(SP - 1, hi);
-	mmu.Write(SP - 2, lo);
+	bus->Write(SP - 1, hi);
+	bus->Write(SP - 2, lo);
 	SP -= 2;
 
 	cycles += 4;
 }
 
 void CPU::RET() {
-	uint16_t hi = static_cast<uint16_t>(mmu.Read(SP + 1) << 8);
-	uint16_t lo = static_cast<uint16_t>(mmu.Read(SP));
+	uint16_t hi = static_cast<uint16_t>(bus->Read(SP + 1) << 8);
+	uint16_t lo = static_cast<uint16_t>(bus->Read(SP));
 	SP += 2;
 	PC = (hi | lo);
 	
@@ -620,8 +621,8 @@ void CPU::RET_C() {
 void CPU::RST(uint8_t t) {
 	uint8_t hi = static_cast<uint8_t>((PC & 0xFF00) >> 8);
 	uint8_t lo = static_cast<uint8_t>(PC & 0x00FF);
-	mmu.Write(SP - 1, hi);
-	mmu.Write(SP - 2, lo);
+	bus->Write(SP - 1, hi);
+	bus->Write(SP - 2, lo);
 	SP -= 2;
 	PC = t;
 
@@ -731,8 +732,8 @@ void CPU::JR_C() {
 void CPU::CALL() {
 	uint8_t hi = static_cast<uint8_t>((PC & 0xFF00) >> 8);
 	uint8_t lo = static_cast<uint8_t>(PC & 0x00FF);
-	mmu.Write(SP - 1, hi);
-	mmu.Write(SP - 2, lo);
+	bus->Write(SP - 1, hi);
+	bus->Write(SP - 2, lo);
 	SP = SP - 2;
 	PC = nn;
 
@@ -782,7 +783,7 @@ void CPU::LD_BC() {
 }
 
 void CPU::LD_BC_A() {
-	mmu.Write(BC, A);
+	bus->Write(BC, A);
 
 	cycles += 2;
 }
@@ -803,7 +804,7 @@ void CPU::RLCA() {
 }
 
 void CPU::LD_A_BC() {
-	A = mmu.Read(BC);
+	A = bus->Read(BC);
 
 	cycles += 2;
 }
@@ -830,7 +831,7 @@ void CPU::LD_DE() {
 }
 
 void CPU::LD_DE_A() {
-	mmu.Write(DE, A);
+	bus->Write(DE, A);
 
 	cycles += 2;
 }
@@ -852,7 +853,7 @@ void CPU::RLA() {
 }
 
 void CPU::LD_A_DE() {
-	A = mmu.Read(DE);
+	A = bus->Read(DE);
 
 	cycles += 2;
 }
@@ -878,7 +879,7 @@ void CPU::LD_HL() {
 }
 
 void CPU::LD_HLI_A() {
-	mmu.Write(HL, A);
+	bus->Write(HL, A);
 	HL++;
 
 	cycles += 2;
@@ -890,7 +891,7 @@ void CPU::DEC_H() { DEC(H); }
 void CPU::LD_H_n() { LD_r_n(H); }
 
 void CPU::LD_A_HLI() {
-	A = mmu.Read(HL);
+	A = bus->Read(HL);
 	HL++;
 
 	cycles += 2;
@@ -906,7 +907,7 @@ void CPU::LD_SP() {
 }
 
 void CPU::LD_HLD_A() {
-	mmu.Write(HL, A);
+	bus->Write(HL, A);
 	HL--;
 
 	cycles += 2;
@@ -915,7 +916,7 @@ void CPU::LD_HLD_A() {
 void CPU::INC_SP() { INC(SP); }
 
 void CPU::LD_HL_n() {
-	mmu.Write(HL, n);
+	bus->Write(HL, n);
 
 	cycles += 3;
 }
@@ -923,7 +924,7 @@ void CPU::LD_HL_n() {
 void CPU::DEC_A() { DEC(A); }
 
 void CPU::LD_A_HLD() {
-	A = mmu.Read(HL);
+	A = bus->Read(HL);
 	HL--;
 
 	cycles += 2;
@@ -1015,7 +1016,7 @@ void CPU::AND_D() { AND(D); }
 void CPU::AND_E() { AND(E); }
 void CPU::AND_H() { AND(H); }
 void CPU::AND_L() { AND(L); }
-void CPU::AND_HL() { AND(mmu.Read(HL)); cycles += 1; }
+void CPU::AND_HL() { AND(bus->Read(HL)); cycles += 1; }
 void CPU::AND_n() { AND(n); cycles += 1; }
 
 void CPU::OR(uint8_t r) {
@@ -1038,7 +1039,7 @@ void CPU::OR_D() { OR(D); }
 void CPU::OR_E() { OR(E); }
 void CPU::OR_H() { OR(H); }
 void CPU::OR_L() { OR(L); }
-void CPU::OR_HL() { OR(mmu.Read(HL)); cycles += 1; }
+void CPU::OR_HL() { OR(bus->Read(HL)); cycles += 1; }
 void CPU::OR_n() { OR(n); cycles += 1; }
 
 void CPU::XOR(uint8_t r) {
@@ -1061,7 +1062,7 @@ void CPU::XOR_D() { XOR(D); }
 void CPU::XOR_E() { XOR(E); }
 void CPU::XOR_H() { XOR(H); }
 void CPU::XOR_L() { XOR(L); }
-void CPU::XOR_HL() { XOR(mmu.Read(HL)); cycles += 1; }
+void CPU::XOR_HL() { XOR(bus->Read(HL)); cycles += 1; }
 void CPU::XOR_n() { XOR(n); cycles += 1; }
 
 void CPU::POP_BC() { POP(BC); }
@@ -1071,16 +1072,16 @@ void CPU::POP_DE() { POP(DE); }
 void CPU::PUSH_DE() { PUSH(DE); }
 
 void CPU::LDH_n_A() {
-	mmu.Write(0xFF00 + n, A);
+	bus->Write(0xFF00 + n, A);
 
 	cycles += 3;
 }
 
 void CPU::LD_nn_SP() {
-	uint8_t hi = mmu.Read(SP - 1);
-	uint8_t lo = mmu.Read(SP);
-	mmu.Write(nn + 1, hi);
-	mmu.Write(nn, lo);
+	uint8_t hi = bus->Read(SP - 1);
+	uint8_t lo = bus->Read(SP);
+	bus->Write(nn + 1, hi);
+	bus->Write(nn, lo);
 
 	cycles += 5;
 }
@@ -1104,7 +1105,7 @@ void CPU::LD_SP_HL() {
 void CPU::POP_HL() { POP(HL); }
 
 void CPU::LD_Ca_A() {
-	mmu.Write(0xFF00 + C, A);
+	bus->Write(0xFF00 + C, A);
 
 	cycles += 2;
 }
@@ -1112,13 +1113,13 @@ void CPU::LD_Ca_A() {
 void CPU::PUSH_HL() { PUSH(HL); }
 
 void CPU::LD_nn_A() {
-	mmu.Write(nn, A);
+	bus->Write(nn, A);
 
 	cycles += 4;
 }
 
 void CPU::LDH_A_n() {
-	A = mmu.Read(0xFF00 + n);
+	A = bus->Read(0xFF00 + n);
 
 	cycles += 3;
 }
@@ -1126,7 +1127,7 @@ void CPU::LDH_A_n() {
 void CPU::POP_AF() { POP(AF);  }
 
 void CPU::LD_A_Ca() {
-	A = mmu.Read(0xFF00 + C);
+	A = bus->Read(0xFF00 + C);
 
 	cycles += 2;
 }
@@ -1134,7 +1135,7 @@ void CPU::LD_A_Ca() {
 void CPU::PUSH_AF() { PUSH(AF); }
 
 void CPU::LD_A_nn() {
-	A = mmu.Read(nn);
+	A = bus->Read(nn);
 
 	cycles += 4;
 }

@@ -1,6 +1,5 @@
 #pragma once
-#include "CPU.h"
-#include "PPU.h"
+#include "Bus.h"
 #include <string>
 #include <cstdint>
 
@@ -10,13 +9,8 @@ public:
 	DameEmu(const char* rom_dir);
 	~DameEmu();
 
-	void Run();
-
-	uint8_t GetCycles() { return cpu.GetCycles(); }
+	void Step();
 
 private:
-	CPU cpu;
-	Memory::MMU mmu;
-	PPU ppu;
-	//Emulator variables
+	Bus bus;
 };

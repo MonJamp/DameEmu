@@ -1,12 +1,14 @@
 #pragma once
-#include "MMU.h"
+#include <cstdint>
+
+class Bus;
 
 class PPU {
 public:
-	PPU(Memory::MMU& mmu);
+	PPU(Bus* b);
 
 	void UpdateScreen(uint8_t cycles);
 private:
+	Bus* bus;
 	int16_t scanline_counter;
-	Memory::MMU& mmu;
 };

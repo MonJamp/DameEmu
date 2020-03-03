@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "Bus.h"
 
 #ifdef D_LOG_INS
 #include <cstdio>
@@ -7,9 +8,11 @@
 #define debug_msg(...)
 #endif
 
-CPU::CPU(Memory::MMU& mmu) :
-	mmu(mmu)
+
+CPU::CPU(Bus* b)
 {
+	bus = b;
+
 	Reset();
 }
 
@@ -36,12 +39,12 @@ void CPU::HandleInterupts() {
 		return;
 	}
 
-	if (mmu.interupt_enable->field->vblank) {
-		if (mmu.interupt_flag->field->vblank) {
+	if (bus->regs.int_enable.vblank) {
+		if (bus->regs.int_request.vblank) {
 			interupt_master_enable = false;
-			mmu.interupt_flag->field->vblank = 0;
-			mmu.Write(SP - 1, (PC & 0xFF00) >> 8);
-			mmu.Write(SP - 2, (PC & 0x00FF));
+			bus->regs.int_request.vblank = 0;
+			bus->Write(SP - 1, (PC & 0xFF00) >> 8);
+			bus->Write(SP - 2, (PC & 0x00FF));
 			SP = SP - 2;
 			PC = 0x0040;
 			cycles += 5;
@@ -53,14 +56,24 @@ void CPU::HandleInterupts() {
 	//TODO: Service other interupts
 }
 
+void CPU::write(uint16_t address, uint8_t data)
+{
+	bus->Write(address, data);
+}
+
+uint8_t CPU::read(uint16_t address)
+{
+	return bus->Read(address);
+}
+
 inline uint8_t CPU::GetByteAtPC() {
-	return mmu.Read(PC++);
+	return bus->Read(PC++);
 }
 
 inline uint16_t CPU::GetWordAtPC() {
 	uint16_t word;
-	word = mmu.Read(PC++);
-	word |= mmu.Read(PC++) << 8;
+	word = bus->Read(PC++);
+	word |= bus->Read(PC++) << 8;
 	return word;
 }
 

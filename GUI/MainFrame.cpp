@@ -80,7 +80,7 @@ void MainFrame::OnRunEmu(wxCommandEvent& evt)
 
 void MainFrame::OnIdleRun(wxIdleEvent& evt)
 {
-	dameEmu->Run();
+	dameEmu->Step();
 }
 
 void MainFrame::OnExit(wxCommandEvent& evt)
