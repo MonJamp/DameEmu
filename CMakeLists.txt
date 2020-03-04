@@ -56,7 +56,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		)
 endif()
  
- find_package(wxWidgets REQUIRED COMPONENTS core base)
+ find_package(wxWidgets REQUIRED COMPONENTS core base adv)
  if(wxWidgets_FOUND)
     message(STATUS "Found wxWidgets ${wxWidgets_VERSION_STRING} in ${wxWidgets_USE_FILE}")
     include(${wxWidgets_USE_FILE})
