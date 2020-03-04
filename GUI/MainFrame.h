@@ -1,7 +1,12 @@
 #pragma once
 #include "../DameEmu.h"
+#include "../Cartridge.h"
 #include "DisasmFrame.h"
 #include "wx_header.h"
+
+#ifdef __GNUG__
+#include <memory>
+#endif
 
 class MainFrame : public wxFrame
 {
@@ -43,6 +48,6 @@ private:
 
 	DisasmFrame* disasmFrame = NULL;
 
-	wxString rom_dir;
 	DameEmu* dameEmu = nullptr;
+	std::shared_ptr<Cartridge> cart;
 };

@@ -61,20 +61,21 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 		return;
 	}
 
-	wxFileInputStream input_stream(openFileDialog.GetPath());
-	if (!input_stream.IsOk()) {
+	wxFileInputStream fileStream(openFileDialog.GetPath());
+	if (!fileStream.IsOk()) {
 		wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
 		return;
 	}
 
-	rom_dir = openFileDialog.GetPath();
-	wxMessageBox(rom_dir);
+	wxString filename = openFileDialog.GetPath();
+	cart.reset(new Cartridge());
+	cart->open(std::string(filename.mb_str()));
 }
 
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
 {
 	runItem->Enable(false);
-	dameEmu = new DameEmu(rom_dir);
+	dameEmu = new DameEmu(cart);
 	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(MainFrame::OnIdleRun));
 }
 
