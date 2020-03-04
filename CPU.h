@@ -1,6 +1,7 @@
 #pragma once
-#include "MMU.h"
 #include <cstdint>
+
+class Bus;
 
 #define BIT_CHECK(x, y) ((x & (y)) == (y))
 #define BIT_SET(x, y)	(x |= (y))
@@ -17,9 +18,10 @@
 #define FLAG_SET(x)		BIT_SET(F, x)
 #define FLAG_CLEAR(x)	BIT_CLEAR(F, x)
 
+
 class CPU {
 public:
-	CPU(Memory::MMU& mmu);
+	CPU(Bus* b);
 
 	uint8_t Step();
 	uint8_t GetCycles() { return cycles; }
@@ -35,8 +37,13 @@ private:
 	void Reset();
 	void HandleInterupts();
 
+	void write(uint16_t address, uint8_t data);
+	uint8_t read(uint16_t address);
+
 	uint8_t GetByteAtPC();
 	uint16_t GetWordAtPC();
+
+	Bus* bus;
 
 	uint16_t PC;
 	uint16_t SP;
@@ -44,8 +51,6 @@ private:
 	//TODO: Implement cycles
 	uint8_t cycles;
 	bool interupt_master_enable;
-
-	Memory::MMU& mmu;
 
 	//CPU registers
 	union {

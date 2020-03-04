@@ -21,8 +21,8 @@ set(SRC
     CPU.cpp
     instructions.cpp
     cb_instructions.cpp
-    MMU.h
-    MMU.cpp
+    Bus.h
+    Bus.cpp
     PPU.h
     PPU.cpp
 	Cartridge.h
