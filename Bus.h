@@ -199,7 +199,7 @@ public:
 
 	void Reset();
 
-	void Bus::InsertCartridge(std::shared_ptr<Cartridge>& cart);
+	void InsertCartridge(std::shared_ptr<Cartridge>& cart);
 	void Write(uint16_t address, uint8_t data);
 	uint8_t Read(uint16_t address);
 	void Clock();
