@@ -2,10 +2,8 @@
 #include "Cartridge.h"
 #include <fstream>
 
-DameEmu::DameEmu(const char* rom_dir)
+DameEmu::DameEmu(std::shared_ptr<Cartridge>& cart)
 {
-	std::shared_ptr<Cartridge> cart;
-	cart->open(rom_dir);
 	bus.InsertCartridge(cart);
 }
 
