@@ -9,12 +9,9 @@ DameEmu::DameEmu(const char* rom_dir) :
 	mmu.LoadCartridge(rom_dir);
 }
 
-DameEmu::~DameEmu() {
-	if (app != NULL) {
-		app->close();
-	}
+DameEmu::~DameEmu()
+{
 
-	delete(app);
 }
 
 void DameEmu::Run() {
