@@ -39,29 +39,20 @@ add_executable(DameEmu WIN32 ${SRC})
 target_compile_features(DameEmu PUBLIC cxx_std_11)
 set_target_properties(DameEmu PROPERTIES CXX_EXTENSIONS OFF)
 
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-
 if(WIN32)
 	set_target_properties(DameEmu PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
 	add_definitions(
 		-DWIN32
 		-D__WXMSW__
 		-D_WINDOWS
+		-D_CRT_SECURE_NO_WARNINGS
 	)
 endif()
 
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    message("DEBUG BUILD")
-    add_definitions(
-		-D_DEBUG
-		-D__WXDEBUG__
-		)
-endif()
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
  
  find_package(wxWidgets REQUIRED COMPONENTS core base adv)
  if(wxWidgets_FOUND)
-    message(STATUS "Found wxWidgets ${wxWidgets_VERSION_STRING} in ${wxWidgets_USE_FILE}")
     include(${wxWidgets_USE_FILE})
     target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
 endif()
