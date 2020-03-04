@@ -12,11 +12,10 @@ addons:
         - cmake
         
 before_script:
-    - sudo apt-get -y install libsfml-dev
     - sudo apt-get -y install wx3.0-headers libwxgtk3.0-gtk3-dev
     
 script:
     - mkdir bin
     - cd bin
-    - cmake -DCMAKE_MODULE_PATH="/usr/share/SFML/cmake/Modules/" -DCMAKE_BUILD_TYPE=Debug ..
+    - cmake -DCMAKE_BUILD_TYPE=Debug ..
     - make -j4
