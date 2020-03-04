@@ -18,7 +18,7 @@ DameEmu::~DameEmu() {
 }
 
 void DameEmu::Run() {
-	while (true) {
+	//while (true) {
 		uint8_t cycles = cpu.Step();
 		ppu.UpdateScreen(cycles);
 
@@ -29,5 +29,5 @@ void DameEmu::Run() {
 			mmu.Write(REG_SC, 0x00);
 		}
 #endif
-	}
+	//}
 }

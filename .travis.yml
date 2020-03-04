@@ -13,6 +13,7 @@ addons:
         
 before_script:
     - sudo apt-get -y install libsfml-dev
+    - sudo apt-get -y install wx3.0-headers libwxgtk3.0-gtk3-dev
     
 script:
     - mkdir bin
