@@ -36,6 +36,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GUI_SRC})
 
 add_executable(DameEmu WIN32 ${SRC})
 
+target_compile_features(DameEmu PUBLIC cxx_std_11)
+set_target_properties(DameEmu PROPERTIES CXX_EXTENSIONS OFF)
+
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 if(WIN32)
@@ -60,6 +63,5 @@ endif()
  if(wxWidgets_FOUND)
     message(STATUS "Found wxWidgets ${wxWidgets_VERSION_STRING} in ${wxWidgets_USE_FILE}")
     include(${wxWidgets_USE_FILE})
-	add_compile_definitions(${wxWidgets_DEFINITIONS})
     target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
 endif()

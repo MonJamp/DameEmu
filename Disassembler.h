@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 
+#ifdef __GNUG__
+#include <memory>
+#endif
+
 
 struct DisasmData {
 	std::string addressToStr();

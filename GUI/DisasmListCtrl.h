@@ -3,6 +3,10 @@
 #include <wx/listctrl.h>
 #include <vector>
 
+#ifdef __GNUG__
+#include <memory>
+#endif
+
 
 struct InsData
 {
