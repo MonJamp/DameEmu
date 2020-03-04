@@ -46,7 +46,7 @@ if(SFML_FOUND)
     )
 endif()
  
- find_package(wxWidgets REQUIRED COMPONENTS core base)
+ find_package(wxWidgets REQUIRED COMPONENTS core base adv)
  if(wxWidgets_FOUND)
     message(STATUS "Found wxWidgets ${wxWidgets_VERSION_STRING} in ${wxWidgets_USE_FILE}")
     set(wxWidgets_USE_STATIC ON)
