@@ -2,9 +2,12 @@
 #include "CPU.h"
 #include "PPU.h"
 #include "Cartridge.h"
-
 #include <cstdint>
 #include <array>
+
+#ifdef __GNUG__
+#include <memory>
+#endif
 
 
 // Port/Mode Registers
