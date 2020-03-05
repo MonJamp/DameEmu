@@ -4,6 +4,7 @@
 
 wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 	EVT_MENU(wxID_EXIT, DisasmFrame::OnExit)
+	EVT_BUTTON(ButtonID::Step, DisasmFrame::OnStep)
 wxEND_EVENT_TABLE()
 
 DisasmFrame::DisasmFrame(std::shared_ptr<Disassembler>& disasm, wxWindow* parent)
@@ -11,19 +12,23 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Disassembler>& disasm, wxWindow* parent
 {
 	InitMenuBar();
 
+	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
-	disasmList = new DisasmListCtrl(this);
-	regPanel = new RegPanel(this);
+	btnPanel = new ButtonPanel(this);
+	vbox->Add(btnPanel, wxSizerFlags(0));
 
+	disasmList = new DisasmListCtrl(this);
 	hbox->Add(disasmList, wxSizerFlags(3).Expand());
+	regPanel = new RegPanel(this);
 	hbox->Add(regPanel, wxSizerFlags(1).Expand());
-	SetSizer(hbox);
+
+	vbox->Add(hbox, wxSizerFlags(1).Expand());
+	SetSizer(vbox);
 
 	// TODO: Show progress bar
 	disasm->Disassemble();
 	disasmList->StoreDisassembly(disasm->GetDisassembly());
-	disasmList->StoreJumpTable(disasm->jumpTable);
 }
 
 DisasmFrame::~DisasmFrame()
@@ -41,6 +46,12 @@ void DisasmFrame::InitMenuBar()
 	menuBar->Append(menuFile, "&File");
 	
 	SetMenuBar(menuBar);
+}
+
+void DisasmFrame::OnStep(wxCommandEvent& evt)
+{
+	// TODO connect this action with emulation
+	wxMessageBox("TODO");
 }
 
 void DisasmFrame::OnExit(wxCommandEvent& evt)

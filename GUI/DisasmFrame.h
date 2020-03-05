@@ -58,6 +58,28 @@ private:
 	wxStaticText* hlText;
 };
 
+enum ButtonID
+{
+	Step
+};
+
+class ButtonPanel : public wxPanel
+{
+public:
+	ButtonPanel(wxWindow* parent) : wxPanel(parent)
+	{
+		wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+
+		// TODO Add buttons for continue, pause, step in, step out, step over
+		wxButton* stepBtn = new wxButton(this, ButtonID::Step, "Step");
+		hbox->Add(stepBtn, wxSizerFlags(0).Align(wxLEFT));
+
+		SetSizer(hbox);
+	}
+
+private:
+};
+
 class DisasmFrame : public wxFrame
 {
 public:
@@ -67,11 +89,13 @@ public:
 private:
 	void InitMenuBar();
 
+	void OnStep(wxCommandEvent& evt);
 	void OnExit(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
 	DisasmListCtrl* disasmList;
 	RegPanel* regPanel;
+	ButtonPanel* btnPanel;
 };
 
