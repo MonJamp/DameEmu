@@ -85,6 +85,8 @@ private:
 		};
 	};
 
+	friend class Debugger;
+
 	//Instructions
 	void UNDEFINED();
 	void UNIMPLEMENTED();

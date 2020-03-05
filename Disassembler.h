@@ -3,6 +3,7 @@
 #include "Cartridge.h"
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #ifdef __GNUG__
 #include <memory>
@@ -30,11 +31,13 @@ public:
 	Disassembler();
 	~Disassembler();
 
-	void LoadCartridge(const std::string& filename);
+	void LoadCartridge(std::shared_ptr<Cartridge>& cart);
 	void Disassemble();
 
 	std::shared_ptr<std::vector<DisasmData>> GetDisassembly() { return disassembly; }
 
+	std::unordered_map<uint16_t, uint16_t> jumpTable;
+	uint16_t it = 0;
 private:
 	void Reset();
 	void CacheConstOperands(Operand& operand);
@@ -42,8 +45,9 @@ private:
 	DisasmData DisassembleInstruction();
 
 	Instruction curr_ins;
-	uint16_t pc;
+	uint16_t index;
 	uint32_t ir; // ir aka instruction registers stores full instruction
-	Cartridge cart;
+	std::shared_ptr<Cartridge> cart;
 	std::shared_ptr<Disassembly> disassembly;
+	
 };

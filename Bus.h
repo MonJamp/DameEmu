@@ -214,4 +214,6 @@ private:
 	std::array<uint8_t, 0x2000> ram;
 	std::array<uint8_t, 0x00A0> oam;
 	std::array<uint8_t, 0x007F> high_ram;
+
+	friend class Debugger;
 };

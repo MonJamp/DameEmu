@@ -121,20 +121,20 @@ Disassembler::~Disassembler()
 
 void Disassembler::Reset()
 {
-	pc = 0x0000;
+	index = 0x0000;
 	ir = 0x00;
 	disassembly.reset(new std::vector<DisasmData>());
 }
 
-void Disassembler::LoadCartridge(const std::string& filename)
+void Disassembler::LoadCartridge(std::shared_ptr<Cartridge>& cart)
 {
 	Reset();
-	cart.open(filename);
+	this->cart = cart;
 }
 
 void Disassembler::Disassemble()
 {
-	while (pc < ROM_MAX_SIZE && pc < cart.size())
+	while (index < ROM_MAX_SIZE && index < cart->size())
 	{
 		disassembly->push_back(DisassembleInstruction());
 	}
@@ -159,7 +159,7 @@ inline void Disassembler::CacheConstOperands(Operand& operand)
 
 inline uint8_t Disassembler::fetch()
 {
-	uint8_t op = cart.read(pc++);
+	uint8_t op = cart->read(index++);
 
 	if (ir == 0)
 	{
@@ -238,7 +238,8 @@ std::string GetIORegister(uint16_t address)
 DisasmData Disassembler::DisassembleInstruction() {
 	ir = 0x00;
 
-	uint16_t address = pc;
+	uint16_t address = index;
+	jumpTable[address] = it++;
 	uint8_t opcode = fetch();
 
 	Instruction ins = insTable[opcode];
@@ -272,6 +273,6 @@ DisasmData Disassembler::DisassembleInstruction() {
 	dis.opcode = ir;
 	dis.ins = ins;
 	dis.comment = comment;
-
+	
 	return dis;
 }

@@ -1,4 +1,5 @@
 #include "MainFrame.h"
+#include "../Disassembler.h"
 #include "wx/wfstream.h"
 #include "wx/aboutdlg.h"
 
@@ -103,7 +104,9 @@ void MainFrame::OnDebugger(wxCommandEvent& evt)
 	}
 	else
 	{
-		disasmFrame = new DisasmFrame(this);
+		std::shared_ptr<Disassembler> disasm(new Disassembler);
+		disasm->LoadCartridge(cart);
+		disasmFrame = new DisasmFrame(disasm, this);
 		disasmFrame->SetName("DisasmFrame");
 		disasmFrame->Show();
 	}

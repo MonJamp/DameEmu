@@ -28,7 +28,7 @@ DisasmListCtrl::DisasmListCtrl(wxWindow* parent)
 	InsertColumn(static_cast<long>(ColumnID::Operand), itemCol);
 	// Comment
 	itemCol.SetId(wxID_ANY);
-	itemCol.SetWidth(150);
+	itemCol.SetWidth(50);
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 }
 
@@ -50,6 +50,17 @@ void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
 
 	SetItemCount(disasmData.size());
 	Refresh();
+}
+
+void DisasmListCtrl::StoreJumpTable(std::unordered_map<uint16_t, uint16_t>& jt)
+{
+	jumpTable = jt;
+}
+
+void DisasmListCtrl::GoToAddress(uint16_t address)
+{
+	EnsureVisible(jumpTable[address]);
+	SetItemState(jumpTable[address], wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 }
 
 wxString DisasmListCtrl::OnGetItemText(long item, long column) const
