@@ -7,7 +7,7 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 	EVT_BUTTON(ButtonID::Step, DisasmFrame::OnStep)
 wxEND_EVENT_TABLE()
 
-DisasmFrame::DisasmFrame(std::shared_ptr<Disassembler>& disasm, wxWindow* parent)
+DisasmFrame::DisasmFrame(wxWindow* parent)
 	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400))
 {
 	InitMenuBar();
@@ -25,10 +25,6 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Disassembler>& disasm, wxWindow* parent
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
 	SetSizer(vbox);
-
-	// TODO: Show progress bar
-	disasm->Disassemble();
-	disasmList->StoreDisassembly(disasm->GetDisassembly());
 }
 
 DisasmFrame::~DisasmFrame()

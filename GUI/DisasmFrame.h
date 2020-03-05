@@ -83,7 +83,7 @@ private:
 class DisasmFrame : public wxFrame
 {
 public:
-	DisasmFrame(std::shared_ptr<Disassembler>& disasm, wxWindow* parent);
+	DisasmFrame(wxWindow* parent);
 	~DisasmFrame();
 
 private:
