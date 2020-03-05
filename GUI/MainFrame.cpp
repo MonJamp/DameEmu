@@ -18,6 +18,8 @@ wxEND_EVENT_TABLE()
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition, wxSize(600,400))
 {
+	cart.reset();
+
 	menuBar = new wxMenuBar();
 
 	systemMenu = new wxMenu();
