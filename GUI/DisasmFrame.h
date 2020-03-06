@@ -1,6 +1,5 @@
 #pragma once
 #include "../Disassembler.h"
-#include "DisasmListCtrl.h"
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 #include <memory>
