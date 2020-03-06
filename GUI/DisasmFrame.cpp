@@ -2,7 +2,6 @@
 
 
 wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
-	EVT_MENU(wxID_EXIT, DisasmFrame::OnExit)
 	EVT_BUTTON(ButtonID::Step, DisasmFrame::OnStep)
 wxEND_EVENT_TABLE()
 
@@ -95,7 +94,6 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
 	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
 	debugger(d)
 {
-	InitMenuBar();
 	InitWidgets();
 	
 	disasmList->StoreDisassembly(debugger->GetDisassembly());
@@ -107,18 +105,6 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
 DisasmFrame::~DisasmFrame()
 {
 	
-}
-
-void DisasmFrame::InitMenuBar()
-{
-	wxMenu* menuFile = new wxMenu();
-	menuFile->AppendSeparator();
-	menuFile->Append(wxID_EXIT);
-
-	wxMenuBar* menuBar = new wxMenuBar();
-	menuBar->Append(menuFile, "&File");
-	
-	SetMenuBar(menuBar);
 }
 
 void DisasmFrame::InitWidgets()
@@ -143,9 +129,4 @@ void DisasmFrame::OnStep(wxCommandEvent& evt)
 	debugger->Step();
 	regPanel->UpdateValues(debugger->cpuState);
 	disasmList->ShowAddress(debugger->cpuState.pc);
-}
-
-void DisasmFrame::OnExit(wxCommandEvent& evt)
-{
-	Close(true);
 }

@@ -129,11 +129,9 @@ public:
 	~DisasmFrame();
 
 private:
-	void InitMenuBar();
 	void InitWidgets();
 
 	void OnStep(wxCommandEvent& evt);
-	void OnExit(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
