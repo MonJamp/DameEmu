@@ -2,13 +2,6 @@
 #include "InstructionSet.h"
 #include "Bus.h"
 
-#ifdef D_LOG_INS
-#include <cstdio>
-#define debug_msg(...) printf(__VA_ARGS__)
-#else
-#define debug_msg(...)
-#endif
-
 
 CPU::CPU(Bus* b)
 {
@@ -49,8 +42,6 @@ void CPU::HandleInterupts() {
 			SP = SP - 2;
 			PC = 0x0040;
 			cycles += 5;
-
-			debug_msg("VBlank service started...\n");
 		}
 	}
 
@@ -82,29 +73,23 @@ uint8_t CPU::Step() {
 	cycles = 0;
 	HandleInterupts();
 
-	debug_msg("%04X: ", PC);
-
 	uint8_t opcode = GetByteAtPC();
 	InstructionJumpTable ins = jumpTable[opcode];
 
 	switch (insTable[opcode].getLength()) {
 	case 1:
-		debug_msg(ins.mnemonic);
 		break;
 	case 2:
 		operand = GetByteAtPC();
-		debug_msg(ins.mnemonic, operand);
 		break;
 	case 3:
 		operand = GetWordAtPC();
-		debug_msg(ins.mnemonic, operand);
 		break;
 	default:
 		break;
 	};
 
 	(this->*ins.execute)();
-	debug_msg("\n");
 
 	return cycles;
 }
@@ -112,8 +97,6 @@ uint8_t CPU::Step() {
 void CPU::CB() {
 	uint8_t opcode = static_cast<uint8_t>(operand);
 	InstructionJumpTable cb_ins = cb_jumpTable[opcode];
-
-	debug_msg(cb_ins.mnemonic);
 
 	(this->*cb_ins.execute)();
 }
