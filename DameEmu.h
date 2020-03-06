@@ -1,16 +1,22 @@
 #pragma once
 #include "Bus.h"
+#include "Disassembler.h"
+#include "Cartridge.h"
 #include <string>
 #include <cstdint>
+#include <memory>
 
 
 class DameEmu {
 public:
-	DameEmu(const char* rom_dir);
+	DameEmu(std::shared_ptr<Cartridge>& cart);
 	~DameEmu();
 
 	void Step();
 
+public:
+	std::shared_ptr<Debugger> debugger;
+
 private:
-	Bus bus;
+	std::shared_ptr <Bus> bus;
 };

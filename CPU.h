@@ -20,6 +20,7 @@ class Bus;
 
 
 class CPU {
+friend class Debugger;
 public:
 	CPU(Bus* b);
 

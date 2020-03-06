@@ -18,6 +18,8 @@ wxEND_EVENT_TABLE()
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition, wxSize(600,400))
 {
+	cart.reset();
+
 	menuBar = new wxMenuBar();
 
 	systemMenu = new wxMenu();
@@ -71,20 +73,22 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 		return;
 	}
 
-	wxFileInputStream input_stream(openFileDialog.GetPath());
-	if (!input_stream.IsOk()) {
+	wxFileInputStream fileStream(openFileDialog.GetPath());
+	if (!fileStream.IsOk()) {
 		wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
 		return;
 	}
 
-	rom_dir = openFileDialog.GetPath();
-	wxMessageBox(rom_dir);
+	wxString filename = openFileDialog.GetPath();
+	cart.reset(new Cartridge());
+	cart->open(std::string(filename.mb_str()));
+	dameEmu = new DameEmu(cart);
 }
 
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
 {
 	runItem->Enable(false);
-	dameEmu = new DameEmu(rom_dir);
+	dameEmu = new DameEmu(cart);
 	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(MainFrame::OnIdleRun));
 }
 
@@ -112,7 +116,7 @@ void MainFrame::OnDebugger(wxCommandEvent& evt)
 	}
 	else
 	{
-		disasmFrame = new DisasmFrame(this);
+		disasmFrame = new DisasmFrame(dameEmu->debugger, this);
 		disasmFrame->SetName("DisasmFrame");
 		disasmFrame->Show();
 	}
@@ -128,12 +132,9 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 
 void MainFrame::OnCheckCart(wxCommandEvent& evt)
 {
-	Cartridge cart;
-	cart.open(std::string(rom_dir));
-	
-	if (cart.isValid())
+	if (cart->isValid())
 	{
-		wxMessageBox(cart.headerToString());
+		wxMessageBox(cart->headerToString());
 	}
 	else
 	{
