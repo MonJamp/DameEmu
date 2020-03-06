@@ -12,21 +12,8 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
 	debugger(d)
 {
 	InitMenuBar();
-
-	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
-
-	btnPanel = new ButtonPanel(this);
-	vbox->Add(btnPanel, wxSizerFlags(0));
-
-	disasmList = new DisasmListCtrl(this);
-	hbox->Add(disasmList, wxSizerFlags(3).Expand());
-	regPanel = new RegPanel(this);
-	hbox->Add(regPanel, wxSizerFlags(1).Expand());
-
-	vbox->Add(hbox, wxSizerFlags(1).Expand());
-	SetSizer(vbox);
-
+	InitWidgets();
+	
 	disasmList->StoreDisassembly(debugger->GetDisassembly());
 	disasmList->StoreAddressTable(debugger->GetAddressTable());
 	disasmList->ShowAddress(debugger->cpuState.pc);
@@ -48,6 +35,23 @@ void DisasmFrame::InitMenuBar()
 	menuBar->Append(menuFile, "&File");
 	
 	SetMenuBar(menuBar);
+}
+
+void DisasmFrame::InitWidgets()
+{
+	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+
+	btnPanel = new ButtonPanel(this);
+	vbox->Add(btnPanel, wxSizerFlags(0));
+
+	disasmList = new DisasmListCtrl(this);
+	hbox->Add(disasmList, wxSizerFlags(3).Expand());
+	regPanel = new RegPanel(this);
+	hbox->Add(regPanel, wxSizerFlags(1).Expand());
+
+	vbox->Add(hbox, wxSizerFlags(1).Expand());
+	SetSizer(vbox);
 }
 
 void DisasmFrame::OnStep(wxCommandEvent& evt)

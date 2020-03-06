@@ -98,6 +98,7 @@ public:
 
 private:
 	void InitMenuBar();
+	void InitWidgets();
 
 	void OnStep(wxCommandEvent& evt);
 	void OnExit(wxCommandEvent& evt);
