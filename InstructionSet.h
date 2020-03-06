@@ -17,7 +17,6 @@
 struct Operand
 {
 public:
-	// TODO: Investigate type s8
 	enum class Type
 	{
 		NONE,
