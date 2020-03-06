@@ -21,7 +21,7 @@ public:
 	DisasmListCtrl(wxWindow* parent);
 
 	void StoreDisassembly(std::shared_ptr<Disassembly> disasm);
-	void StoreAddressTable(AddressTable& at);
+	void StoreAddressTable(AddressTable at);
 	void ShowAddress(uint16_t a);
 
 protected:

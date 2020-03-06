@@ -52,7 +52,7 @@ void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
 	Refresh();
 }
 
-void DisasmListCtrl::StoreAddressTable(AddressTable& at)
+void DisasmListCtrl::StoreAddressTable(AddressTable at)
 {
 	addressTable = at;
 }
