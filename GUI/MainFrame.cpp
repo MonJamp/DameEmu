@@ -88,7 +88,6 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
 {
 	runItem->Enable(false);
-	dameEmu = new DameEmu(cart);
 	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(MainFrame::OnIdleRun));
 }
 
