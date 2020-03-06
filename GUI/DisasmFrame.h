@@ -42,10 +42,9 @@ public:
 	};
 
 public:
-	DisasmListCtrl(wxWindow* parent);
+	DisasmListCtrl(std::shared_ptr<Debugger>& d, wxWindow* parent);
 
-	void StoreDisassembly(std::shared_ptr<Disassembly> disasm);
-	void StoreAddressTable(AddressTable at);
+	void RefreshValues();
 	void ShowAddress(uint16_t a);
 
 protected:
@@ -53,6 +52,7 @@ protected:
 
 private:
 	std::vector<InsData> disasmData;
+	std::shared_ptr<Debugger> debugger;
 	AddressTable addressTable; // Address is key, index is value
 	uint16_t selectedItem = 0;
 

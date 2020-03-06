@@ -6,9 +6,10 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-DisasmListCtrl::DisasmListCtrl(wxWindow* parent)
+DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger>& d, wxWindow* parent)
 	: wxListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER)
+		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER),
+	debugger(d)
 {
 	wxListItem itemCol;
 	// Empty
@@ -35,10 +36,15 @@ DisasmListCtrl::DisasmListCtrl(wxWindow* parent)
 	itemCol.SetId(wxID_ANY);
 	itemCol.SetWidth(150);
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
+
+	RefreshValues();
 }
 
-void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
+void DisasmListCtrl::RefreshValues()
 {
+	std::shared_ptr<Disassembly>& disasm(debugger->GetDisassembly());
+	addressTable = debugger->GetAddressTable();
+
 	disasmData.clear();
 
 	for (auto i : *disasm)
@@ -55,11 +61,8 @@ void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
 
 	SetItemCount(disasmData.size());
 	Refresh();
-}
 
-void DisasmListCtrl::StoreAddressTable(AddressTable at)
-{
-	addressTable = at;
+	ShowAddress(debugger->cpuState.pc);
 }
 
 void DisasmListCtrl::ShowAddress(uint16_t a)
@@ -95,10 +98,7 @@ DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
 	debugger(d)
 {
 	InitWidgets();
-	
-	disasmList->StoreDisassembly(debugger->GetDisassembly());
-	disasmList->StoreAddressTable(debugger->GetAddressTable());
-	disasmList->ShowAddress(debugger->cpuState.pc);
+
 	regPanel->UpdateValues(debugger->cpuState);
 }
 
@@ -115,7 +115,7 @@ void DisasmFrame::InitWidgets()
 	btnPanel = new ButtonPanel(this);
 	vbox->Add(btnPanel, wxSizerFlags(0));
 
-	disasmList = new DisasmListCtrl(this);
+	disasmList = new DisasmListCtrl(debugger, this);
 	hbox->Add(disasmList, wxSizerFlags(3).Expand());
 	regPanel = new RegPanel(this);
 	hbox->Add(regPanel, wxSizerFlags(1).Expand());
