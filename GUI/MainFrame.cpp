@@ -10,6 +10,9 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(MenuID::SETTINGS, MainFrame::OnSettings)
 	EVT_MENU(MenuID::DEBUGGER, MainFrame::OnDebugger)
 	EVT_MENU(MenuID::ABOUT, MainFrame::OnAbout)
+#ifdef _DEBUG
+	EVT_MENU(MenuID::CHECK, MainFrame::OnCheckCart)
+#endif
 wxEND_EVENT_TABLE()
 
 
@@ -38,6 +41,13 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 	aboutItem = new wxMenuItem(miscMenu, MenuID::ABOUT, _("&About"));
 	miscMenu->Append(aboutItem);
 	menuBar->Append(miscMenu, _("&Misc"));
+
+#ifdef _DEBUG
+	wxMenu* debugMenu = new wxMenu();
+	wxMenuItem* checkCartItem = new wxMenuItem(debugMenu, MenuID::CHECK, _("&Check Cartridge"));
+	debugMenu->Append(checkCartItem);
+	menuBar->Append(debugMenu, _("&Debug"));
+#endif
 
 	SetMenuBar(menuBar);
 }
@@ -114,4 +124,19 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 	info.SetName(_("DameEmu"));
 	info.SetWebSite("https://github.com/MonJamp/DameEmu");
 	wxAboutBox(info, this);
+}
+
+void MainFrame::OnCheckCart(wxCommandEvent& evt)
+{
+	Cartridge cart;
+	cart.open(std::string(rom_dir));
+	
+	if (cart.isValid())
+	{
+		wxMessageBox(cart.headerToString());
+	}
+	else
+	{
+		wxMessageBox("ROM is invalid");
+	}
 }

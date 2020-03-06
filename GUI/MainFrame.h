@@ -17,6 +17,9 @@ private:
 	void OnSettings(wxCommandEvent& evt);
 	void OnDebugger(wxCommandEvent& evt);
 	void OnAbout(wxCommandEvent& evt);
+#ifdef _DEBUG
+	void OnCheckCart(wxCommandEvent& evt);
+#endif
 
 	enum MenuID
 	{
@@ -25,7 +28,10 @@ private:
 		EXIT,
 		SETTINGS,
 		DEBUGGER,
-		ABOUT
+		ABOUT,
+#ifdef _DEBUG
+		CHECK
+#endif
 	};
 
 	wxDECLARE_EVENT_TABLE();
