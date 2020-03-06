@@ -131,12 +131,9 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 
 void MainFrame::OnCheckCart(wxCommandEvent& evt)
 {
-	Cartridge cart;
-	cart.open(std::string(rom_dir));
-	
-	if (cart.isValid())
+	if (cart->isValid())
 	{
-		wxMessageBox(cart.headerToString());
+		wxMessageBox(cart->headerToString());
 	}
 	else
 	{
