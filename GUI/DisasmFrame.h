@@ -42,7 +42,7 @@ public:
 	};
 
 public:
-	DisasmListCtrl(std::shared_ptr<Debugger>& d, wxWindow* parent);
+	DisasmListCtrl(std::shared_ptr<Debugger> d, wxWindow* parent);
 
 	void RefreshValues();
 	void ShowAddress(uint16_t a);
@@ -125,7 +125,7 @@ private:
 class DisasmFrame : public wxFrame
 {
 public:
-	DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent);
+	DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent);
 	~DisasmFrame();
 
 private:

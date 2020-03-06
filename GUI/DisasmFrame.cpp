@@ -6,7 +6,7 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger>& d, wxWindow* parent)
+DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger> d, wxWindow* parent)
 	: wxListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER),
 	debugger(d)
@@ -42,7 +42,7 @@ DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger>& d, wxWindow* parent)
 
 void DisasmListCtrl::RefreshValues()
 {
-	std::shared_ptr<Disassembly>& disasm(debugger->GetDisassembly());
+	std::shared_ptr<Disassembly> disasm(debugger->GetDisassembly());
 	addressTable = debugger->GetAddressTable();
 
 	disasmData.clear();
@@ -93,7 +93,7 @@ wxString DisasmListCtrl::OnGetItemText(long item, long column) const
 	}
 }
 
-DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
+DisasmFrame::DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent)
 	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
 	debugger(d)
 {
