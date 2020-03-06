@@ -7,8 +7,6 @@ set(GUI_SRC
     GUI/AppMain.cpp
     GUI/DisasmFrame.h
     GUI/DisasmFrame.cpp
-    GUI/DisasmListCtrl.h
-    GUI/DisasmListCtrl.cpp
     GUI/MainFrame.h
     GUI/MainFrame.cpp
     GUI/wx_header.h

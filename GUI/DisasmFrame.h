@@ -2,11 +2,72 @@
 #include "../Disassembler.h"
 #include "DisasmListCtrl.h"
 #include <wx/wx.h>
-
-#ifdef __GNUG__
+#include <wx/listctrl.h>
 #include <memory>
-#endif
+#include <vector>
+#include <unordered_map>
 
+
+enum ButtonID
+{
+	Step
+};
+
+class ButtonPanel : public wxPanel
+{
+public:
+	ButtonPanel(wxWindow* parent) : wxPanel(parent)
+	{
+		wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+
+		// TODO Add buttons for continue, pause, step in, step out, step over
+		wxButton* stepBtn = new wxButton(this, ButtonID::Step, "Step");
+		hbox->Add(stepBtn, wxSizerFlags(0).Align(wxLEFT));
+
+		SetSizer(hbox);
+	}
+
+private:
+};
+
+class DisasmListCtrl : public wxListCtrl
+{
+public:
+	struct InsData
+	{
+		wxString address;
+		wxString opcode;
+		wxString mnemonic;
+		wxString operand;
+		wxString comment;
+	};
+
+public:
+	DisasmListCtrl(wxWindow* parent);
+
+	void StoreDisassembly(std::shared_ptr<Disassembly> disasm);
+	void StoreAddressTable(AddressTable at);
+	void ShowAddress(uint16_t a);
+
+protected:
+	wxString OnGetItemText(long item, long column) const;
+
+private:
+	std::vector<InsData> disasmData;
+	AddressTable addressTable; // Address is key, index is value
+	uint16_t selectedItem = 0;
+
+
+	enum class ColumnID
+	{
+		Empty,
+		Address,
+		Opcode,
+		Mnemonic,
+		Operand,
+		Comment
+	};
+};
 
 class RegPanel : public wxPanel
 {
@@ -68,28 +129,6 @@ private:
 	wxStaticText* hl_value;
 };
 
-enum ButtonID
-{
-	Step
-};
-
-class ButtonPanel : public wxPanel
-{
-public:
-	ButtonPanel(wxWindow* parent) : wxPanel(parent)
-	{
-		wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
-
-		// TODO Add buttons for continue, pause, step in, step out, step over
-		wxButton* stepBtn = new wxButton(this, ButtonID::Step, "Step");
-		hbox->Add(stepBtn, wxSizerFlags(0).Align(wxLEFT));
-
-		SetSizer(hbox);
-	}
-
-private:
-};
-
 class DisasmFrame : public wxFrame
 {
 public:
@@ -111,4 +150,3 @@ private:
 
 	std::shared_ptr<Debugger> debugger;
 };
-
