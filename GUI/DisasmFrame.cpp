@@ -7,8 +7,9 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 	EVT_BUTTON(ButtonID::Step, DisasmFrame::OnStep)
 wxEND_EVENT_TABLE()
 
-DisasmFrame::DisasmFrame(wxWindow* parent)
-	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400))
+DisasmFrame::DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent)
+	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
+	debugger(d)
 {
 	InitMenuBar();
 
@@ -25,6 +26,11 @@ DisasmFrame::DisasmFrame(wxWindow* parent)
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
 	SetSizer(vbox);
+
+	disasmList->StoreDisassembly(debugger->GetDisassembly());
+	disasmList->StoreAddressTable(debugger->GetAddressTable());
+	disasmList->ShowAddress(debugger->cpuState.pc);
+	regPanel->UpdateValues(debugger->cpuState);
 }
 
 DisasmFrame::~DisasmFrame()
@@ -46,8 +52,9 @@ void DisasmFrame::InitMenuBar()
 
 void DisasmFrame::OnStep(wxCommandEvent& evt)
 {
-	// TODO connect this action with emulation
-	wxMessageBox("TODO");
+	debugger->Step();
+	regPanel->UpdateValues(debugger->cpuState);
+	disasmList->ShowAddress(debugger->cpuState.pc);
 }
 
 void DisasmFrame::OnExit(wxCommandEvent& evt)

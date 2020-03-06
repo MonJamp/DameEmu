@@ -52,6 +52,21 @@ void DisasmListCtrl::StoreDisassembly(std::shared_ptr<Disassembly> disasm)
 	Refresh();
 }
 
+void DisasmListCtrl::StoreAddressTable(AddressTable& at)
+{
+	addressTable = at;
+}
+
+void DisasmListCtrl::ShowAddress(uint16_t a)
+{
+	// Deselect previous item
+	SetItemState(selectedItem, 0, wxLIST_STATE_SELECTED);
+	// Select new item
+	EnsureVisible(addressTable[a]);
+	SetItemState(addressTable[a], wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+	selectedItem = addressTable[a];
+}
+
 wxString DisasmListCtrl::OnGetItemText(long item, long column) const
 {
 	if (static_cast<size_t>(item) > disasmData.size())

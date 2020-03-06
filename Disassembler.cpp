@@ -1,22 +1,7 @@
 #include "Disassembler.h"
-#include <sstream>
-#include <iomanip>
 #include <fstream>
 #include <iostream>
 
-
-template<
-	typename T,
-	typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type
->
-std::string intToHexString(T n, std::streamsize bytes, const char* is_prefix = "")
-{
-	std::stringstream ss;
-	ss << is_prefix
-		<< std::setfill('0') << std::setw(bytes * 2)
-		<< std::hex << std::uppercase << +n;
-	return ss.str();
-}
 
 std::string DisasmData::addressToStr()
 {
@@ -111,6 +96,7 @@ std::string DisasmData::commentToStr()
 
 Disassembler::Disassembler()
 {
+	cart.reset();
 	Reset();
 }
 
@@ -126,15 +112,15 @@ void Disassembler::Reset()
 	disassembly.reset(new std::vector<DisasmData>());
 }
 
-void Disassembler::LoadCartridge(const std::string& filename)
+void Disassembler::LoadCartridge(std::shared_ptr<Cartridge>& c)
 {
+	cart = c;
 	Reset();
-	cart.open(filename);
 }
 
 void Disassembler::Disassemble()
 {
-	while (pc < ROM_MAX_SIZE && pc < cart.size())
+	while (pc < ROM_MAX_SIZE && pc < cart->size())
 	{
 		disassembly->push_back(DisassembleInstruction());
 	}
@@ -159,7 +145,7 @@ inline void Disassembler::CacheConstOperands(Operand& operand)
 
 inline uint8_t Disassembler::fetch()
 {
-	uint8_t op = cart.read(pc++);
+	uint8_t op = cart->read(pc++);
 
 	if (ir == 0)
 	{
@@ -239,6 +225,7 @@ DisasmData Disassembler::DisassembleInstruction() {
 	ir = 0x00;
 
 	uint16_t address = pc;
+	addressTable[address] = disassembly->size();
 	uint8_t opcode = fetch();
 
 	Instruction ins = insTable[opcode];
@@ -274,4 +261,31 @@ DisasmData Disassembler::DisassembleInstruction() {
 	dis.comment = comment;
 
 	return dis;
+}
+
+Debugger::Debugger(std::shared_ptr<Bus>& b)
+{
+	bus = b;
+	disassembler.reset(new Disassembler());
+	disassembler->LoadCartridge(bus->cart);
+	disassembler->Disassemble();
+
+	UpdateCpuState();
+}
+
+void Debugger::Step()
+{
+	bus->Clock();
+	UpdateCpuState();
+}
+
+void Debugger::UpdateCpuState()
+{
+	cpuState.pc = bus->cpu.PC;
+	cpuState.sp = bus->cpu.SP;
+	cpuState.af = bus->cpu.AF;
+	cpuState.bc = bus->cpu.BC;
+	cpuState.de = bus->cpu.DE;
+	cpuState.hl = bus->cpu.HL;
+	cpuState.ime = bus->cpu.interupt_master_enable;
 }

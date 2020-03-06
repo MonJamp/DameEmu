@@ -42,12 +42,15 @@ public:
 		SetSizer(sbox);
 	}
 
-	wxStaticText* pc_value;
-	wxStaticText* sp_value;
-	wxStaticText* af_value;
-	wxStaticText* bc_value;
-	wxStaticText* de_value;
-	wxStaticText* hl_value;
+	void UpdateValues(Debugger::CpuState cpuState)
+	{
+		pc_value->SetLabel(intToHexString(cpuState.pc, 2, "0x"));
+		sp_value->SetLabel(intToHexString(cpuState.sp, 2, "0x"));
+		af_value->SetLabel(intToHexString(cpuState.af, 2, "0x"));
+		bc_value->SetLabel(intToHexString(cpuState.bc, 2, "0x"));
+		de_value->SetLabel(intToHexString(cpuState.de, 2, "0x"));
+		hl_value->SetLabel(intToHexString(cpuState.hl, 2, "0x"));
+	}
 
 private:
 	wxStaticText* pcText;
@@ -56,6 +59,13 @@ private:
 	wxStaticText* bcText;
 	wxStaticText* deText;
 	wxStaticText* hlText;
+
+	wxStaticText* pc_value;
+	wxStaticText* sp_value;
+	wxStaticText* af_value;
+	wxStaticText* bc_value;
+	wxStaticText* de_value;
+	wxStaticText* hl_value;
 };
 
 enum ButtonID
@@ -83,7 +93,7 @@ private:
 class DisasmFrame : public wxFrame
 {
 public:
-	DisasmFrame(wxWindow* parent);
+	DisasmFrame(std::shared_ptr<Debugger>& d, wxWindow* parent);
 	~DisasmFrame();
 
 private:
@@ -97,5 +107,7 @@ private:
 	DisasmListCtrl* disasmList;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
+
+	std::shared_ptr<Debugger> debugger;
 };
 

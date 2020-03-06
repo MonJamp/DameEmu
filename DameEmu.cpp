@@ -4,7 +4,9 @@
 
 DameEmu::DameEmu(std::shared_ptr<Cartridge>& cart)
 {
-	bus.InsertCartridge(cart);
+	bus.reset(new Bus);
+	bus->InsertCartridge(cart);
+	debugger.reset(new Debugger(bus));
 }
 
 DameEmu::~DameEmu()
@@ -13,5 +15,5 @@ DameEmu::~DameEmu()
 }
 
 void DameEmu::Step() {
-	bus.Clock();
+	bus->Clock();
 }

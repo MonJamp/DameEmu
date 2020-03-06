@@ -1,12 +1,10 @@
 #pragma once
 #include "Bus.h"
+#include "Disassembler.h"
 #include "Cartridge.h"
 #include <string>
 #include <cstdint>
-
-#ifdef __GNUG__
 #include <memory>
-#endif
 
 
 class DameEmu {
@@ -16,6 +14,9 @@ public:
 
 	void Step();
 
+public:
+	std::shared_ptr<Debugger> debugger;
+
 private:
-	Bus bus;
+	std::shared_ptr <Bus> bus;
 };

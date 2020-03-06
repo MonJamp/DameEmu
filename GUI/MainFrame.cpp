@@ -82,6 +82,7 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 	wxString filename = openFileDialog.GetPath();
 	cart.reset(new Cartridge());
 	cart->open(std::string(filename.mb_str()));
+	dameEmu = new DameEmu(cart);
 }
 
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
@@ -115,7 +116,7 @@ void MainFrame::OnDebugger(wxCommandEvent& evt)
 	}
 	else
 	{
-		disasmFrame = new DisasmFrame(this);
+		disasmFrame = new DisasmFrame(dameEmu->debugger, this);
 		disasmFrame->SetName("DisasmFrame");
 		disasmFrame->Show();
 	}
