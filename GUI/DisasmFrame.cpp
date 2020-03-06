@@ -6,8 +6,8 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxListCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+DisasmListView::DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent)
+	: wxListView(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER),
 	debugger(d)
 {
@@ -40,7 +40,7 @@ DisasmListCtrl::DisasmListCtrl(std::shared_ptr<Debugger> d, wxWindow* parent)
 	RefreshValues();
 }
 
-void DisasmListCtrl::RefreshValues()
+void DisasmListView::RefreshValues()
 {
 	std::shared_ptr<Disassembly> disasm(debugger->GetDisassembly());
 	addressTable = debugger->GetAddressTable();
@@ -65,17 +65,17 @@ void DisasmListCtrl::RefreshValues()
 	ShowAddress(debugger->cpuState.pc);
 }
 
-void DisasmListCtrl::ShowAddress(uint16_t a)
+void DisasmListView::ShowAddress(uint16_t a)
 {
 	// Deselect previous item
-	SetItemState(selectedItem, 0, wxLIST_STATE_SELECTED);
+	Select(selectedItem, false);
 	// Select new item
-	EnsureVisible(addressTable[a]);
-	SetItemState(addressTable[a], wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 	selectedItem = addressTable[a];
+	Focus(selectedItem);
+	Select(selectedItem, true);
 }
 
-wxString DisasmListCtrl::OnGetItemText(long item, long column) const
+wxString DisasmListView::OnGetItemText(long item, long column) const
 {
 	if (static_cast<size_t>(item) > disasmData.size())
 	{
@@ -115,7 +115,7 @@ void DisasmFrame::InitWidgets()
 	btnPanel = new ButtonPanel(this);
 	vbox->Add(btnPanel, wxSizerFlags(0));
 
-	disasmList = new DisasmListCtrl(debugger, this);
+	disasmList = new DisasmListView(debugger, this);
 	hbox->Add(disasmList, wxSizerFlags(3).Expand());
 	regPanel = new RegPanel(this);
 	hbox->Add(regPanel, wxSizerFlags(1).Expand());

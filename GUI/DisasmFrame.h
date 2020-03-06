@@ -29,7 +29,7 @@ public:
 private:
 };
 
-class DisasmListCtrl : public wxListCtrl
+class DisasmListView : public wxListView
 {
 public:
 	struct InsData
@@ -42,7 +42,7 @@ public:
 	};
 
 public:
-	DisasmListCtrl(std::shared_ptr<Debugger> d, wxWindow* parent);
+	DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent);
 
 	void RefreshValues();
 	void ShowAddress(uint16_t a);
@@ -135,7 +135,7 @@ private:
 
 	wxDECLARE_EVENT_TABLE();
 
-	DisasmListCtrl* disasmList;
+	DisasmListView* disasmList;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
 
