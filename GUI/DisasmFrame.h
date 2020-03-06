@@ -77,12 +77,12 @@ public:
 		wxStaticBoxSizer* sbox = new wxStaticBoxSizer(wxHORIZONTAL, this);
 		wxGridSizer* grid = new wxGridSizer(6, 2, 0, 0);
 
-		pcText = new wxStaticText(this, wxID_ANY, "PC: ");
-		spText = new wxStaticText(this, wxID_ANY, "SP: ");
-		afText = new wxStaticText(this, wxID_ANY, "AF: ");
-		bcText = new wxStaticText(this, wxID_ANY, "BC: ");
-		deText = new wxStaticText(this, wxID_ANY, "DE: ");
-		hlText = new wxStaticText(this, wxID_ANY, "HL: ");
+		wxStaticText* pcText = new wxStaticText(this, wxID_ANY, "PC: ");
+		wxStaticText* spText = new wxStaticText(this, wxID_ANY, "SP: ");
+		wxStaticText* afText = new wxStaticText(this, wxID_ANY, "AF: ");
+		wxStaticText* bcText = new wxStaticText(this, wxID_ANY, "BC: ");
+		wxStaticText* deText = new wxStaticText(this, wxID_ANY, "DE: ");
+		wxStaticText* hlText = new wxStaticText(this, wxID_ANY, "HL: ");
 
 		pc_value = new wxStaticText(this, wxID_ANY, "0xFFFF");
 		sp_value = new wxStaticText(this, wxID_ANY, "0xFFFF");
@@ -114,19 +114,13 @@ public:
 	}
 
 private:
-	wxStaticText* pcText;
-	wxStaticText* spText;
-	wxStaticText* afText;
-	wxStaticText* bcText;
-	wxStaticText* deText;
-	wxStaticText* hlText;
-
 	wxStaticText* pc_value;
 	wxStaticText* sp_value;
 	wxStaticText* af_value;
 	wxStaticText* bc_value;
 	wxStaticText* de_value;
 	wxStaticText* hl_value;
+
 };
 
 class DisasmFrame : public wxFrame
