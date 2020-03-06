@@ -1,263 +1,263 @@
 #include "CPU.h"
 #include "Bus.h"
 
-CPU::Instruction CPU::cb_instructions[256] = {
-	{"RLC B", 1, &CPU::RLC_B},					//00
-	{"RLC C", 1, &CPU::RLC_C},					//01
-	{"RLC D", 1, &CPU::RLC_D},					//02
-	{"RLC E", 1, &CPU::RLC_E},					//03
-	{"RLC H", 1, &CPU::RLC_H},					//04
-	{"RLC L", 1, &CPU::RLC_L},					//05
-	{"RLC (HL)", 1, &CPU::RLC_HL},				//06
-	{"RLC A", 1, &CPU::RLC_A},					//07
-	{"RRC B", 1, &CPU::RRC_B},					//08
-	{"RRC C", 1, &CPU::RRC_C},					//09
-	{"RRC D", 1, &CPU::RRC_D},					//0A
-	{"RRC E", 1, &CPU::RRC_E},					//0B
-	{"RRC H", 1, &CPU::RRC_H},					//0C
-	{"RRC L", 1, &CPU::RRC_L},					//0D
-	{"RRC (HL)", 1, &CPU::RRC_HL},				//0E
-	{"RRC A", 1, &CPU::RRC_A},					//0F
-	{"RL B", 1, &CPU::RL_B},					//10
-	{"RL C", 1, &CPU::RL_C},					//11
-	{"RL D", 1, &CPU::RL_D},					//12
-	{"RL E", 1, &CPU::RL_E},					//13
-	{"RL H", 1, &CPU::RL_H},					//14
-	{"RL L", 1, &CPU::RL_L},					//15
-	{"RL (HL)", 1, &CPU::RL_HL},				//16
-	{"RL A", 1, &CPU::RL_A},					//17
-	{"RR B", 1, &CPU::RR_B},					//18
-	{"RR C", 1, &CPU::RR_C},					//19
-	{"RR D", 1, &CPU::RR_D},					//1A
-	{"RR E", 1, &CPU::RR_E},					//1B
-	{"RR H", 1, &CPU::RR_H},					//1C
-	{"RR L", 1, &CPU::RR_L},					//1D
-	{"RR (HL)", 1, &CPU::RR_HL},				//1E
-	{"RR A", 1, &CPU::RR_A},					//1F
-	{"SLA B", 1, &CPU::SLA_B},					//20
-	{"SLA C", 1, &CPU::SLA_C},					//21
-	{"SLA D", 1, &CPU::SLA_D},					//22
-	{"SLA E", 1, &CPU::SLA_E},					//23
-	{"SLA H", 1, &CPU::SLA_H},					//24
-	{"SLA L", 1, &CPU::SLA_L},					//25
-	{"SLA (HL)", 1, &CPU::SLA_HL},				//26
-	{"SLA A", 1, &CPU::SRA_A},					//27
-	{"SRA B", 1, &CPU::SRA_B},					//28
-	{"SRA C", 1, &CPU::SRA_C},					//29
-	{"SRA D", 1, &CPU::SRA_D},					//2A
-	{"SRA E", 1, &CPU::SRA_E},					//2B
-	{"SRA H", 1, &CPU::SRA_H},					//2C
-	{"SRA L", 1, &CPU::SRA_L},					//2D
-	{"SRA (HL)", 1, &CPU::SRA_HL},				//2E
-	{"SRA A", 1, &CPU::SRA_A},					//2F
-	{"SWAP B", 1, &CPU::SWAP_B},				//30
-	{"SWAP C", 1, &CPU::SWAP_C},				//31
-	{"SWAP D", 1, &CPU::SWAP_D},				//32
-	{"SWAP E", 1, &CPU::SWAP_E},				//33
-	{"SWAP H", 1, &CPU::SWAP_H},				//34
-	{"SWAP L", 1, &CPU::SWAP_L},				//35
-	{"SWAP (HL)", 1, &CPU::SWAP_HL},			//36
-	{"SWAP A", 1, &CPU::SWAP_A},				//37
-	{"SRL B", 1, &CPU::SRL_B},					//38
-	{"SRL C", 1, &CPU::SRL_C},					//39
-	{"SRL D", 1, &CPU::SRL_D},					//3A
-	{"SRL E", 1, &CPU::SRL_E},					//3B
-	{"SRL H", 1, &CPU::SRL_H},					//3C
-	{"SRL L", 1, &CPU::SRL_L},					//3D
-	{"SRL (HL)", 1, &CPU::SRL_HL},				//3E
-	{"SRL A", 1, &CPU::SRL_A},					//3F
-	{"BIT 0, B", 1, &CPU::BIT_0_B},				//40
-	{"BIT 0, C", 1, &CPU::BIT_0_C},				//41
-	{"BIT 0, D", 1, &CPU::BIT_0_D},				//42
-	{"BIT 0, E", 1, &CPU::BIT_0_E},				//43
-	{"BIT 0, H", 1, &CPU::BIT_0_H},				//44
-	{"BIT 0, L", 1, &CPU::BIT_0_L},				//45
-	{"BIT 0, (HL)", 1, &CPU::BIT_0_HL},			//46
-	{"BIT 0, A", 1, &CPU::BIT_0_A},				//47
-	{"BIT 1, B", 1, &CPU::BIT_1_B},				//48
-	{"BIT 1, C", 1, &CPU::BIT_1_C},				//49
-	{"BIT 1, D", 1, &CPU::BIT_1_D},				//4A
-	{"BIT 1, E", 1, &CPU::BIT_1_E},				//4B
-	{"BIT 1, H", 1, &CPU::BIT_1_H},				//4C
-	{"BIT 1, L", 1, &CPU::BIT_1_L},				//4D
-	{"BIT 1, (HL)", 1, &CPU::BIT_1_HL},			//4E
-	{"BIT 1, A", 1, &CPU::BIT_1_A},				//4F
-	{"BIT 2, B", 1, &CPU::BIT_2_B},				//50
-	{"BIT 2, C", 1, &CPU::BIT_2_C},				//51
-	{"BIT 2, D", 1, &CPU::BIT_2_D},				//52
-	{"BIT 2, E", 1, &CPU::BIT_2_E},				//53
-	{"BIT 2, H", 1, &CPU::BIT_2_H},				//54
-	{"BIT 2, L", 1, &CPU::BIT_2_L},				//55
-	{"BIT 2, (HL)", 1, &CPU::BIT_2_HL},			//56
-	{"BIT 2, A", 1, &CPU::BIT_2_A},				//57
-	{"BIT 3, B", 1, &CPU::BIT_3_B},				//58
-	{"BIT 3, C", 1, &CPU::BIT_3_C},				//59
-	{"BIT 3, D", 1, &CPU::BIT_3_D},				//5A
-	{"BIT 3, E", 1, &CPU::BIT_3_E},				//5B
-	{"BIT 3, H", 1, &CPU::BIT_3_H},				//5C
-	{"BIT 3, L", 1, &CPU::BIT_3_L},				//5D
-	{"BIT 3, (HL)", 1, &CPU::BIT_3_HL},			//5E
-	{"BIT 3, A", 1, &CPU::BIT_3_A},				//5F
-	{"BIT 4, B", 1, &CPU::BIT_4_B},				//60
-	{"BIT 4, C", 1, &CPU::BIT_4_C},				//61
-	{"BIT 4, D", 1, &CPU::BIT_4_D},				//62
-	{"BIT 4, E", 1, &CPU::BIT_4_E},				//63
-	{"BIT 4, H", 1, &CPU::BIT_4_H},				//64
-	{"BIT 4, L", 1, &CPU::BIT_4_L},				//65
-	{"BIT 4, (HL)", 1, &CPU::BIT_4_HL},			//66
-	{"BIT 4, A", 1, &CPU::BIT_4_A},				//67
-	{"BIT 5, B", 1, &CPU::BIT_5_B},				//68
-	{"BIT 5, C", 1, &CPU::BIT_5_C},				//69
-	{"BIT 5, D", 1, &CPU::BIT_5_D},				//6A
-	{"BIT 5, E", 1, &CPU::BIT_5_E},				//6B
-	{"BIT 5, H", 1, &CPU::BIT_5_H},				//6C
-	{"BIT 5, L", 1, &CPU::BIT_5_L},				//6D
-	{"BIT 5, (HL)", 1, &CPU::BIT_5_HL},			//6E
-	{"BIT 5, A", 1, &CPU::BIT_5_A},				//6F
-	{"BIT 6, B", 1, &CPU::BIT_6_B},				//70
-	{"BIT 6, C", 1, &CPU::BIT_6_C},				//71
-	{"BIT 6, D", 1, &CPU::BIT_6_D},				//72
-	{"BIT 6, E", 1, &CPU::BIT_6_E},				//73
-	{"BIT 6, H", 1, &CPU::BIT_6_H},				//74
-	{"BIT 6, L", 1, &CPU::BIT_6_L},				//75
-	{"BIT 6, (HL)", 1, &CPU::BIT_6_HL},			//76
-	{"BIT 6, A", 1, &CPU::BIT_6_A},				//77
-	{"BIT 7, B", 1, &CPU::BIT_7_B},				//78
-	{"BIT 7, C", 1, &CPU::BIT_7_C},				//79
-	{"BIT 7, D", 1, &CPU::BIT_7_D},				//7A
-	{"BIT 7, E", 1, &CPU::BIT_7_E},				//7B
-	{"BIT 7, H", 1, &CPU::BIT_7_H},				//7C
-	{"BIT 7, L", 1, &CPU::BIT_7_L},				//7D
-	{"BIT 7, (HL)", 1, &CPU::BIT_7_HL},			//7E
-	{"BIT 7, A", 1, &CPU::BIT_7_A},				//7F
-	{"RES 0, B", 1, &CPU::RES_0_B},				//80
-	{"RES 0, C", 1, &CPU::RES_0_C},				//81
-	{"RES 0, D", 1, &CPU::RES_0_D},				//82
-	{"RES 0, E", 1, &CPU::RES_0_E},				//83
-	{"RES 0, H", 1, &CPU::RES_0_H},				//84
-	{"RES 0, L", 1, &CPU::RES_0_L},				//85
-	{"RES 0, (HL)", 1, &CPU::RES_0_HL},			//86
-	{"RES 0, A", 1, &CPU::RES_0_A},				//87
-	{"RES 1, B", 1, &CPU::RES_1_B},				//88
-	{"RES 1, C", 1, &CPU::RES_1_C},				//89
-	{"RES 1, D", 1, &CPU::RES_1_D},				//8A
-	{"RES 1, E", 1, &CPU::RES_1_E},				//8B
-	{"RES 1, H", 1, &CPU::RES_1_H},				//8C
-	{"RES 1, L", 1, &CPU::RES_1_L},				//8D
-	{"RES 1, (HL)", 1, &CPU::RES_1_HL},			//8E
-	{"RES 1, A", 1, &CPU::RES_1_A},				//8F
-	{"RES 2, B", 1, &CPU::RES_2_B},				//90
-	{"RES 2, C", 1, &CPU::RES_2_C},				//91
-	{"RES 2, D", 1, &CPU::RES_2_D},				//92
-	{"RES 2, E", 1, &CPU::RES_2_E},				//93
-	{"RES 2, H", 1, &CPU::RES_2_H},				//94
-	{"RES 2, L", 1, &CPU::RES_2_L},				//95
-	{"RES 2, (HL)", 1, &CPU::RES_2_HL},			//96
-	{"RES 2, A", 1, &CPU::RES_2_A},				//97
-	{"RES 3, B", 1, &CPU::RES_3_B},				//98
-	{"RES 3, C", 1, &CPU::RES_3_C},				//99
-	{"RES 3, D", 1, &CPU::RES_3_D},				//9A
-	{"RES 3, E", 1, &CPU::RES_3_E},				//9B
-	{"RES 3, H", 1, &CPU::RES_3_H},				//9C
-	{"RES 3, L", 1, &CPU::RES_3_L},				//9D
-	{"RES 3, (HL)", 1, &CPU::RES_3_HL},			//9E
-	{"RES 3, A", 1, &CPU::RES_3_A},				//9F
-	{"RES 4, B", 1, &CPU::RES_4_B},				//A0
-	{"RES 4, C", 1, &CPU::RES_4_C},				//A1
-	{"RES 4, D", 1, &CPU::RES_4_D},				//A2
-	{"RES 4, E", 1, &CPU::RES_4_E},				//A3
-	{"RES 4, H", 1, &CPU::RES_4_H},				//A4
-	{"RES 4, L", 1, &CPU::RES_4_L},				//A5
-	{"RES 4, (HL)", 1, &CPU::RES_4_HL},			//A6
-	{"RES 4, A", 1, &CPU::RES_4_A},				//A7
-	{"RES 5, B", 1, &CPU::RES_5_B},				//A8
-	{"RES 5, C", 1, &CPU::RES_5_C},				//A9
-	{"RES 5, D", 1, &CPU::RES_5_D},				//AA
-	{"RES 5, E", 1, &CPU::RES_5_E},				//AB
-	{"RES 5, H", 1, &CPU::RES_5_H},				//AC
-	{"RES 5, L", 1, &CPU::RES_5_L},				//AD
-	{"RES 5, (HL)", 1, &CPU::RES_5_HL},			//AE
-	{"RES 5, A", 1, &CPU::RES_5_A},				//AF
-	{"RES 6, B", 1, &CPU::RES_6_B},				//B0
-	{"RES 6, C", 1, &CPU::RES_6_C},				//B1
-	{"RES 6, D", 1, &CPU::RES_6_D},				//B2
-	{"RES 6, E", 1, &CPU::RES_6_E},				//B3
-	{"RES 6, H", 1, &CPU::RES_6_H},				//B4
-	{"RES 6, L", 1, &CPU::RES_6_L},				//B5
-	{"RES 6, (HL)", 1, &CPU::RES_6_HL},			//B6
-	{"RES 6, A", 1, &CPU::RES_6_A},				//B7
-	{"RES 7, B", 1, &CPU::RES_7_B},				//B8
-	{"RES 7, C", 1, &CPU::RES_7_C},				//B9
-	{"RES 7, D", 1, &CPU::RES_7_D},				//BA
-	{"RES 7, E", 1, &CPU::RES_7_E},				//BB
-	{"RES 7, H", 1, &CPU::RES_7_H},				//BC
-	{"RES 7, L", 1, &CPU::RES_7_L},				//BD
-	{"RES 7, (HL)", 1, &CPU::RES_7_HL},			//BE
-	{"RES 7, A", 1, &CPU::RES_7_A},				//BF
-	{"SET 0, B", 1, &CPU::SET_0_B},				//C0
-	{"SET 0, C", 1, &CPU::SET_0_C},				//C1
-	{"SET 0, D", 1, &CPU::SET_0_D},				//C2
-	{"SET 0, E", 1, &CPU::SET_0_E},				//C3
-	{"SET 0, H", 1, &CPU::SET_0_H},				//C4
-	{"SET 0, L", 1, &CPU::SET_0_L},				//C5
-	{"SET 0, (HL)", 1, &CPU::SET_0_HL},			//C6
-	{"SET 0, A", 1, &CPU::SET_0_A},				//C7
-	{"SET 1, B", 1, &CPU::SET_1_B},				//C8
-	{"SET 1, C", 1, &CPU::SET_1_C},				//C9
-	{"SET 1, D", 1, &CPU::SET_1_D},				//CA
-	{"SET 1, E", 1, &CPU::SET_1_E},				//CB
-	{"SET 1, H", 1, &CPU::SET_1_H},				//CC
-	{"SET 1, L", 1, &CPU::SET_1_L},				//CD
-	{"SET 1, (HL)", 1, &CPU::SET_1_HL},			//CE
-	{"SET 1, A", 1, &CPU::SET_1_A},				//CF
-	{"SET 2, B", 1, &CPU::SET_2_B},				//D0
-	{"SET 2, C", 1, &CPU::SET_2_C},				//D1
-	{"SET 2, D", 1, &CPU::SET_2_D},				//D2
-	{"SET 2, E", 1, &CPU::SET_2_E},				//D3
-	{"SET 2, H", 1, &CPU::SET_2_H},				//D4
-	{"SET 2, L", 1, &CPU::SET_2_L},				//D5
-	{"SET 2, (HL)", 1, &CPU::SET_2_HL},			//D6
-	{"SET 2, A", 1, &CPU::SET_2_A},				//D7
-	{"SET 3, B", 1, &CPU::SET_3_B},				//D8
-	{"SET 3, C", 1, &CPU::SET_3_C},				//D9
-	{"SET 3, D", 1, &CPU::SET_3_D},				//DA
-	{"SET 3, E", 1, &CPU::SET_3_E},				//DB
-	{"SET 3, H", 1, &CPU::SET_3_H},				//DC
-	{"SET 3, L", 1, &CPU::SET_3_L},				//DD
-	{"SET 3, (HL)", 1, &CPU::SET_3_HL},			//DE
-	{"SET 3, A", 1, &CPU::SET_3_A},				//DF
-	{"SET 4, B", 1, &CPU::SET_4_B},				//E0
-	{"SET 4, C", 1, &CPU::SET_4_C},				//E1
-	{"SET 4, D", 1, &CPU::SET_4_D},				//E2
-	{"SET 4, E", 1, &CPU::SET_4_E},				//E3
-	{"SET 4, H", 1, &CPU::SET_4_H},				//E4
-	{"SET 4, L", 1, &CPU::SET_4_L},				//E5
-	{"SET 4, (HL)", 1, &CPU::SET_4_HL},			//E6
-	{"SET 4, A", 1, &CPU::SET_4_A},				//E7
-	{"SET 5, B", 1, &CPU::SET_5_B},				//E8
-	{"SET 5, C", 1, &CPU::SET_5_C},				//E9
-	{"SET 5, D", 1, &CPU::SET_5_D},				//EA
-	{"SET 5, E", 1, &CPU::SET_5_E},				//EB
-	{"SET 5, H", 1, &CPU::SET_5_H},				//EC
-	{"SET 5, L", 1, &CPU::SET_5_L},				//ED
-	{"SET 5, (HL)", 1, &CPU::SET_5_HL},			//EE
-	{"SET 5, A", 1, &CPU::SET_5_A},				//EF
-	{"SET 6, B", 1, &CPU::SET_6_B},				//F0
-	{"SET 6, C", 1, &CPU::SET_6_C},				//F1
-	{"SET 6, D", 1, &CPU::SET_6_D},				//F2
-	{"SET 6, E", 1, &CPU::SET_6_E},				//F3
-	{"SET 6, H", 1, &CPU::SET_6_H},				//F4
-	{"SET 6, L", 1, &CPU::SET_6_L},				//F5
-	{"SET 6, (HL)", 1, &CPU::SET_6_HL},			//F6
-	{"SET 6, A", 1, &CPU::SET_6_A},				//F7
-	{"SET 7, B", 1, &CPU::SET_7_B},				//F8
-	{"SET 7, C", 1, &CPU::SET_7_C},				//F9
-	{"SET 7, D", 1, &CPU::SET_7_D},				//FA
-	{"SET 7, E", 1, &CPU::SET_7_E},				//FB
-	{"SET 7, H", 1, &CPU::SET_7_H},				//FC
-	{"SET 7, L", 1, &CPU::SET_7_L},				//FD
-	{"SET 7, (HL)", 1, &CPU::SET_7_HL},			//FE
-	{"SET 7, A", 1, &CPU::SET_7_A},				//FF
+CPU::InstructionJumpTable CPU::cb_jumpTable[256] = {
+{&CPU::RLC_B},					//00
+{&CPU::RLC_C},					//01
+{&CPU::RLC_D},					//02
+{&CPU::RLC_E},					//03
+{&CPU::RLC_H},					//04
+{&CPU::RLC_L},					//05
+{&CPU::RLC_HL},				//06
+{&CPU::RLC_A},					//07
+{&CPU::RRC_B},					//08
+{&CPU::RRC_C},					//09
+{&CPU::RRC_D},					//0A
+{&CPU::RRC_E},					//0B
+{&CPU::RRC_H},					//0C
+{&CPU::RRC_L},					//0D
+{&CPU::RRC_HL},				//0E
+{&CPU::RRC_A},					//0F
+{&CPU::RL_B},					//10
+{&CPU::RL_C},					//11
+{&CPU::RL_D},					//12
+{&CPU::RL_E},					//13
+{&CPU::RL_H},					//14
+{&CPU::RL_L},					//15
+{&CPU::RL_HL},				//16
+{&CPU::RL_A},					//17
+{&CPU::RR_B},					//18
+{&CPU::RR_C},					//19
+{&CPU::RR_D},					//1A
+{&CPU::RR_E},					//1B
+{&CPU::RR_H},					//1C
+{&CPU::RR_L},					//1D
+{&CPU::RR_HL},				//1E
+{&CPU::RR_A},					//1F
+{&CPU::SLA_B},					//20
+{&CPU::SLA_C},					//21
+{&CPU::SLA_D},					//22
+{&CPU::SLA_E},					//23
+{&CPU::SLA_H},					//24
+{&CPU::SLA_L},					//25
+{&CPU::SLA_HL},				//26
+{&CPU::SRA_A},					//27
+{&CPU::SRA_B},					//28
+{&CPU::SRA_C},					//29
+{&CPU::SRA_D},					//2A
+{&CPU::SRA_E},					//2B
+{&CPU::SRA_H},					//2C
+{&CPU::SRA_L},					//2D
+{&CPU::SRA_HL},				//2E
+{&CPU::SRA_A},					//2F
+{&CPU::SWAP_B},				//30
+{&CPU::SWAP_C},				//31
+{&CPU::SWAP_D},				//32
+{&CPU::SWAP_E},				//33
+{&CPU::SWAP_H},				//34
+{&CPU::SWAP_L},				//35
+{&CPU::SWAP_HL},			//36
+{&CPU::SWAP_A},				//37
+{&CPU::SRL_B},					//38
+{&CPU::SRL_C},					//39
+{&CPU::SRL_D},					//3A
+{&CPU::SRL_E},					//3B
+{&CPU::SRL_H},					//3C
+{&CPU::SRL_L},					//3D
+{&CPU::SRL_HL},				//3E
+{&CPU::SRL_A},					//3F
+{&CPU::BIT_0_B},				//40
+{&CPU::BIT_0_C},				//41
+{&CPU::BIT_0_D},				//42
+{&CPU::BIT_0_E},				//43
+{&CPU::BIT_0_H},				//44
+{&CPU::BIT_0_L},				//45
+{&CPU::BIT_0_HL},			//46
+{&CPU::BIT_0_A},				//47
+{&CPU::BIT_1_B},				//48
+{&CPU::BIT_1_C},				//49
+{&CPU::BIT_1_D},				//4A
+{&CPU::BIT_1_E},				//4B
+{&CPU::BIT_1_H},				//4C
+{&CPU::BIT_1_L},				//4D
+{&CPU::BIT_1_HL},			//4E
+{&CPU::BIT_1_A},				//4F
+{&CPU::BIT_2_B},				//50
+{&CPU::BIT_2_C},				//51
+{&CPU::BIT_2_D},				//52
+{&CPU::BIT_2_E},				//53
+{&CPU::BIT_2_H},				//54
+{&CPU::BIT_2_L},				//55
+{&CPU::BIT_2_HL},			//56
+{&CPU::BIT_2_A},				//57
+{&CPU::BIT_3_B},				//58
+{&CPU::BIT_3_C},				//59
+{&CPU::BIT_3_D},				//5A
+{&CPU::BIT_3_E},				//5B
+{&CPU::BIT_3_H},				//5C
+{&CPU::BIT_3_L},				//5D
+{&CPU::BIT_3_HL},			//5E
+{&CPU::BIT_3_A},				//5F
+{&CPU::BIT_4_B},				//60
+{&CPU::BIT_4_C},				//61
+{&CPU::BIT_4_D},				//62
+{&CPU::BIT_4_E},				//63
+{&CPU::BIT_4_H},				//64
+{&CPU::BIT_4_L},				//65
+{&CPU::BIT_4_HL},			//66
+{&CPU::BIT_4_A},				//67
+{&CPU::BIT_5_B},				//68
+{&CPU::BIT_5_C},				//69
+{&CPU::BIT_5_D},				//6A
+{&CPU::BIT_5_E},				//6B
+{&CPU::BIT_5_H},				//6C
+{&CPU::BIT_5_L},				//6D
+{&CPU::BIT_5_HL},			//6E
+{&CPU::BIT_5_A},				//6F
+{&CPU::BIT_6_B},				//70
+{&CPU::BIT_6_C},				//71
+{&CPU::BIT_6_D},				//72
+{&CPU::BIT_6_E},				//73
+{&CPU::BIT_6_H},				//74
+{&CPU::BIT_6_L},				//75
+{&CPU::BIT_6_HL},			//76
+{&CPU::BIT_6_A},				//77
+{&CPU::BIT_7_B},				//78
+{&CPU::BIT_7_C},				//79
+{&CPU::BIT_7_D},				//7A
+{&CPU::BIT_7_E},				//7B
+{&CPU::BIT_7_H},				//7C
+{&CPU::BIT_7_L},				//7D
+{&CPU::BIT_7_HL},			//7E
+{&CPU::BIT_7_A},				//7F
+{&CPU::RES_0_B},				//80
+{&CPU::RES_0_C},				//81
+{&CPU::RES_0_D},				//82
+{&CPU::RES_0_E},				//83
+{&CPU::RES_0_H},				//84
+{&CPU::RES_0_L},				//85
+{&CPU::RES_0_HL},			//86
+{&CPU::RES_0_A},				//87
+{&CPU::RES_1_B},				//88
+{&CPU::RES_1_C},				//89
+{&CPU::RES_1_D},				//8A
+{&CPU::RES_1_E},				//8B
+{&CPU::RES_1_H},				//8C
+{&CPU::RES_1_L},				//8D
+{&CPU::RES_1_HL},			//8E
+{&CPU::RES_1_A},				//8F
+{&CPU::RES_2_B},				//90
+{&CPU::RES_2_C},				//91
+{&CPU::RES_2_D},				//92
+{&CPU::RES_2_E},				//93
+{&CPU::RES_2_H},				//94
+{&CPU::RES_2_L},				//95
+{&CPU::RES_2_HL},			//96
+{&CPU::RES_2_A},				//97
+{&CPU::RES_3_B},				//98
+{&CPU::RES_3_C},				//99
+{&CPU::RES_3_D},				//9A
+{&CPU::RES_3_E},				//9B
+{&CPU::RES_3_H},				//9C
+{&CPU::RES_3_L},				//9D
+{&CPU::RES_3_HL},			//9E
+{&CPU::RES_3_A},				//9F
+{&CPU::RES_4_B},				//A0
+{&CPU::RES_4_C},				//A1
+{&CPU::RES_4_D},				//A2
+{&CPU::RES_4_E},				//A3
+{&CPU::RES_4_H},				//A4
+{&CPU::RES_4_L},				//A5
+{&CPU::RES_4_HL},			//A6
+{&CPU::RES_4_A},				//A7
+{&CPU::RES_5_B},				//A8
+{&CPU::RES_5_C},				//A9
+{&CPU::RES_5_D},				//AA
+{&CPU::RES_5_E},				//AB
+{&CPU::RES_5_H},				//AC
+{&CPU::RES_5_L},				//AD
+{&CPU::RES_5_HL},			//AE
+{&CPU::RES_5_A},				//AF
+{&CPU::RES_6_B},				//B0
+{&CPU::RES_6_C},				//B1
+{&CPU::RES_6_D},				//B2
+{&CPU::RES_6_E},				//B3
+{&CPU::RES_6_H},				//B4
+{&CPU::RES_6_L},				//B5
+{&CPU::RES_6_HL},			//B6
+{&CPU::RES_6_A},				//B7
+{&CPU::RES_7_B},				//B8
+{&CPU::RES_7_C},				//B9
+{&CPU::RES_7_D},				//BA
+{&CPU::RES_7_E},				//BB
+{&CPU::RES_7_H},				//BC
+{&CPU::RES_7_L},				//BD
+{&CPU::RES_7_HL},			//BE
+{&CPU::RES_7_A},				//BF
+{&CPU::SET_0_B},				//C0
+{&CPU::SET_0_C},				//C1
+{&CPU::SET_0_D},				//C2
+{&CPU::SET_0_E},				//C3
+{&CPU::SET_0_H},				//C4
+{&CPU::SET_0_L},				//C5
+{&CPU::SET_0_HL},			//C6
+{&CPU::SET_0_A},				//C7
+{&CPU::SET_1_B},				//C8
+{&CPU::SET_1_C},				//C9
+{&CPU::SET_1_D},				//CA
+{&CPU::SET_1_E},				//CB
+{&CPU::SET_1_H},				//CC
+{&CPU::SET_1_L},				//CD
+{&CPU::SET_1_HL},			//CE
+{&CPU::SET_1_A},				//CF
+{&CPU::SET_2_B},				//D0
+{&CPU::SET_2_C},				//D1
+{&CPU::SET_2_D},				//D2
+{&CPU::SET_2_E},				//D3
+{&CPU::SET_2_H},				//D4
+{&CPU::SET_2_L},				//D5
+{&CPU::SET_2_HL},			//D6
+{&CPU::SET_2_A},				//D7
+{&CPU::SET_3_B},				//D8
+{&CPU::SET_3_C},				//D9
+{&CPU::SET_3_D},				//DA
+{&CPU::SET_3_E},				//DB
+{&CPU::SET_3_H},				//DC
+{&CPU::SET_3_L},				//DD
+{&CPU::SET_3_HL},			//DE
+{&CPU::SET_3_A},				//DF
+{&CPU::SET_4_B},				//E0
+{&CPU::SET_4_C},				//E1
+{&CPU::SET_4_D},				//E2
+{&CPU::SET_4_E},				//E3
+{&CPU::SET_4_H},				//E4
+{&CPU::SET_4_L},				//E5
+{&CPU::SET_4_HL},			//E6
+{&CPU::SET_4_A},				//E7
+{&CPU::SET_5_B},				//E8
+{&CPU::SET_5_C},				//E9
+{&CPU::SET_5_D},				//EA
+{&CPU::SET_5_E},				//EB
+{&CPU::SET_5_H},				//EC
+{&CPU::SET_5_L},				//ED
+{&CPU::SET_5_HL},			//EE
+{&CPU::SET_5_A},				//EF
+{&CPU::SET_6_B},				//F0
+{&CPU::SET_6_C},				//F1
+{&CPU::SET_6_D},				//F2
+{&CPU::SET_6_E},				//F3
+{&CPU::SET_6_H},				//F4
+{&CPU::SET_6_L},				//F5
+{&CPU::SET_6_HL},			//F6
+{&CPU::SET_6_A},				//F7
+{&CPU::SET_7_B},				//F8
+{&CPU::SET_7_C},				//F9
+{&CPU::SET_7_D},				//FA
+{&CPU::SET_7_E},				//FB
+{&CPU::SET_7_H},				//FC
+{&CPU::SET_7_L},				//FD
+{&CPU::SET_7_HL},			//FE
+{&CPU::SET_7_A},				//FF
 };
 
 

@@ -1,4 +1,5 @@
 #include "CPU.h"
+#include "InstructionSet.h"
 #include "Bus.h"
 
 #ifdef D_LOG_INS
@@ -84,9 +85,9 @@ uint8_t CPU::Step() {
 	debug_msg("%04X: ", PC);
 
 	uint8_t opcode = GetByteAtPC();
-	Instruction ins = instructions[opcode];
+	InstructionJumpTable ins = jumpTable[opcode];
 
-	switch (ins.length) {
+	switch (insTable[opcode].getLength()) {
 	case 1:
 		debug_msg(ins.mnemonic);
 		break;
@@ -110,7 +111,7 @@ uint8_t CPU::Step() {
 
 void CPU::CB() {
 	uint8_t opcode = static_cast<uint8_t>(operand);
-	Instruction cb_ins = cb_instructions[opcode];
+	InstructionJumpTable cb_ins = cb_jumpTable[opcode];
 
 	debug_msg(cb_ins.mnemonic);
 
