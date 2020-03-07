@@ -88,7 +88,6 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
 {
 	runItem->Enable(false);
-	dameEmu = new DameEmu(cart);
 	Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(MainFrame::OnIdleRun));
 }
 
@@ -116,7 +115,7 @@ void MainFrame::OnDebugger(wxCommandEvent& evt)
 	}
 	else
 	{
-		disasmFrame = new DisasmFrame(dameEmu->debugger, this);
+		disasmFrame = new DisasmFrame(dameEmu->GetDebugger(), this);
 		disasmFrame->SetName("DisasmFrame");
 		disasmFrame->Show();
 	}

@@ -6,6 +6,7 @@
 Bus::Bus()
 	: cpu(this), ppu(this)
 {
+	cart.reset(new Cartridge());
 	Reset();
 }
 

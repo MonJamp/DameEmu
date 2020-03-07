@@ -13,10 +13,9 @@ public:
 	~DameEmu();
 
 	void Step();
-
-public:
-	std::shared_ptr<Debugger> debugger;
+	std::shared_ptr<Debugger> GetDebugger() { return debugger; }
 
 private:
 	std::shared_ptr <Bus> bus;
+	std::shared_ptr<Debugger> debugger;
 };

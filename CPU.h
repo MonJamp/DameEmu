@@ -29,11 +29,9 @@ public:
 
 	//Store information about instructions
 	//Also used as a hashmap to instruction's functions
-	struct Instruction {
-		const char* mnemonic;
-		uint8_t length;
+	struct InstructionJumpTable {
 		void (CPU::* execute)();
-	} static instructions[256], cb_instructions[256];
+	} static jumpTable[256], cb_jumpTable[256];
 private:
 	void Reset();
 	void HandleInterupts();
