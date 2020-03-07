@@ -1,12 +1,6 @@
 #include "CPU.h"
 #include "Bus.h"
 
-#ifdef _DEBUG
-#include <cstdio>
-#define debug_msg(...) printf(__VA_ARGS__)
-#else
-#define debug_msg(x)
-#endif
 
 #define isHalfCarry(x, y, result) (((x ^ y ^ result) & 0x10) == 0x10)
 #define isHalfCarry16(x, y, result) (((x ^ y ^ result) & 0x1000) == 0x1000)
@@ -275,7 +269,7 @@ CPU::InstructionJumpTable CPU::jumpTable[256] = {
 };
 
 void CPU::UNDEFINED() {
-	debug_msg("\nUndefined instruction! OP: %X", operand);
+	// TODO Stop operation
 }
 
 void CPU::NOP() {
