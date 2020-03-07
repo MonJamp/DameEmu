@@ -287,15 +287,13 @@ void CPU::NOP() {
 }
 
 void CPU::STOP() {
-	//TODO: Stop system clock, oscialltor circuit, and LCD controller
-	debug_msg("\nSTOP instruction has been called but it isn't properly implemented!");
-	
+	stop = true;
+
 	cycles += 1;
 }
 
 void CPU::HALT() {
-	//TODO: Stop system clock. HALT mode is exited when interrupt request/enable flag are set
-	debug_msg("\nHALT instruction has been called but it isn't properly implemented!");
+	halt = true;
 
 	cycles += 1;
 }

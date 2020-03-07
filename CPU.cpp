@@ -14,6 +14,7 @@ void CPU::Reset() {
 	cycles = 0;
 	interupt_master_enable = false;
 	halt = false;
+	stop = false;
 
 	//Gameboy boot state after bios
 	//These values are true only for DMG
@@ -40,6 +41,7 @@ void CPU::HandleInterupts()
 		// Apparently this doesn't occur on CGB mode
 		// I've read contradicting information on this however
 		halt = false;
+		stop = false;
 
 		if (interupt_master_enable)
 		{
@@ -110,7 +112,7 @@ uint8_t CPU::Step() {
 	cycles = 0;
 	HandleInterupts();
 
-	if (halt)
+	if (halt || stop)
 	{
 		return cycles;
 	}

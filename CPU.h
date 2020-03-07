@@ -21,7 +21,10 @@ public:
 	CPU(Bus* b);
 
 	uint8_t Step();
-	
+
+public:
+	bool stop;
+
 private:
 	void Reset();
 	void HandleInterupts();

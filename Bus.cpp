@@ -416,7 +416,10 @@ uint8_t Bus::Read(uint16_t address)
 void Bus::Clock()
 {
 	uint8_t cycles = cpu.Step();
-	ppu.UpdateScreen(cycles);
+	if (!cpu.stop)
+	{
+		ppu.UpdateScreen(cycles);
+	}
 
 #ifdef D_SERIAL_OUT
 	// Get serial output from blargg tests
