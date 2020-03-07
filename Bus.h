@@ -68,6 +68,18 @@ constexpr auto ADDR_ROM = 0xFF50;
 constexpr auto ADDR_IF = 0xFF0F;
 constexpr auto ADDR_IE = 0xFFFF;
 
+// Bit operations
+#define BIT_CHECK(x, y) ((x & (y)) == (y))
+#define BIT_SET(x, y)	(x |= (y))
+#define BIT_CLEAR(x, y) (x &= ~(y))
+
+// Interupt flags
+#define INT_VBLANK	(1 << 0)
+#define INT_LCDC	(1 << 1)
+#define INT_TIMER	(1 << 2)
+#define INT_SERIAL	(1 << 3)
+#define INT_INPUT	(1 << 4)
+
 namespace Memory {
 	struct Registers {
 		using Register = uint8_t;
@@ -97,17 +109,6 @@ namespace Memory {
 				};
 			} sc;
 		} serial;
-
-		union Interupt {
-			uint8_t raw;
-			struct {
-				unsigned vblank : 1;
-				unsigned lcdc : 1;
-				unsigned timer : 1;
-				unsigned serial : 1;
-				unsigned input : 1;
-			};
-		} int_enable, int_request;
 
 		struct Timer {
 			Register tima;
@@ -187,6 +188,8 @@ namespace Memory {
 
 		Register div;
 		Register boot;
+		Register int_enable;
+		Register int_request;
 	};
 }
 

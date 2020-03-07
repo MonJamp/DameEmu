@@ -54,7 +54,7 @@ void Bus::Reset()
 	regs.lcd.obp1 = 0xFF;
 	regs.lcd.wy = 0x00;
 	regs.lcd.wx = 0x00;
-	regs.int_enable.raw = 0x00;
+	regs.int_enable = 0x00;
 }
 
 void Bus::InsertCartridge(std::shared_ptr<Cartridge>& cart)

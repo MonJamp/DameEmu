@@ -21,7 +21,7 @@ void PPU::UpdateScreen(uint8_t cycles) {
 
 	bus->regs.lcd.ly++;
 	if (bus->regs.lcd.ly == 144) {
-		bus->regs.int_request.vblank = 1;
+		BIT_SET(bus->regs.int_enable, INT_VBLANK);
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
