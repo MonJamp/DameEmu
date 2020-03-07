@@ -85,7 +85,6 @@ private:
 
 	//Instructions
 	void UNDEFINED();
-	void UNIMPLEMENTED();
 	//Misc
 	void NOP();
 	void STOP();

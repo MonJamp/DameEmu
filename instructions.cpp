@@ -278,10 +278,6 @@ void CPU::UNDEFINED() {
 	debug_msg("\nUndefined instruction! OP: %X", operand);
 }
 
-void CPU::UNIMPLEMENTED() {
-	debug_msg("\nUnimplemented instruction! OP: %X", operand);
-}
-
 void CPU::NOP() {
 	cycles += 1;
 }
