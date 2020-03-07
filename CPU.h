@@ -25,7 +25,6 @@ public:
 	CPU(Bus* b);
 
 	uint8_t Step();
-	uint8_t GetCycles() { return cycles; }
 	
 private:
 	void Reset();
