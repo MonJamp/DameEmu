@@ -74,7 +74,6 @@ uint8_t CPU::Step() {
 	HandleInterupts();
 
 	uint8_t opcode = GetByteAtPC();
-	InstructionJumpTable ins = jumpTable[opcode];
 
 	switch (insTable[opcode].getLength()) {
 	case 1:
@@ -89,14 +88,12 @@ uint8_t CPU::Step() {
 		break;
 	};
 
-	(this->*ins.execute)();
+	(this->*jumpTable[opcode].execute)();
 
 	return cycles;
 }
 
 void CPU::CB() {
 	uint8_t opcode = static_cast<uint8_t>(operand);
-	InstructionJumpTable cb_ins = cb_jumpTable[opcode];
-
-	(this->*cb_ins.execute)();
+	(this->*cb_jumpTable[opcode].execute)();
 }

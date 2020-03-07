@@ -26,12 +26,7 @@ public:
 
 	uint8_t Step();
 	uint8_t GetCycles() { return cycles; }
-
-	//Store information about instructions
-	//Also used as a hashmap to instruction's functions
-	struct InstructionJumpTable {
-		void (CPU::* execute)();
-	} static jumpTable[256], cb_jumpTable[256];
+	
 private:
 	void Reset();
 	void HandleInterupts();
@@ -83,6 +78,11 @@ private:
 			uint8_t H;
 		};
 	};
+
+	// Maps opcodes to instruction functions
+	struct InstructionJumpTable {
+		void (CPU::* execute)();
+	} static jumpTable[256], cb_jumpTable[256];
 
 	//Instructions
 	void UNDEFINED();
