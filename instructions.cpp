@@ -286,6 +286,40 @@ void CPU::NOP() {
 	cycles += 1;
 }
 
+// I hope this is correct
+void CPU::DAA() {
+	if (!FLAG_CHECK(FLAG_NEGATIVE))
+	{
+		if (FLAG_CHECK(FLAG_CARRY) || ((A & 0xFF) > 0x99))
+		{
+			A += 0x60;
+			FLAG_SET(FLAG_CARRY);
+		}
+		if (FLAG_CHECK(FLAG_HALFCARRY) || ((A & 0x0F) > 0x9))
+		{
+			A += 0x6;
+		}
+	}
+	else if (FLAG_CHECK(FLAG_NEGATIVE))
+	{
+		FLAG_CLEAR(FLAG_CARRY);
+
+		if (FLAG_CHECK(FLAG_CARRY))
+		{
+			A -= 0x60;
+		}
+		if (FLAG_CHECK(FLAG_HALFCARRY))
+		{
+			A -= 0x6;
+		}
+	}
+
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+
+	cycles += 1;
+}
+
 void CPU::STOP() {
 	stop = true;
 
@@ -466,13 +500,6 @@ void CPU::CP_L() { CP(L); }
 void CPU::CP_A() { CP(A); }
 void CPU::CP_n() { CP(n);  cycles += 1; }
 void CPU::CP_HL() { CP(bus->Read(HL)); cycles += 1; }
-
-void CPU::DAA() {
-	debug_msg("\nDAA instruction not implemnted...\n");
-	UNIMPLEMENTED();
-
-	cycles += 1;
-}
 
 void CPU::CPL() {
 	A = ~A;
