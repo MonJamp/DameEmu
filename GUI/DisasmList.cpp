@@ -1,6 +1,5 @@
 #include "DisasmList.h"
 
-
 wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
 	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnListRightClick)
 	EVT_MENU(EventID::AddBreakpoint, DisasmList::OnPopupClick)
@@ -9,8 +8,11 @@ wxEND_EVENT_TABLE()
 DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 	: debugger(d)
 {
+#ifdef __WINDOWS__
 	// Disables vertical gap between columns
-	EnableSystemTheme(false);
+	wxSystemThemedControl::EnableSystemTheme(false);
+#endif
+
 	Create(parent);
 
 	wxListItem itemCol;
