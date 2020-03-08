@@ -1,8 +1,13 @@
 #include "DisasmList.h"
 
 
-DisasmListView::DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxListView(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
+	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnListRightClick)
+	EVT_MENU(EventID::AddBreakpoint, DisasmList::OnPopupClick)
+wxEND_EVENT_TABLE()
+
+DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
+	: wxListView(parent, EventID::LIST_CTRL, wxDefaultPosition, wxDefaultSize,
 		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER),
 	debugger(d)
 {
@@ -35,15 +40,16 @@ DisasmListView::DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent)
 	RefreshValues();
 }
 
-void DisasmListView::RefreshValues()
+void DisasmList::RefreshValues()
 {
-	std::shared_ptr<Disassembly> disasm(debugger->GetDisassembly());
-	addressTable = debugger->GetAddressTable();
+	Disassembly& disasm = debugger->GetDisassembly();
+	addressToIndex = debugger->GetAddressTable();
 
 	disasmData.clear();
 
-	for (auto i : *disasm)
+	for (auto i : disasm)
 	{
+
 		InsData data;
 		data.address = i.addressToStr();
 		data.opcode = i.opcodeToStr();
@@ -60,17 +66,38 @@ void DisasmListView::RefreshValues()
 	ShowAddress(debugger->cpuState.pc);
 }
 
-void DisasmListView::ShowAddress(uint16_t a)
+void DisasmList::ShowAddress(uint16_t a)
 {
 	// Deselect previous item
 	Select(selectedItem, false);
 	// Select new item
-	selectedItem = addressTable[a];
+	selectedItem = addressToIndex[a];
 	Focus(selectedItem);
 	Select(selectedItem, true);
 }
 
-wxString DisasmListView::OnGetItemText(long item, long column) const
+void DisasmList::OnListRightClick(wxListEvent& evt)
+{
+	long item = evt.GetIndex();
+
+	wxMenu popMenu;
+	popMenu.SetClientData(reinterpret_cast<void*>(item));
+	popMenu.Append(EventID::AddBreakpoint, _("&Add Breakpoint"));
+	PopupMenu(&popMenu);
+}
+
+void DisasmList::OnPopupClick(wxCommandEvent& evt)
+{
+	long item = reinterpret_cast<long>(static_cast<wxMenu*>(evt.GetEventObject())->GetClientData());
+
+	if (evt.GetId() == EventID::AddBreakpoint)
+	{
+		uint8_t address = this->debugger->GetDisassembly()[item].address;
+		this->debugger->AddBreakpoint(address);
+	}
+}
+
+wxString DisasmList::OnGetItemText(long item, long column) const
 {
 	if (static_cast<size_t>(item) > disasmData.size())
 	{

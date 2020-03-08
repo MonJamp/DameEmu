@@ -3,7 +3,7 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 
-class DisasmListView : public wxListView
+class DisasmList : public wxListView
 {
 public:
 	struct InsData
@@ -15,8 +15,14 @@ public:
 		wxString comment;
 	};
 
+	enum EventID
+	{
+		LIST_CTRL,
+		AddBreakpoint
+	};
+
 public:
-	DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent);
+	DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent);
 
 	void RefreshValues();
 	void ShowAddress(uint16_t a);
@@ -27,10 +33,16 @@ protected:
 private:
 	std::vector<InsData> disasmData;
 	std::shared_ptr<Debugger> debugger;
-	AddressTable addressTable; // Address is key, index is value
+	AddressTable addressToIndex; // Address is key, index is value
 	uint16_t selectedItem = 0;
 
+private:
+	void OnListRightClick(wxListEvent& evt);
+	void OnPopupClick(wxCommandEvent& evt);
 
+	wxDECLARE_EVENT_TABLE();
+
+private:
 	enum class ColumnID
 	{
 		Empty,

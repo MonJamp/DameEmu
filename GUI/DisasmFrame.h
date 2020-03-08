@@ -9,7 +9,7 @@
 
 enum ButtonID
 {
-	Step
+	Step, RunBreak
 };
 
 class ButtonPanel : public wxPanel
@@ -23,8 +23,14 @@ public:
 		wxButton* stepBtn = new wxButton(this, ButtonID::Step, "Step");
 		hbox->Add(stepBtn, wxSizerFlags(0).Align(wxLEFT));
 
+		runbreakBtn = new wxButton(this, ButtonID::RunBreak, "Run");
+		hbox->Add(runbreakBtn, wxSizerFlags(0).Align(wxLEFT));
+
 		SetSizer(hbox);
 	}
+
+public:
+	wxButton* runbreakBtn;
 
 private:
 };
@@ -93,10 +99,13 @@ private:
 	void InitWidgets();
 
 	void OnStep(wxCommandEvent& evt);
+	void OnRunBreak(wxCommandEvent& evt);
+	void RunLoop(wxIdleEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
-	DisasmListView* disasmList;
+	bool running;
+	DisasmList* disasmList;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
 
