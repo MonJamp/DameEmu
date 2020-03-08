@@ -50,7 +50,7 @@ bool DisasmList::Create(wxWindow* parent)
 
 void DisasmList::RefreshValues()
 {
-	Disassembly& disasm = debugger->GetDisassembly();
+	Disassembly disasm = debugger->GetDisassembly();
 	addressToIndex = debugger->GetAddressTable();
 
 	disasmData.clear();
