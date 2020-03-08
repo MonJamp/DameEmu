@@ -28,6 +28,7 @@ public:
 	void ShowAddress(uint16_t a);
 
 protected:
+	bool Create(wxWindow* parent);
 	wxString OnGetItemText(long item, long column) const;
 
 private:

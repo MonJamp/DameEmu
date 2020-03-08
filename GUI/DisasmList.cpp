@@ -7,10 +7,12 @@ wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
 wxEND_EVENT_TABLE()
 
 DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxListView(parent, EventID::LIST_CTRL, wxDefaultPosition, wxDefaultSize,
-		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER),
-	debugger(d)
+	: debugger(d)
 {
+	// Disables vertical gap between columns
+	EnableSystemTheme(false);
+	Create(parent);
+
 	wxListItem itemCol;
 	// Empty
 	itemCol.SetId(wxID_ANY);
@@ -38,6 +40,12 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 
 	RefreshValues();
+}
+
+bool DisasmList::Create(wxWindow* parent)
+{
+	return wxListView::Create(parent, EventID::LIST_CTRL, wxDefaultPosition, wxDefaultSize,
+		wxLC_REPORT | wxLC_VIRTUAL | wxLC_NO_HEADER);
 }
 
 void DisasmList::RefreshValues()
