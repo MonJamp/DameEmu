@@ -54,7 +54,7 @@ void Bus::Reset()
 	regs.lcd.obp1 = 0xFF;
 	regs.lcd.wy = 0x00;
 	regs.lcd.wx = 0x00;
-	regs.int_enable.raw = 0x00;
+	regs.int_enable = 0x00;
 }
 
 void Bus::InsertCartridge(std::shared_ptr<Cartridge>& cart)
@@ -416,7 +416,10 @@ uint8_t Bus::Read(uint16_t address)
 void Bus::Clock()
 {
 	uint8_t cycles = cpu.Step();
-	ppu.UpdateScreen(cycles);
+	if (!cpu.stop)
+	{
+		ppu.UpdateScreen(cycles);
+	}
 
 #ifdef D_SERIAL_OUT
 	// Get serial output from blargg tests

@@ -3,10 +3,6 @@
 
 class Bus;
 
-#define BIT_CHECK(x, y) ((x & (y)) == (y))
-#define BIT_SET(x, y)	(x |= (y))
-#define BIT_CLEAR(x, y) (x &= ~(y))
-
 //Flag bits
 #define FLAG_ZERO		(1 << 7)
 #define FLAG_NEGATIVE	(1 << 6)
@@ -25,8 +21,10 @@ public:
 	CPU(Bus* b);
 
 	uint8_t Step();
-	uint8_t GetCycles() { return cycles; }
-	
+
+public:
+	bool stop;
+
 private:
 	void Reset();
 	void HandleInterupts();
@@ -45,6 +43,7 @@ private:
 	//TODO: Implement cycles
 	uint8_t cycles;
 	bool interupt_master_enable;
+	bool halt;
 
 	//CPU registers
 	union {
@@ -86,7 +85,6 @@ private:
 
 	//Instructions
 	void UNDEFINED();
-	void UNIMPLEMENTED();
 	//Misc
 	void NOP();
 	void STOP();

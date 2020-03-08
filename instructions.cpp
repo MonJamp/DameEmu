@@ -1,12 +1,6 @@
 #include "CPU.h"
 #include "Bus.h"
 
-#ifdef _DEBUG
-#include <cstdio>
-#define debug_msg(...) printf(__VA_ARGS__)
-#else
-#define debug_msg(x)
-#endif
 
 #define isHalfCarry(x, y, result) (((x ^ y ^ result) & 0x10) == 0x10)
 #define isHalfCarry16(x, y, result) (((x ^ y ^ result) & 0x1000) == 0x1000)
@@ -275,27 +269,55 @@ CPU::InstructionJumpTable CPU::jumpTable[256] = {
 };
 
 void CPU::UNDEFINED() {
-	debug_msg("\nUndefined instruction! OP: %X", operand);
-}
-
-void CPU::UNIMPLEMENTED() {
-	debug_msg("\nUnimplemented instruction! OP: %X", operand);
+	// TODO Stop operation
 }
 
 void CPU::NOP() {
 	cycles += 1;
 }
 
+// I hope this is correct
+void CPU::DAA() {
+	if (!FLAG_CHECK(FLAG_NEGATIVE))
+	{
+		if (FLAG_CHECK(FLAG_CARRY) || ((A & 0xFF) > 0x99))
+		{
+			A += 0x60;
+			FLAG_SET(FLAG_CARRY);
+		}
+		if (FLAG_CHECK(FLAG_HALFCARRY) || ((A & 0x0F) > 0x9))
+		{
+			A += 0x6;
+		}
+	}
+	else if (FLAG_CHECK(FLAG_NEGATIVE))
+	{
+		FLAG_CLEAR(FLAG_CARRY);
+
+		if (FLAG_CHECK(FLAG_CARRY))
+		{
+			A -= 0x60;
+		}
+		if (FLAG_CHECK(FLAG_HALFCARRY))
+		{
+			A -= 0x6;
+		}
+	}
+
+	(A == 0) ? FLAG_SET(FLAG_ZERO) : FLAG_CLEAR(FLAG_ZERO);
+	FLAG_CLEAR(FLAG_HALFCARRY);
+
+	cycles += 1;
+}
+
 void CPU::STOP() {
-	//TODO: Stop system clock, oscialltor circuit, and LCD controller
-	debug_msg("\nSTOP instruction has been called but it isn't properly implemented!");
-	
+	stop = true;
+
 	cycles += 1;
 }
 
 void CPU::HALT() {
-	//TODO: Stop system clock. HALT mode is exited when interrupt request/enable flag are set
-	debug_msg("\nHALT instruction has been called but it isn't properly implemented!");
+	halt = true;
 
 	cycles += 1;
 }
@@ -468,13 +490,6 @@ void CPU::CP_L() { CP(L); }
 void CPU::CP_A() { CP(A); }
 void CPU::CP_n() { CP(n);  cycles += 1; }
 void CPU::CP_HL() { CP(bus->Read(HL)); cycles += 1; }
-
-void CPU::DAA() {
-	debug_msg("\nDAA instruction not implemnted...\n");
-	UNIMPLEMENTED();
-
-	cycles += 1;
-}
 
 void CPU::CPL() {
 	A = ~A;
