@@ -39,33 +39,6 @@ struct DisasmData {
 using Disassembly = std::vector<DisasmData>;
 using AddressTable = std::unordered_map<uint16_t, uint16_t>;
 
-
-class Disassembler {
-public:
-	Disassembler();
-	~Disassembler();
-
-	void LoadCartridge(std::shared_ptr<Cartridge>& c);
-	void Disassemble();
-
-	std::shared_ptr<std::vector<DisasmData>> GetDisassembly() { return disassembly; }
-
-public:
-	AddressTable addressTable; // Address is key, index is value
-
-private:
-	void Reset();
-	void CacheConstOperands(Operand& operand);
-	uint8_t fetch();
-	DisasmData DisassembleInstruction();
-
-	Instruction curr_ins;
-	uint16_t pc;
-	uint32_t ir; // ir aka instruction registers stores full instruction
-	std::shared_ptr<Cartridge> cart;
-	std::shared_ptr<Disassembly> disassembly;
-};
-
 class Debugger
 {
 public:
@@ -85,13 +58,21 @@ public:
 public:
 	Debugger(std::shared_ptr<Bus>& b);
 
+	void Disassemble();
 	void Step();
-	std::shared_ptr<std::vector<DisasmData>> GetDisassembly() { return disassembler->GetDisassembly(); }
-	AddressTable GetAddressTable() { return disassembler->addressTable; }
-private:
-	std::shared_ptr<Bus> bus;
-	std::shared_ptr<Disassembler> disassembler;
+	bool HitBreakpoint();
+	void AddBreakpoint(uint16_t address);
+
+	std::vector<DisasmData> GetDisassembly() { return disassembly; }
+	AddressTable GetAddressTable() { return addressTable; }
+	Disassembly GetBreakpoints() { return breakpoints; }
 
 private:
 	void UpdateCpuState();
+
+private:
+	std::shared_ptr<Bus> bus;
+	Disassembly disassembly;
+	AddressTable addressTable; // Address is key, index is value
+	Disassembly breakpoints;
 };

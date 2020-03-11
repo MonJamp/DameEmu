@@ -1,15 +1,14 @@
 #pragma once
 #include "../Disassembler.h"
+#include "DisasmPanel.h"
 #include <wx/wx.h>
-#include <wx/listctrl.h>
 #include <memory>
 #include <vector>
-#include <unordered_map>
 
 
 enum ButtonID
 {
-	Step
+	Step, RunBreak
 };
 
 class ButtonPanel : public wxPanel
@@ -23,49 +22,16 @@ public:
 		wxButton* stepBtn = new wxButton(this, ButtonID::Step, "Step");
 		hbox->Add(stepBtn, wxSizerFlags(0).Align(wxLEFT));
 
+		runbreakBtn = new wxButton(this, ButtonID::RunBreak, "Run");
+		hbox->Add(runbreakBtn, wxSizerFlags(0).Align(wxLEFT));
+
 		SetSizer(hbox);
 	}
 
-private:
-};
-
-class DisasmListView : public wxListView
-{
 public:
-	struct InsData
-	{
-		wxString address;
-		wxString opcode;
-		wxString mnemonic;
-		wxString operand;
-		wxString comment;
-	};
-
-public:
-	DisasmListView(std::shared_ptr<Debugger> d, wxWindow* parent);
-
-	void RefreshValues();
-	void ShowAddress(uint16_t a);
-
-protected:
-	wxString OnGetItemText(long item, long column) const;
+	wxButton* runbreakBtn;
 
 private:
-	std::vector<InsData> disasmData;
-	std::shared_ptr<Debugger> debugger;
-	AddressTable addressTable; // Address is key, index is value
-	uint16_t selectedItem = 0;
-
-
-	enum class ColumnID
-	{
-		Empty,
-		Address,
-		Opcode,
-		Mnemonic,
-		Operand,
-		Comment
-	};
 };
 
 class RegPanel : public wxPanel
@@ -132,10 +98,13 @@ private:
 	void InitWidgets();
 
 	void OnStep(wxCommandEvent& evt);
+	void OnRunBreak(wxCommandEvent& evt);
+	void RunLoop(wxIdleEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
-	DisasmListView* disasmList;
+	bool running;
+	DisasmPanel* disasmPanel;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
 

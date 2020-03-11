@@ -94,71 +94,6 @@ std::string DisasmData::commentToStr()
 	return comment;
 }
 
-Disassembler::Disassembler()
-{
-	cart.reset();
-	Reset();
-}
-
-Disassembler::~Disassembler()
-{
-	
-}
-
-void Disassembler::Reset()
-{
-	pc = 0x0000;
-	ir = 0x00;
-	disassembly.reset(new std::vector<DisasmData>());
-}
-
-void Disassembler::LoadCartridge(std::shared_ptr<Cartridge>& c)
-{
-	cart = c;
-	Reset();
-}
-
-void Disassembler::Disassemble()
-{
-	while (pc < ROM_MAX_SIZE && pc < cart->size())
-	{
-		disassembly->push_back(DisassembleInstruction());
-	}
-}
-
-
-// Store operand values
-inline void Disassembler::CacheConstOperands(Operand& operand)
-{
-	switch (operand.type)
-	{
-	case Operand::Type::s8:
-	case Operand::Type::u8:
-		operand.value = fetch();
-		return;
-	case Operand::Type::u16:
-		operand.value = fetch() | (fetch() << 8);
-		return;
-	default: return;
-	}
-}
-
-inline uint8_t Disassembler::fetch()
-{
-	uint8_t op = cart->read(pc++);
-
-	if (ir == 0)
-	{
-		ir = op;
-	}
-	else
-	{
-		ir = (ir << 8) | op;
-	}
-
-	return op;
-}
-
 // Returns string of which I/O register is associated with the address
 std::string GetIORegister(uint16_t address)
 {
@@ -221,62 +156,96 @@ std::string GetIORegister(uint16_t address)
 	}
 }
 
-DisasmData Disassembler::DisassembleInstruction() {
-	ir = 0x00;
-
-	uint16_t address = pc;
-	addressTable[address] = disassembly->size();
-	uint8_t opcode = fetch();
-
-	Instruction ins = insTable[opcode];
-	if (ins.is_prefix)
-	{
-		opcode = fetch();
-		ins = cb_insTable[opcode];
-	}
-
-	std::string comment = "";
-	for (auto& i : ins.operands)
-	{
-		CacheConstOperands(i);
-
-		// Find out if instruction target I/O port
-		if (!i.isTypeRegister())
-		{
-			if (ins.mnemonic == "ldh")
-			{
-				comment = GetIORegister(0xFF00 + i.value);
-			}
-			else if (ins.mnemonic == "ld" && i.size() == 2)
-			{
-				comment = GetIORegister(i.value);
-			}
-		}
-	}
-
-	DisasmData dis;
-	dis.address = address;
-	dis.opcode = ir;
-	dis.ins = ins;
-	dis.comment = comment;
-
-	return dis;
-}
 
 Debugger::Debugger(std::shared_ptr<Bus>& b)
 {
 	bus = b;
-	disassembler.reset(new Disassembler());
-	disassembler->LoadCartridge(bus->cart);
-	disassembler->Disassemble();
+	Disassemble();
 
 	UpdateCpuState();
+}
+
+void Debugger::Disassemble()
+{
+	uint16_t pc = 0x0000;
+	while (pc < ROM_MAX_SIZE && pc < bus->cart->size())
+	{
+		uint32_t ir = 0x00;
+
+		uint16_t address = pc;
+		addressTable[address] = disassembly.size();
+		uint8_t opcode = bus->cart->read(pc++);
+
+		Instruction ins = insTable[opcode];
+		if (ins.is_prefix)
+		{
+			opcode = bus->cart->read(pc++);
+			ir = (ir << 8) | opcode;
+			ins = cb_insTable[opcode];
+		}
+
+		std::string comment = "";
+		for (auto& i : ins.operands)
+		{
+			switch (i.type)
+			{
+			case Operand::Type::s8:
+			case Operand::Type::u8:
+				i.value = bus->cart->read(pc++);
+				ir = (ir << 8) | i.value;
+				break;
+			case Operand::Type::u16:
+				i.value = bus->cart->read(pc++) | (bus->cart->read(pc++) << 8);
+				ir = (ir << 16) | i.value;
+				break;
+			default: break;
+			}
+
+			// Find out if instruction target I/O port
+			if (!i.isTypeRegister())
+			{
+				if (ins.mnemonic == "ldh")
+				{
+					comment = GetIORegister(0xFF00 + i.value);
+				}
+				else if (ins.mnemonic == "ld" && i.size() == 2)
+				{
+					comment = GetIORegister(i.value);
+				}
+			}
+		}
+
+		DisasmData dis;
+		dis.address = address;
+		dis.opcode = ir;
+		dis.ins = ins;
+		dis.comment = comment;
+		disassembly.push_back(dis);
+	}
 }
 
 void Debugger::Step()
 {
 	bus->Clock();
 	UpdateCpuState();
+}
+
+bool Debugger::HitBreakpoint()
+{
+	for (auto i : breakpoints)
+	{
+		if (i.address == bus->cpu.PC)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void Debugger::AddBreakpoint(uint16_t address)
+{
+	breakpoints.push_back(disassembly[addressTable[address]]);
 }
 
 void Debugger::UpdateCpuState()
