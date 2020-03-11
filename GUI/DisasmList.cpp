@@ -86,12 +86,9 @@ void DisasmList::ShowCurrentAddress()
 
 void DisasmList::ShowAddress(uint16_t a)
 {
-	// Deselect previous item
-	Select(selectedItem, false);
 	// Select new item
-	selectedItem = addressToIndex[a];
-	Focus(selectedItem);
-	Select(selectedItem, true);
+	uint16_t index = addressToIndex[a];
+	Focus(index);
 }
 
 void DisasmList::OnListRightClick(wxListEvent& evt)
@@ -110,6 +107,8 @@ void DisasmList::OnPopupClick(wxCommandEvent& evt)
 
 	if (evt.GetId() == EventID::AddBreakpoint)
 	{
+		Select(item, false);
+
 		uint16_t address = this->debugger->GetDisassembly()[item].address;
 		this->debugger->AddBreakpoint(address);
 
@@ -134,4 +133,28 @@ wxString DisasmList::OnGetItemText(long item, long column) const
 	case ColumnID::Comment:		return disasmData[item].comment;
 	default: return "";
 	}
+}
+
+wxItemAttr* DisasmList::OnGetItemAttr(long item) const
+{
+	wxColor fontColor = wxColor(*wxBLACK);
+	wxColor bgColor = wxColor(*wxWHITE);
+	wxFont font = wxFont(*wxNORMAL_FONT);
+
+	for (auto i : debugger->GetBreakpoints())
+	{
+		uint16_t index = addressToIndex.at(i.address);
+		if (item == index)
+		{
+			bgColor = wxColor(255, 82, 82);
+		}
+	}
+
+	uint16_t index = addressToIndex.at(debugger->cpuState.pc);
+	if (item == index)
+	{
+		bgColor = wxColor(205, 220, 57);
+	}
+
+	return new wxItemAttr(fontColor, bgColor, font);
 }

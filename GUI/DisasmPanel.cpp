@@ -22,6 +22,7 @@ DisasmPanel::DisasmPanel(std::shared_ptr<Debugger> d, wxWindow* parent)
 void DisasmPanel::OnPause()
 {
 	disasmList->ShowCurrentAddress();
+	disasmList->Refresh();
 }
 
 void DisasmPanel::OnAddBreakpoint(wxCommandEvent& evt)

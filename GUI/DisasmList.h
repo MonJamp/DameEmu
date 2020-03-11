@@ -34,12 +34,12 @@ public:
 protected:
 	bool Create(wxWindow* parent);
 	wxString OnGetItemText(long item, long column) const;
+	wxItemAttr* OnGetItemAttr(long item) const;
 
 private:
 	std::vector<InsData> disasmData;
 	std::shared_ptr<Debugger> debugger;
 	AddressTable addressToIndex; // Address is key, index is value
-	uint16_t selectedItem = 0;
 
 private:
 	void OnListRightClick(wxListEvent& evt);
