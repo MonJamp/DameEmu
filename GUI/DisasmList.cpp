@@ -1,4 +1,5 @@
 #include "DisasmList.h"
+#include <wx/itemattr.h>
 
 
 wxDEFINE_EVENT(ADD_BREAKPOINT, wxCommandEvent);
