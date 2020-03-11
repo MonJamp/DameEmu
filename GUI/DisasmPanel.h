@@ -19,7 +19,7 @@ private:
 
 private:
 	DisasmList* disasmList;
-	BreakpointList* bpView;
+	BreakpointList* bpList;
 	std::shared_ptr<Debugger> debugger;
 
 };
