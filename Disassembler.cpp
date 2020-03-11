@@ -234,7 +234,7 @@ bool Debugger::HitBreakpoint()
 {
 	for (auto i : breakpoints)
 	{
-		if (i == bus->cpu.PC)
+		if (i.address == bus->cpu.PC)
 		{
 			return true;
 		}
@@ -245,7 +245,7 @@ bool Debugger::HitBreakpoint()
 
 void Debugger::AddBreakpoint(uint16_t address)
 {
-	breakpoints.push_back(address);
+	breakpoints.push_back(disassembly[addressTable[address]]);
 }
 
 void Debugger::UpdateCpuState()

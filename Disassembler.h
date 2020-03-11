@@ -65,6 +65,7 @@ public:
 
 	std::vector<DisasmData> GetDisassembly() { return disassembly; }
 	AddressTable GetAddressTable() { return addressTable; }
+	Disassembly GetBreakpoints() { return breakpoints; }
 
 private:
 	void UpdateCpuState();
@@ -73,5 +74,5 @@ private:
 	std::shared_ptr<Bus> bus;
 	Disassembly disassembly;
 	AddressTable addressTable; // Address is key, index is value
-	std::vector<uint16_t> breakpoints;
+	Disassembly breakpoints;
 };

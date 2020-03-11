@@ -1,4 +1,4 @@
-#include "DisasmFrame.h"
+#include "DebugFrame.h"
 
 
 wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
@@ -7,7 +7,7 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 DisasmFrame::DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 400)),
+	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 500)),
 	debugger(d)
 {
 	InitWidgets();
@@ -29,8 +29,9 @@ void DisasmFrame::InitWidgets()
 	btnPanel = new ButtonPanel(this);
 	vbox->Add(btnPanel, wxSizerFlags(0));
 
-	disasmList = new DisasmList(debugger, this);
-	hbox->Add(disasmList, wxSizerFlags(3).Expand());
+	disasmPanel = new DisasmPanel(debugger, this);
+	hbox->Add(disasmPanel, wxSizerFlags(3).Expand());
+
 	regPanel = new RegPanel(this);
 	hbox->Add(regPanel, wxSizerFlags(1).Expand());
 
@@ -42,7 +43,7 @@ void DisasmFrame::OnStep(wxCommandEvent& evt)
 {
 	debugger->Step();
 	regPanel->UpdateValues(debugger->cpuState);
-	disasmList->ShowAddress(debugger->cpuState.pc);
+	disasmPanel->OnPause();
 }
 
 void DisasmFrame::OnRunBreak(wxCommandEvent& evt)
@@ -59,7 +60,7 @@ void DisasmFrame::OnRunBreak(wxCommandEvent& evt)
 		btnPanel->runbreakBtn->SetLabel("Run");
 		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
 		regPanel->UpdateValues(debugger->cpuState);
-		disasmList->ShowAddress(debugger->cpuState.pc);
+		disasmPanel->OnPause();
 	}
 }
 
@@ -73,7 +74,7 @@ void DisasmFrame::RunLoop(wxIdleEvent& evt)
 		btnPanel->runbreakBtn->SetLabel("Run");
 		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
 		regPanel->UpdateValues(debugger->cpuState);
-		disasmList->ShowAddress(debugger->cpuState.pc);
+		disasmPanel->OnPause();
 	}
 	else
 	{

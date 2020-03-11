@@ -5,10 +5,14 @@ project(DameEmu)
 set(GUI_SRC
     GUI/AppMain.h
     GUI/AppMain.cpp
-    GUI/DisasmFrame.h
-    GUI/DisasmFrame.cpp
+    GUI/DebugFrame.h
+    GUI/DebugFrame.cpp
+    GUI/DisasmPanel.h
+    GUI/DisasmPanel.cpp
     GUI/DisasmList.h
     GUI/DisasmList.cpp
+    GUI/BreakpointList.h
+    GUI/BreakpointList.cpp
     GUI/MainFrame.h
     GUI/MainFrame.cpp
     GUI/wx_header.h

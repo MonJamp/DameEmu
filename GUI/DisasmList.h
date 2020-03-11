@@ -3,6 +3,9 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 
+
+wxDECLARE_EVENT(ADD_BREAKPOINT, wxCommandEvent);
+
 class DisasmList : public wxListView
 {
 public:
@@ -25,6 +28,7 @@ public:
 	DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent);
 
 	void RefreshValues();
+	void ShowCurrentAddress();
 	void ShowAddress(uint16_t a);
 
 protected:

@@ -1,5 +1,8 @@
 #include "DisasmList.h"
 
+
+wxDEFINE_EVENT(ADD_BREAKPOINT, wxCommandEvent);
+
 wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
 	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnListRightClick)
 	EVT_MENU(EventID::AddBreakpoint, DisasmList::OnPopupClick)
@@ -76,6 +79,11 @@ void DisasmList::RefreshValues()
 	ShowAddress(debugger->cpuState.pc);
 }
 
+void DisasmList::ShowCurrentAddress()
+{
+	ShowAddress(debugger->cpuState.pc);
+}
+
 void DisasmList::ShowAddress(uint16_t a)
 {
 	// Deselect previous item
@@ -102,8 +110,11 @@ void DisasmList::OnPopupClick(wxCommandEvent& evt)
 
 	if (evt.GetId() == EventID::AddBreakpoint)
 	{
-		uint8_t address = this->debugger->GetDisassembly()[item].address;
+		uint16_t address = this->debugger->GetDisassembly()[item].address;
 		this->debugger->AddBreakpoint(address);
+
+		wxCommandEvent event(ADD_BREAKPOINT);
+		wxPostEvent(this->GetParent(), event);
 	}
 }
 

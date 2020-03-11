@@ -1,7 +1,7 @@
 #pragma once
 #include "../DameEmu.h"
 #include "../Cartridge.h"
-#include "DisasmFrame.h"
+#include "DebugFrame.h"
 #include "wx_header.h"
 
 #ifdef __GNUG__

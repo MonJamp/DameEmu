@@ -1,10 +1,9 @@
 #pragma once
 #include "../Disassembler.h"
-#include "DisasmList.h"
+#include "DisasmPanel.h"
 #include <wx/wx.h>
 #include <memory>
 #include <vector>
-#include <unordered_map>
 
 
 enum ButtonID
@@ -105,7 +104,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 	bool running;
-	DisasmList* disasmList;
+	DisasmPanel* disasmPanel;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
 
