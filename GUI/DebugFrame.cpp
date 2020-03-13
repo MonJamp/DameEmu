@@ -7,13 +7,13 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 DisasmFrame::DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(600, 500)),
+	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(650, 550)),
 	debugger(d)
 {
 	InitWidgets();
 
 	running = false;
-	regPanel->UpdateValues(debugger->cpuState);
+	regPanel->UpdateValues(debugger->regState);
 }
 
 DisasmFrame::~DisasmFrame()
@@ -33,16 +33,17 @@ void DisasmFrame::InitWidgets()
 	hbox->Add(disasmPanel, wxSizerFlags(3).Expand());
 
 	regPanel = new RegPanel(this);
-	hbox->Add(regPanel, wxSizerFlags(1).Expand());
+	hbox->Add(regPanel, wxSizerFlags(1).Expand().Border(wxALL, 5));
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
 	SetSizer(vbox);
+	SetBackgroundColour(*wxWHITE);
 }
 
 void DisasmFrame::OnStep(wxCommandEvent& evt)
 {
 	debugger->Step();
-	regPanel->UpdateValues(debugger->cpuState);
+	regPanel->UpdateValues(debugger->regState);
 	disasmPanel->OnPause();
 }
 
@@ -59,7 +60,7 @@ void DisasmFrame::OnRunBreak(wxCommandEvent& evt)
 		running = false;
 		btnPanel->runbreakBtn->SetLabel("Run");
 		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
-		regPanel->UpdateValues(debugger->cpuState);
+		regPanel->UpdateValues(debugger->regState);
 		disasmPanel->OnPause();
 	}
 }
@@ -73,7 +74,7 @@ void DisasmFrame::RunLoop(wxIdleEvent& evt)
 		running = false;
 		btnPanel->runbreakBtn->SetLabel("Run");
 		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
-		regPanel->UpdateValues(debugger->cpuState);
+		regPanel->UpdateValues(debugger->regState);
 		disasmPanel->OnPause();
 	}
 	else

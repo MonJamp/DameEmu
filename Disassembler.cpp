@@ -162,7 +162,7 @@ Debugger::Debugger(std::shared_ptr<Bus>& b)
 	bus = b;
 	Disassemble();
 
-	UpdateCpuState();
+	UpdateRegState();
 }
 
 void Debugger::Disassemble()
@@ -227,7 +227,7 @@ void Debugger::Disassemble()
 void Debugger::Step()
 {
 	bus->Clock();
-	UpdateCpuState();
+	UpdateRegState();
 }
 
 bool Debugger::HitBreakpoint()
@@ -248,13 +248,56 @@ void Debugger::AddBreakpoint(uint16_t address)
 	breakpoints.push_back(disassembly[addressTable[address]]);
 }
 
-void Debugger::UpdateCpuState()
+void Debugger::UpdateRegState()
 {
-	cpuState.pc = bus->cpu.PC;
-	cpuState.sp = bus->cpu.SP;
-	cpuState.af = bus->cpu.AF;
-	cpuState.bc = bus->cpu.BC;
-	cpuState.de = bus->cpu.DE;
-	cpuState.hl = bus->cpu.HL;
-	cpuState.ime = bus->cpu.interupt_master_enable;
+	regState.cpu.pc = bus->cpu.PC;
+	regState.cpu.sp = bus->cpu.SP;
+	regState.cpu.af = bus->cpu.AF;
+	regState.cpu.bc = bus->cpu.BC;
+	regState.cpu.de = bus->cpu.DE;
+	regState.cpu.hl = bus->cpu.HL;
+	regState.cpu.ime = bus->cpu.interupt_master_enable;
+
+	regState.mem.p1		= bus->regs.input.raw;
+	regState.mem.sb		= bus->regs.serial.sb;
+	regState.mem.sc		= bus->regs.serial.sc.raw;
+	regState.mem.div	= bus->regs.div;
+	regState.mem.tima	= bus->regs.timer.tima;
+	regState.mem.tma	= bus->regs.timer.tma;
+	regState.mem.tac	= bus->regs.timer.tac.raw;
+	regState.mem.nr10	= bus->regs.sound.nr10;
+	regState.mem.nr11	= bus->regs.sound.nr11;
+	regState.mem.nr12	= bus->regs.sound.nr12;
+	regState.mem.nr13	= bus->regs.sound.nr13;
+	regState.mem.nr14	= bus->regs.sound.nr14;
+	regState.mem.nr21	= bus->regs.sound.nr21;
+	regState.mem.nr22	= bus->regs.sound.nr22;
+	regState.mem.nr23	= bus->regs.sound.nr23;
+	regState.mem.nr24	= bus->regs.sound.nr24;
+	regState.mem.nr30	= bus->regs.sound.nr30;
+	regState.mem.nr31	= bus->regs.sound.nr31;
+	regState.mem.nr32	= bus->regs.sound.nr32;
+	regState.mem.nr33	= bus->regs.sound.nr33;
+	regState.mem.nr34	= bus->regs.sound.nr34;
+	regState.mem.nr41	= bus->regs.sound.nr41;
+	regState.mem.nr42	= bus->regs.sound.nr42;
+	regState.mem.nr43	= bus->regs.sound.nr43;
+	regState.mem.nr44	= bus->regs.sound.nr44;
+	regState.mem.nr50	= bus->regs.sound.nr50;
+	regState.mem.nr51	= bus->regs.sound.nr51;
+	regState.mem.nr52	= bus->regs.sound.nr52;
+	regState.mem.lcdc	= bus->regs.lcd.lcdc.raw;
+	regState.mem.stat	= bus->regs.lcd.stat.raw;
+	regState.mem.scy	= bus->regs.lcd.scy;
+	regState.mem.scx	= bus->regs.lcd.scx;
+	regState.mem.ly		= bus->regs.lcd.ly;
+	regState.mem.lyc	= bus->regs.lcd.lyc;
+	regState.mem.dma	= bus->regs.lcd.dma;
+	regState.mem.bgp	= bus->regs.lcd.bgp;
+	regState.mem.obp0	= bus->regs.lcd.obp0;
+	regState.mem.obp1	= bus->regs.lcd.obp1;
+	regState.mem.wy		= bus->regs.lcd.wy;
+	regState.mem.wx		= bus->regs.lcd.wx;
+	regState.mem.int_req = bus->regs.int_request;
+	regState.mem.int_ie = bus->regs.int_enable;
 }

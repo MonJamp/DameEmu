@@ -221,6 +221,12 @@ void Bus::Write(uint16_t address, uint8_t data)
 		case ADDR_WX:
 			regs.lcd.wx = data;
 			break;
+		case ADDR_IF:
+			regs.int_request = data;
+			break;
+		case ADDR_IE:
+			regs.int_enable = data;
+			break;
 		default: 
 			break;
 		}
@@ -395,6 +401,12 @@ uint8_t Bus::Read(uint16_t address)
 			break;
 		case ADDR_WX:
 			data = regs.lcd.wx;
+			break;
+		case ADDR_IF:
+			data = regs.int_request;
+			break;
+		case ADDR_IE:
+			data = regs.int_enable;
 			break;
 		default:
 			data = 0;
