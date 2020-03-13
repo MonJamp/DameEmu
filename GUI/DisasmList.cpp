@@ -77,12 +77,12 @@ void DisasmList::RefreshValues()
 	SetItemCount(disasmData.size());
 	Refresh();
 
-	ShowAddress(debugger->cpuState.pc);
+	ShowAddress(debugger->regState.cpu.pc);
 }
 
 void DisasmList::ShowCurrentAddress()
 {
-	ShowAddress(debugger->cpuState.pc);
+	ShowAddress(debugger->regState.cpu.pc);
 }
 
 void DisasmList::ShowAddress(uint16_t a)
@@ -151,7 +151,7 @@ wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 		}
 	}
 
-	uint16_t index = addressToIndex.at(debugger->cpuState.pc);
+	uint16_t index = addressToIndex.at(debugger->regState.cpu.pc);
 	if (item == index)
 	{
 		bgColor = wxColor(205, 220, 57);

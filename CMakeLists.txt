@@ -7,6 +7,8 @@ set(GUI_SRC
     GUI/AppMain.cpp
     GUI/DebugFrame.h
     GUI/DebugFrame.cpp
+    GUI/RegPanel.h
+    GUI/RegPanel.cpp
     GUI/DisasmPanel.h
     GUI/DisasmPanel.cpp
     GUI/DisasmList.h
