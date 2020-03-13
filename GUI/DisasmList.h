@@ -26,6 +26,7 @@ public:
 
 public:
 	DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent);
+	~DisasmList();
 
 	void RefreshValues();
 	void ShowCurrentAddress();
@@ -57,4 +58,7 @@ private:
 		Operand,
 		Comment
 	};
+
+private:
+	wxItemAttr* itemAttr;
 };

@@ -19,6 +19,11 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 
 	Create(parent);
 
+	wxColor fontColor = wxColor(*wxBLACK);
+	wxColor bgColor = wxColor(*wxWHITE);
+	wxFont font = wxFont(*wxNORMAL_FONT);
+	itemAttr = new wxItemAttr(fontColor, bgColor, font);
+
 	wxListItem itemCol;
 	// Empty
 	itemCol.SetId(wxID_ANY);
@@ -46,6 +51,11 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 
 	RefreshValues();
+}
+
+DisasmList::~DisasmList()
+{
+	delete itemAttr;
 }
 
 bool DisasmList::Create(wxWindow* parent)
@@ -138,9 +148,9 @@ wxString DisasmList::OnGetItemText(long item, long column) const
 
 wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 {
-	wxColor fontColor = wxColor(*wxBLACK);
+	// Reset itemAttr
 	wxColor bgColor = wxColor(*wxWHITE);
-	wxFont font = wxFont(*wxNORMAL_FONT);
+	itemAttr->SetBackgroundColour(bgColor);
 
 	for (auto i : debugger->GetBreakpoints())
 	{
@@ -148,6 +158,7 @@ wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 		if (item == index)
 		{
 			bgColor = wxColor(255, 82, 82);
+			itemAttr->SetBackgroundColour(bgColor);
 		}
 	}
 
@@ -155,7 +166,8 @@ wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 	if (item == index)
 	{
 		bgColor = wxColor(205, 220, 57);
+		itemAttr->SetBackgroundColour(bgColor);
 	}
 
-	return new wxItemAttr(fontColor, bgColor, font);
+	return itemAttr;
 }
