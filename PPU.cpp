@@ -8,7 +8,7 @@ PPU::PPU(Bus* b)
 }
 
 void PPU::UpdateScreen(uint8_t cycles) {
-	if (bus->regs.lcd.lcdc.lcd_on) {
+	if (!bus->regs.lcd.lcdc.lcd_on) {
 		return;
 	}
 
