@@ -130,6 +130,7 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 	wxAboutBox(info, this);
 }
 
+#ifdef _DEBUG
 void MainFrame::OnCheckCart(wxCommandEvent& evt)
 {
 	if (cart->isValid())
@@ -141,3 +142,4 @@ void MainFrame::OnCheckCart(wxCommandEvent& evt)
 		wxMessageBox("ROM is invalid");
 	}
 }
+#endif
