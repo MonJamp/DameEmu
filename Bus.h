@@ -197,6 +197,7 @@ namespace Memory {
 class Bus
 {
 friend class Debugger;
+friend class DameEmu;
 public:
 	Bus();
 	~Bus();

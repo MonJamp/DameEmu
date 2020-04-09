@@ -1,6 +1,7 @@
 #pragma once
 #include "../DameEmu.h"
 #include "../Cartridge.h"
+#include "GLPanel.h"
 #include "DebugFrame.h"
 #include "wx_header.h"
 
@@ -52,6 +53,7 @@ private:
 	wxMenuItem* debuggerItem;
 	wxMenuItem* aboutItem;
 
+	GLPanel* glPanel = NULL;
 	DisasmFrame* disasmFrame = NULL;
 
 	DameEmu* dameEmu = nullptr;
