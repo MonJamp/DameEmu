@@ -15,6 +15,8 @@ set(GUI_SRC
     GUI/DisasmList.cpp
     GUI/BreakpointList.h
     GUI/BreakpointList.cpp
+    GUI/GLPanel.cpp
+    GUI/GLPanel.h
     GUI/MainFrame.h
     GUI/MainFrame.cpp
     GUI/wx_header.h
@@ -61,4 +63,10 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
  if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
     target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
+endif()
+
+set(SFML_STATIC_LIBRARIES TRUE)
+find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+if(SFML_FOUND)
+    target_link_libraries(DameEmu sfml-graphics)
 endif()

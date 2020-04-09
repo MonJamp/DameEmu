@@ -53,6 +53,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 #endif
 
 	SetMenuBar(menuBar);
+
+	glPanel = new GLPanel(this);
 }
 
 MainFrame::~MainFrame()
@@ -84,6 +86,7 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 	cart.reset(new Cartridge());
 	cart->open(std::string(filename.mb_str()));
 	dameEmu = new DameEmu(cart);
+	dameEmu->SetCanvas(glPanel);
 }
 
 void MainFrame::OnRunEmu(wxCommandEvent& evt)

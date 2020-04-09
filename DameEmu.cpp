@@ -14,6 +14,11 @@ DameEmu::~DameEmu()
 
 }
 
+void DameEmu::SetCanvas(sf::RenderWindow* canvas)
+{
+	bus->ppu.SetCanvas(canvas);
+}
+
 void DameEmu::Step() {
 	bus->Clock();
 }
