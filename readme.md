@@ -1,4 +1,4 @@
-# DameEmu
+# DameEmu [![Build Status](https://travis-ci.com/MonJamp/DameEmu.svg?branch=master)](https://travis-ci.com/MonJamp/DameEmu)
 
 DameEmu is a GameBoy emulator + debugger
 
