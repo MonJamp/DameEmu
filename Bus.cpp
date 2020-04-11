@@ -70,27 +70,27 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
-
+		vram[address - 0x8000] = data;
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
-
+		// External RAM
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{
-
+		ram[address - 0xC000] = data;
 	}
 	else if (address >= 0xE000 && address <= 0xFDFF)
 	{
-
+		// Prohibited
 	}
 	else if (address >= 0xFE00 && address <= 0xFE9F)
 	{
-
+		oam[address - 0xFE00] = data;
 	}
 	else if (address >= 0xFEA0 && address <= 0xFEFF)
 	{
-
+		// Prohibited
 	}
 	else if (address >= 0xFF00 && address <= 0xFF7F)
 	{
@@ -224,20 +224,17 @@ void Bus::Write(uint16_t address, uint8_t data)
 		case ADDR_IF:
 			regs.int_request = data;
 			break;
-		case ADDR_IE:
-			regs.int_enable = data;
-			break;
 		default: 
 			break;
 		}
 	}
 	else if (address >= 0xFF80 && address <= 0xFFFE)
 	{
-
+		high_ram[address - 0xFF80] = data;
 	}
 	else if (address == 0xFFFF)
 	{
-
+		regs.int_enable = data;
 	}
 }
 
@@ -251,27 +248,27 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
-
+		data = vram[address - 0x8000];
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
-
+		// External RAM
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{
-
+		data = ram[address - 0xC000];
 	}
 	else if (address >= 0xE000 && address <= 0xFDFF)
 	{
-
+		// Prohibited
 	}
 	else if (address >= 0xFE00 && address <= 0xFE9F)
 	{
-
+		data = oam[address - 0xFE00];
 	}
 	else if (address >= 0xFEA0 && address <= 0xFEFF)
 	{
-
+		// Prohibited
 	}
 	else if (address >= 0xFF00 && address <= 0xFF7F)
 	{
@@ -405,9 +402,6 @@ uint8_t Bus::Read(uint16_t address)
 		case ADDR_IF:
 			data = regs.int_request;
 			break;
-		case ADDR_IE:
-			data = regs.int_enable;
-			break;
 		default:
 			data = 0;
 			break;
@@ -415,11 +409,11 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0xFF80 && address <= 0xFFFE)
 	{
-
+		data = high_ram[address - 0xFF80];
 	}
 	else if (address == 0xFFFF)
 	{
-
+		data = regs.int_enable;
 	}
 
 	return data;
