@@ -210,6 +210,8 @@ public:
 
 	Memory::Registers regs;
 private:
+	void dmaTransfer(uint8_t data);
+private:
 	CPU cpu;
 	PPU ppu;
 	std::shared_ptr<Cartridge> cart;

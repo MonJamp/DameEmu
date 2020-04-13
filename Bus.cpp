@@ -205,6 +205,8 @@ void Bus::Write(uint16_t address, uint8_t data)
 			break;
 		case ADDR_DMA:
 			regs.lcd.dma = data;
+			// DMA Transfer
+			dmaTransfer(data);
 			break;
 		case ADDR_BGP:
 			regs.lcd.bgp = data;
@@ -434,4 +436,14 @@ void Bus::Clock()
 		regs.serial.sc.raw = 0x00;
 	}
 #endif
+}
+
+void Bus::dmaTransfer(uint8_t data)
+{
+	uint16_t address = data * 0x100;
+	for (int i = 0; i < oam.size(); i++)
+	{
+		uint8_t oam_data = Read(address + i);
+		Write(0xFE00 + i, oam_data);
+	}
 }
