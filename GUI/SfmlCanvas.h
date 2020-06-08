@@ -3,12 +3,12 @@
 #include <SFML/Graphics.hpp>
 
 
-class GLPanel : public wxControl, public sf::RenderWindow
+class SfmlCanvas : public wxControl, public sf::RenderWindow
 {
 public:
-	GLPanel(wxWindow* parent);
+	SfmlCanvas(wxWindow* parent);
 	
-	virtual ~GLPanel();
+	virtual ~SfmlCanvas();
 
 private:
 	virtual void OnUpdate();
