@@ -54,7 +54,7 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 
 	SetMenuBar(menuBar);
 
-	glPanel = new GLPanel(this);
+	glPanel = new SfmlCanvas(this);
 }
 
 MainFrame::~MainFrame()

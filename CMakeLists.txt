@@ -15,8 +15,8 @@ set(GUI_SRC
     GUI/DisasmList.cpp
     GUI/BreakpointList.h
     GUI/BreakpointList.cpp
-    GUI/GLPanel.cpp
-    GUI/GLPanel.h
+    GUI/SfmlCanvas.cpp
+    GUI/SfmlCanvas.h
     GUI/MainFrame.h
     GUI/MainFrame.cpp
     GUI/wx_header.h
