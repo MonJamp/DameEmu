@@ -67,7 +67,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
 endif()
 
 set(SFML_STATIC_LIBRARIES FALSE)
-find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
+find_package(SFML 2 COMPONENTS graphics REQUIRED)
 if(SFML_FOUND)
     target_link_libraries(DameEmu sfml-graphics)
 endif()
