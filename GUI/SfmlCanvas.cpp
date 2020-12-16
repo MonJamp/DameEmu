@@ -1,5 +1,11 @@
 #include "SfmlCanvas.h"
 
+#ifdef __WXGTK__
+	#include <gdk/x11/gdk.h>
+	#include <gtk/gtk.h>
+	#include <wx/gtk/win_gtk.h>
+#endif
+
 
 BEGIN_EVENT_TABLE(SfmlCanvas, wxControl)
 	EVT_PAINT(SfmlCanvas::OnPaint)
@@ -11,7 +17,16 @@ END_EVENT_TABLE()
 SfmlCanvas::SfmlCanvas(wxWindow* parent)
 	: wxControl(parent, wxID_ANY)
 {
+#ifdef __WXGTK__
+	// Get handle of X11 window
+	gtk_widget_realize(m_wxwindow);
+	gtk_widget_set_double_buffered(m_wxwindow, false);
+	GdkWindow* Win = GTK_PIZZA(m_wxwindow)->bin_window;
+	XFlush(GDK_WINDOW_XDISPLAY(Win));
+	sf::RenderWindow::Create(GDK_WINDOW_XWINDOW(Win));
+#else
 	sf::RenderWindow::create(GetHandle());
+#endif
 	clear(sf::Color::Black);
 }
 
