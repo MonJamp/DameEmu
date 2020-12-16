@@ -54,6 +54,7 @@ if(WIN32)
 		-D__WXMSW__
 		-D_WINDOWS
 		-D_CRT_SECURE_NO_WARNINGS
+		-D_SFML_DYNAMIC
 	)
 endif()
 
@@ -65,7 +66,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
     target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
 endif()
 
-set(SFML_STATIC_LIBRARIES TRUE)
+set(SFML_STATIC_LIBRARIES FALSE)
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 if(SFML_FOUND)
     target_link_libraries(DameEmu sfml-graphics)
