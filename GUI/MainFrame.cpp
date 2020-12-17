@@ -69,7 +69,7 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 		_("Open GB file"),
 		"",
 		"",
-		"GB files (*.gb) | *.gb",
+		"GB files (*.gb)|*.gb",
 		wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	if (openFileDialog.ShowModal() == wxID_CANCEL) {
