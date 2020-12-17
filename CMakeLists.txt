@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(DameEmu)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 set(GUI_SRC
     GUI/AppMain.h
@@ -56,12 +57,24 @@ if(WIN32)
 		-D_CRT_SECURE_NO_WARNINGS
 		-D_SFML_DYNAMIC
 	)
+else()
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+    include_directories(${GTK3_INCLUDE_DIRS})
+    link_directories(${GTK3_LIBRARY_DIRS})
+    add_definitions(${GTK3_CFLAGS_OTHER})
+    target_link_libraries(DameEmu ${GTK3_LIBRARIES})
+
+    find_package(X11)
+    include_directories(${X11_INCLUDE_DIR})
+    link_directories(${X11_LIBRARIES})
+    target_link_libraries(DameEmu ${X11_LIBRARIES})
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
  
- find_package(wxWidgets REQUIRED COMPONENTS core base adv)
- if(wxWidgets_FOUND)
+find_package(wxWidgets REQUIRED COMPONENTS core base adv)
+if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
     target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
 endif()
