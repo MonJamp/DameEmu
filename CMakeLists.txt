@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
-project(DameEmu)
+set(PROJECT_NAME dameEmu)
+project(${PROJECT_NAME})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -43,13 +44,13 @@ set(SRC
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GUI_SRC})
 
-add_executable(DameEmu WIN32 ${SRC})
+add_executable(${PROJECT_NAME} WIN32 ${SRC})
 
-target_compile_features(DameEmu PUBLIC cxx_std_11)
-set_target_properties(DameEmu PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 
 if(WIN32)
-	set_target_properties(DameEmu PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+	set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
 	add_definitions(
 		-DWIN32
 		-D__WXMSW__
@@ -63,12 +64,12 @@ else()
     include_directories(${GTK3_INCLUDE_DIRS})
     link_directories(${GTK3_LIBRARY_DIRS})
     add_definitions(${GTK3_CFLAGS_OTHER})
-    target_link_libraries(DameEmu ${GTK3_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${GTK3_LIBRARIES})
 
     find_package(X11)
     include_directories(${X11_INCLUDE_DIR})
     link_directories(${X11_LIBRARIES})
-    target_link_libraries(DameEmu ${X11_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${X11_LIBRARIES})
 endif()
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
@@ -76,11 +77,11 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
 find_package(wxWidgets REQUIRED COMPONENTS core base adv)
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
-    target_link_libraries(DameEmu ${wxWidgets_LIBRARIES})
+    target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 endif()
 
 set(SFML_STATIC_LIBRARIES FALSE)
 find_package(SFML 2 COMPONENTS window graphics REQUIRED)
 if(SFML_FOUND)
-    target_link_libraries(DameEmu sfml-window sfml-graphics)
+    target_link_libraries(${PROJECT_NAME} sfml-window sfml-graphics)
 endif()
