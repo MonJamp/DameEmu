@@ -1,9 +1,8 @@
 #include "SfmlCanvas.h"
 
 #ifdef __WXGTK__
-	#include <gdk/x11/gdk.h>
-	#include <gtk/gtk.h>
-	#include <wx/gtk/win_gtk.h>
+    #include <gtk/gtk.h>
+	#include <gdk/gdkx.h>
 #endif
 
 
@@ -21,9 +20,9 @@ SfmlCanvas::SfmlCanvas(wxWindow* parent)
 	// Get handle of X11 window
 	gtk_widget_realize(m_wxwindow);
 	gtk_widget_set_double_buffered(m_wxwindow, false);
-	GdkWindow* Win = GTK_PIZZA(m_wxwindow)->bin_window;
+	GdkWindow* Win = gtk_widget_get_window(m_wxwindow);
 	XFlush(GDK_WINDOW_XDISPLAY(Win));
-	sf::RenderWindow::Create(GDK_WINDOW_XWINDOW(Win));
+	sf::RenderWindow::create(gdk_x11_window_get_xid(Win));
 #else
 	sf::RenderWindow::create(GetHandle());
 #endif
