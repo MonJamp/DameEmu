@@ -77,6 +77,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -D__WXDEBUG__")
 find_package(wxWidgets REQUIRED COMPONENTS core base adv)
 if(wxWidgets_FOUND)
     include(${wxWidgets_USE_FILE})
+    include_directories(${wxWidgets_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
 endif()
 
