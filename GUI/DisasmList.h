@@ -43,8 +43,11 @@ private:
 	AddressTable addressToIndex; // Address is key, index is value
 
 private:
-	void OnListRightClick(wxListEvent& evt);
-	void OnPopupClick(wxCommandEvent& evt);
+	void OnItemRightClick(wxListEvent& evt);
+	void OnItemDoubleClick(wxListEvent& evt);
+	void OnItemAction(wxCommandEvent& evt);
+
+	void OnToggleBreakpoint(long item);
 
 	wxDECLARE_EVENT_TABLE();
 
