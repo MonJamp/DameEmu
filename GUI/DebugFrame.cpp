@@ -37,7 +37,10 @@ void DisasmFrame::InitWidgets()
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
 	SetSizer(vbox);
+	//TODO: Use default color theme for windows?
+#ifndef __WXGTK__
 	SetBackgroundColour(*wxWHITE);
+#endif
 }
 
 void DisasmFrame::OnStep(wxCommandEvent& evt)
