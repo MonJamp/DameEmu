@@ -5,8 +5,9 @@
 wxDEFINE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);
 
 wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
-	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnListRightClick)
-	EVT_MENU(EventID::ToggleBreakpoint, DisasmList::OnPopupClick)
+	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnItemRightClick)
+	EVT_LIST_ITEM_ACTIVATED(EventID::LIST_CTRL, DisasmList::OnItemDoubleClick)
+	EVT_MENU(EventID::ToggleBreakpoint, DisasmList::OnItemAction)
 wxEND_EVENT_TABLE()
 
 DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
@@ -102,7 +103,7 @@ void DisasmList::ShowAddress(uint16_t a)
 	Focus(index);
 }
 
-void DisasmList::OnListRightClick(wxListEvent& evt)
+void DisasmList::OnItemRightClick(wxListEvent& evt)
 {
 	long item = evt.GetIndex();
 
@@ -112,23 +113,33 @@ void DisasmList::OnListRightClick(wxListEvent& evt)
 	PopupMenu(&popMenu);
 }
 
-void DisasmList::OnPopupClick(wxCommandEvent& evt)
+void DisasmList::OnToggleBreakpoint(long item)
+{
+	Select(item, false);
+
+	uint16_t address = this->debugger->GetDisassembly()[item].address;
+	this->debugger->ToggleBreakpoint(address);
+
+	wxCommandEvent event(TOGGLE_BREAKPOINT);
+	wxPostEvent(this->GetParent(), event);
+}
+
+void DisasmList::OnItemDoubleClick(wxListEvent& evt)
+{
+	long item = evt.GetIndex();
+	OnToggleBreakpoint(item);
+}
+
+void DisasmList::OnItemAction(wxCommandEvent& evt)
 {
 	long item = reinterpret_cast<long>(static_cast<wxMenu*>(evt.GetEventObject())->GetClientData());
-	int evtID = evt.GetId();
 
+	int evtID = evt.GetId();
 	switch(evtID)
 	{
 		case EventID::ToggleBreakpoint:
-		{
-			Select(item, false);
-
-			uint16_t address = this->debugger->GetDisassembly()[item].address;
-			this->debugger->ToggleBreakpoint(address);
-
-			wxCommandEvent event(TOGGLE_BREAKPOINT);
-			wxPostEvent(this->GetParent(), event);
-		} break;
+			OnToggleBreakpoint(item);
+			break;
 		default:
 			break;
 	}
