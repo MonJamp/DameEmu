@@ -2,11 +2,11 @@
 #include <wx/itemattr.h>
 
 
-wxDEFINE_EVENT(ADD_BREAKPOINT, wxCommandEvent);
+wxDEFINE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);
 
 wxBEGIN_EVENT_TABLE(DisasmList, wxListView)
 	EVT_LIST_ITEM_RIGHT_CLICK(EventID::LIST_CTRL, DisasmList::OnListRightClick)
-	EVT_MENU(EventID::AddBreakpoint, DisasmList::OnPopupClick)
+	EVT_MENU(EventID::ToggleBreakpoint, DisasmList::OnPopupClick)
 wxEND_EVENT_TABLE()
 
 DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
@@ -107,24 +107,30 @@ void DisasmList::OnListRightClick(wxListEvent& evt)
 	long item = evt.GetIndex();
 
 	wxMenu popMenu;
+	popMenu.Append(EventID::ToggleBreakpoint, _("&Toggle Breakpoint"));
 	popMenu.SetClientData(reinterpret_cast<void*>(item));
-	popMenu.Append(EventID::AddBreakpoint, _("&Add Breakpoint"));
 	PopupMenu(&popMenu);
 }
 
 void DisasmList::OnPopupClick(wxCommandEvent& evt)
 {
 	long item = reinterpret_cast<long>(static_cast<wxMenu*>(evt.GetEventObject())->GetClientData());
+	int evtID = evt.GetId();
 
-	if (evt.GetId() == EventID::AddBreakpoint)
+	switch(evtID)
 	{
-		Select(item, false);
+		case EventID::ToggleBreakpoint:
+		{
+			Select(item, false);
 
-		uint16_t address = this->debugger->GetDisassembly()[item].address;
-		this->debugger->AddBreakpoint(address);
+			uint16_t address = this->debugger->GetDisassembly()[item].address;
+			this->debugger->ToggleBreakpoint(address);
 
-		wxCommandEvent event(ADD_BREAKPOINT);
-		wxPostEvent(this->GetParent(), event);
+			wxCommandEvent event(TOGGLE_BREAKPOINT);
+			wxPostEvent(this->GetParent(), event);
+		} break;
+		default:
+			break;
 	}
 }
 

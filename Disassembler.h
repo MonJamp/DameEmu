@@ -77,7 +77,7 @@ public:
 	void Disassemble();
 	void Step();
 	bool HitBreakpoint();
-	void AddBreakpoint(uint16_t address);
+	void ToggleBreakpoint(uint16_t address);
 
 	std::vector<DisasmData> GetDisassembly() { return disassembly; }
 	AddressTable GetAddressTable() { return addressTable; }

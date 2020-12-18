@@ -13,7 +13,7 @@ public:
 	void OnPause();
 
 private:
-	void OnAddBreakpoint(wxCommandEvent& evt);
+	void OnToggleBreakpoint(wxCommandEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 

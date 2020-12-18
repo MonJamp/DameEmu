@@ -4,7 +4,7 @@
 #include <wx/listctrl.h>
 
 
-wxDECLARE_EVENT(ADD_BREAKPOINT, wxCommandEvent);
+wxDECLARE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);
 
 class DisasmList : public wxListView
 {
@@ -21,7 +21,7 @@ public:
 	enum EventID
 	{
 		LIST_CTRL,
-		AddBreakpoint
+		ToggleBreakpoint,
 	};
 
 public:

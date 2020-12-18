@@ -2,7 +2,7 @@
 
 
 wxBEGIN_EVENT_TABLE(DisasmPanel, wxPanel)
-	EVT_COMMAND(wxID_ANY, ADD_BREAKPOINT, DisasmPanel::OnAddBreakpoint)
+	EVT_COMMAND(wxID_ANY, TOGGLE_BREAKPOINT, DisasmPanel::OnToggleBreakpoint)
 wxEND_EVENT_TABLE()
 
 DisasmPanel::DisasmPanel(std::shared_ptr<Debugger> d, wxWindow* parent)
@@ -25,7 +25,7 @@ void DisasmPanel::OnPause()
 	disasmList->Refresh();
 }
 
-void DisasmPanel::OnAddBreakpoint(wxCommandEvent& evt)
+void DisasmPanel::OnToggleBreakpoint(wxCommandEvent& evt)
 {
 	bpList->SetItems(debugger->GetBreakpoints());
 }
