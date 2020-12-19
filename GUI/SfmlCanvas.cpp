@@ -19,7 +19,12 @@ SfmlCanvas::SfmlCanvas(wxWindow* parent)
 #ifdef __WXGTK__
 	// Get handle of X11 window
 	gtk_widget_realize(m_wxwindow);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+	// This function is deprecated but should continue to work on X11
+	// A workaround may be necessary for Wayland
 	gtk_widget_set_double_buffered(m_wxwindow, false);
+#pragma GCC diagnostic pop
 	GdkWindow* Win = gtk_widget_get_window(m_wxwindow);
 	XFlush(GDK_WINDOW_XDISPLAY(Win));
 	sf::RenderWindow::create(gdk_x11_window_get_xid(Win));
