@@ -13,7 +13,7 @@ DisasmPanel::DisasmPanel(std::shared_ptr<Debugger> d, wxWindow* parent)
 	disasmList = new DisasmList(debugger, this);
 	vbox->Add(disasmList, wxSizerFlags(3).Expand());
 
-	bpList = new BreakpointList(this);
+	bpList = new BreakpointList(debugger, this);
 	vbox->Add(bpList, wxSizerFlags(1).Expand());
 
 	SetSizer(vbox);
@@ -27,5 +27,5 @@ void DisasmPanel::OnPause()
 
 void DisasmPanel::OnToggleBreakpoint(wxCommandEvent& evt)
 {
-	bpList->SetItems(debugger->GetBreakpoints());
+	bpList->SetItems();
 }

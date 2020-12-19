@@ -8,8 +8,16 @@
 class BreakpointList : public wxListView
 {
 public:
-	BreakpointList(wxWindow* parent);
-	void SetItems(Disassembly breakpoints);
+	enum EventID
+	{
+		LIST_CTRL,
+		AddBreakpoint,
+		RemoveBreakpoint
+	};
+
+public:
+	BreakpointList(std::shared_ptr<Debugger> d, wxWindow* parent);
+	void SetItems();
 
 protected:
 	bool Create(wxWindow* parent);
@@ -33,7 +41,13 @@ private:
 private:
 	void Init();
 
+	void OnItemRightClick(wxListEvent& evt);
+	void OnPopupClick(wxCommandEvent& evt);
+
+	wxDECLARE_EVENT_TABLE();
+
 private:
+	std::shared_ptr<Debugger> debugger;
 	std::vector<BreakpointData> bpData;
 
 };
