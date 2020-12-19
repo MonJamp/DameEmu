@@ -243,19 +243,43 @@ bool Debugger::HitBreakpoint()
 	return false;
 }
 
-// Remove breakpoint if it exists otherwise add it
-void Debugger::ToggleBreakpoint(uint16_t address)
+bool Debugger::RemoveBreakpoint(uint16_t address)
 {
 	for(int i = 0; i < breakpoints.size(); i++)
 	{
 		if(breakpoints[i].address == address)
 		{
 			breakpoints.erase(breakpoints.begin() + i);
-			return;
+			return true;
 		}
 	}
 
-	breakpoints.push_back(disassembly[addressTable[address]]);
+	return false;
+}
+
+void Debugger::AddBreakpoint(uint16_t address)
+{
+	if(addressTable.find(address) != addressTable.end())
+	{
+		for(auto bp : breakpoints)
+		{
+			if(bp.address == address)
+			{
+				return;
+			}
+		}
+
+		breakpoints.push_back(disassembly[addressTable[address]]);
+	}
+}
+
+// Remove breakpoint if it exists otherwise add it
+void Debugger::ToggleBreakpoint(uint16_t address)
+{
+	if(!RemoveBreakpoint(address))
+	{
+		AddBreakpoint(address);
+	}
 }
 
 void Debugger::UpdateRegState()
