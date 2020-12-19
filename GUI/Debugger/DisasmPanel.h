@@ -1,5 +1,5 @@
 #pragma once
-#include "../Disassembler.h"
+#include "../../Disassembler.h"
 #include "DisasmList.h"
 #include "BreakpointList.h"
 #include <wx/panel.h>

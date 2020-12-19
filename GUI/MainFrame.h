@@ -2,7 +2,7 @@
 #include "../DameEmu.h"
 #include "../Cartridge.h"
 #include "SfmlCanvas.h"
-#include "DebugFrame.h"
+#include "Debugger/DebugFrame.h"
 #include "wx_header.h"
 
 #ifdef __GNUG__

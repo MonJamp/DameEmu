@@ -7,16 +7,16 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(GUI_SRC
     GUI/AppMain.h
     GUI/AppMain.cpp
-    GUI/DebugFrame.h
-    GUI/DebugFrame.cpp
-    GUI/RegPanel.h
-    GUI/RegPanel.cpp
-    GUI/DisasmPanel.h
-    GUI/DisasmPanel.cpp
-    GUI/DisasmList.h
-    GUI/DisasmList.cpp
-    GUI/BreakpointList.h
-    GUI/BreakpointList.cpp
+    GUI/Debugger/DebugFrame.h
+    GUI/Debugger/DebugFrame.cpp
+    GUI/Debugger/RegPanel.h
+    GUI/Debugger/RegPanel.cpp
+    GUI/Debugger/DisasmPanel.h
+    GUI/Debugger/DisasmPanel.cpp
+    GUI/Debugger/DisasmList.h
+    GUI/Debugger/DisasmList.cpp
+    GUI/Debugger/BreakpointList.h
+    GUI/Debugger/BreakpointList.cpp
     GUI/SfmlCanvas.cpp
     GUI/SfmlCanvas.h
     GUI/MainFrame.h
