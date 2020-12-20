@@ -19,11 +19,14 @@ public:
     ~MemoryBrowser();
 
     void RefreshValues();
+    void OnFocus(wxFocusEvent& evt);
 
 protected:
     bool Create(wxWindow* parent);
     wxString OnGetItemText(long item, long column) const;
     wxItemAttr* OnGetItemAttr(long itme) const;
+
+    wxDECLARE_EVENT_TABLE();
 
 private:
     std::vector<MemData> memData;
