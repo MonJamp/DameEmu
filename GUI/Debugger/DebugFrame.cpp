@@ -4,12 +4,20 @@
 wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 	EVT_BUTTON(ButtonID::Step, DisasmFrame::OnStep)
 	EVT_BUTTON(ButtonID::RunBreak, DisasmFrame::OnRunBreak)
+	EVT_MENU(MenuID::SHOW_VRAM, DisasmFrame::OnShowVram)
 wxEND_EVENT_TABLE()
 
 DisasmFrame::DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent)
 	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(750, 550)),
 	debugger(d)
 {
+	menuBar = new wxMenuBar();
+	windowsMenu = new wxMenu();
+	vramItem = new wxMenuItem(windowsMenu, MenuID::SHOW_VRAM, _("&VRAM"));
+	windowsMenu->Append(vramItem);
+	menuBar->Append(windowsMenu, _("Windows"));
+	SetMenuBar(menuBar);
+
 	InitWidgets();
 
 	running = false;
@@ -83,5 +91,19 @@ void DisasmFrame::RunLoop(wxIdleEvent& evt)
 	else
 	{
 		evt.RequestMore(true);
+	}
+}
+
+void DisasmFrame::OnShowVram(wxCommandEvent& evt)
+{
+	if(wxWindow::FindWindowByName("VRAM Viewer"))
+	{
+		vramFrame->Raise();
+	}
+	else
+	{
+		vramFrame = new VramFrame(this);
+		vramFrame->SetName("VRAM Viewer");
+		vramFrame->Show();
 	}
 }
