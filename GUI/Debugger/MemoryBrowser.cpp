@@ -26,14 +26,22 @@ MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
     InsertColumn(static_cast<long>(ColumnID::CategoryAddress), itemCol);
     // Values
     itemCol.SetId(wxID_ANY);
-    itemCol.SetWidth(340);
+    itemCol.SetWidth(345);
     InsertColumn(static_cast<long>(ColumnID::Values), itemCol);
     // Ascii
     itemCol.SetId(wxID_ANY);
+#ifdef __WINDOWS__
+    itemCol.SetWidth(135);
+#elif __WXGTK__
     itemCol.SetWidth(125);
+#endif
     InsertColumn(static_cast<long>(ColumnID::Ascii), itemCol);
 
-    SetMinSize(wxSize(75+340+125, 100));
+#ifdef __WINDOWS__
+    SetMinSize(wxSize(75+345+135+20, 150));
+#elif __WXGTK__
+    SetMinSize(wxSize(75+340+125, 150));
+#endif
 
     RefreshValues();
 }

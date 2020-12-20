@@ -36,7 +36,7 @@ void DisasmFrame::InitWidgets()
 	hbox->Add(regPanel, wxSizerFlags(2).Expand().Border(wxALL, 10));
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
-	SetSizer(vbox);
+	SetSizerAndFit(vbox);
 	//TODO: Use default color theme for windows?
 #ifndef __WXGTK__
 	SetBackgroundColour(*wxWHITE);
