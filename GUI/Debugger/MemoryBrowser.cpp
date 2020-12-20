@@ -1,6 +1,12 @@
 #include "MemoryBrowser.h"
 #include <wx/settings.h>
 
+
+wxBEGIN_EVENT_TABLE(MemoryBrowser, wxListView)
+    EVT_SET_FOCUS(MemoryBrowser::OnFocus)
+    EVT_KILL_FOCUS(MemoryBrowser::OnFocus)
+wxEND_EVENT_TABLE()
+
 MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
     : bus(b)
 {
@@ -150,6 +156,20 @@ void MemoryBrowser::RefreshValues()
 
     SetItemCount(memData.size());
     Refresh();
+}
+
+void MemoryBrowser::OnFocus(wxFocusEvent& evt)
+{
+    if(!HasFocus())
+    {
+        itemAttr->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
+    }
+    else
+    {
+        itemAttr->SetTextColour(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXTEXT));
+    }
+
+    evt.Skip();
 }
 
 wxString MemoryBrowser::OnGetItemText(long item, long column) const
