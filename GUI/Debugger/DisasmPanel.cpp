@@ -11,7 +11,7 @@ DisasmPanel::DisasmPanel(std::shared_ptr<Debugger> d, wxWindow* parent)
 	wxBoxSizer* vbox = new wxBoxSizer(wxVERTICAL);
 
 	disasmList = new DisasmList(debugger, this);
-	vbox->Add(disasmList, wxSizerFlags(3).Expand());
+	vbox->Add(disasmList, wxSizerFlags(2).Expand());
 
 	// Puts disassembler controls in a tabbed interface
 	notebook = new wxNotebook(this, wxID_ANY);
