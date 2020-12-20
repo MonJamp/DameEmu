@@ -19,6 +19,8 @@ set(GUI_SRC
     GUI/Debugger/BreakpointList.cpp
     GUI/Debugger/MemoryBrowser.cpp
     GUI/Debugger/MemoryBrowser.h
+    GUI/Debugger/VramFrame.cpp
+    GUI/Debugger/VramFrame.h
     GUI/SfmlCanvas.cpp
     GUI/SfmlCanvas.h
     GUI/MainFrame.h

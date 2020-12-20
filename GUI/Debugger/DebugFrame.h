@@ -2,6 +2,7 @@
 #include "../../Disassembler.h"
 #include "DisasmPanel.h"
 #include "RegPanel.h"
+#include "VramFrame.h"
 #include <wx/wx.h>
 #include <memory>
 #include <vector>
@@ -48,12 +49,28 @@ private:
 	void OnRunBreak(wxCommandEvent& evt);
 	void RunLoop(wxIdleEvent& evt);
 
+	void OnShowVram(wxCommandEvent& evt);
+
 	wxDECLARE_EVENT_TABLE();
 
+private:
+	enum MenuID
+	{
+		SHOW_VRAM
+	};
+
+private:
 	bool running;
+
+	wxMenuBar* menuBar;
+	wxMenu* windowsMenu;
+	wxMenuItem* vramItem;
+
 	DisasmPanel* disasmPanel;
 	RegPanel* regPanel;
 	ButtonPanel* btnPanel;
+	
+	VramFrame* vramFrame = NULL;
 
 	std::shared_ptr<Debugger> debugger;
 };
