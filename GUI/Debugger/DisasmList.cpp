@@ -1,5 +1,6 @@
 #include "DisasmList.h"
 #include <wx/itemattr.h>
+#include <wx/settings.h>
 
 
 wxDEFINE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);
@@ -20,8 +21,8 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 
 	Create(parent);
 
-	wxColor fontColor = wxColor(*wxBLACK);
-	wxColor bgColor = wxColor(*wxWHITE);
+	wxColor fontColor = wxColor(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXTEXT));
+    wxColor bgColor = wxColor(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX));
 	wxFont font = wxFont(*wxNORMAL_FONT);
 	itemAttr = new wxItemAttr(fontColor, bgColor, font);
 
@@ -166,7 +167,7 @@ wxString DisasmList::OnGetItemText(long item, long column) const
 wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 {
 	// Reset itemAttr
-	wxColor bgColor = wxColor(*wxWHITE);
+	wxColor bgColor = wxColor(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX));
 	itemAttr->SetBackgroundColour(bgColor);
 
 	for (auto i : debugger->GetBreakpoints())
@@ -182,7 +183,13 @@ wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 	uint16_t index = addressToIndex.at(debugger->regState.cpu.pc);
 	if (item == index)
 	{
-		bgColor = wxColor(205, 220, 57);
+		if(wxSystemSettings::GetAppearance().IsDark())
+		{
+			bgColor = wxColor(153, 170, 0);
+		} else {
+			bgColor = wxColor(205, 220, 57);
+		}
+
 		itemAttr->SetBackgroundColour(bgColor);
 	}
 

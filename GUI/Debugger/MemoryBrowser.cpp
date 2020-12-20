@@ -1,4 +1,5 @@
 #include "MemoryBrowser.h"
+#include <wx/settings.h>
 
 MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
     : bus(b)
@@ -10,8 +11,8 @@ MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
     
     Create(parent);
 
-    wxColor fontColor = wxColor(*wxBLACK);
-    wxColor bgColor = wxColor(*wxWHITE);
+    wxColor fontColor = wxColor(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXTEXT));
+    wxColor bgColor = wxColor(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX));
     wxFont font = wxFont(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
     itemAttr = new wxItemAttr(fontColor, bgColor, font);
 
