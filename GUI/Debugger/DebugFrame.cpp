@@ -7,7 +7,7 @@ wxBEGIN_EVENT_TABLE(DisasmFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 DisasmFrame::DisasmFrame(std::shared_ptr<Debugger> d, wxWindow* parent)
-	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(650, 550)),
+	: wxFrame(parent, wxID_ANY, "DameDis", wxDefaultPosition, wxSize(750, 550)),
 	debugger(d)
 {
 	InitWidgets();
@@ -30,10 +30,10 @@ void DisasmFrame::InitWidgets()
 	vbox->Add(btnPanel, wxSizerFlags(0));
 
 	disasmPanel = new DisasmPanel(debugger, this);
-	hbox->Add(disasmPanel, wxSizerFlags(3).Expand());
+	hbox->Add(disasmPanel, wxSizerFlags(5).Expand());
 
 	regPanel = new RegPanel(this);
-	hbox->Add(regPanel, wxSizerFlags(1).Expand().Border(wxALL, 5));
+	hbox->Add(regPanel, wxSizerFlags(2).Expand().Border(wxALL, 10));
 
 	vbox->Add(hbox, wxSizerFlags(1).Expand());
 	SetSizer(vbox);

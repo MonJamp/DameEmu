@@ -84,6 +84,7 @@ public:
 	std::vector<DisasmData> GetDisassembly() { return disassembly; }
 	AddressTable GetAddressTable() { return addressTable; }
 	Disassembly GetBreakpoints() { return breakpoints; }
+	std::shared_ptr<Bus> GetBus() { return bus; }
 
 private:
 	void UpdateRegState();

@@ -28,7 +28,7 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 	wxListItem itemCol;
 	// Empty
 	itemCol.SetId(wxID_ANY);
-	itemCol.SetWidth(20);
+	itemCol.SetWidth(50);
 	InsertColumn(static_cast<long>(ColumnID::Empty), itemCol);
 	// Address
 	itemCol.SetId(wxID_ANY);
@@ -48,7 +48,7 @@ DisasmList::DisasmList(std::shared_ptr<Debugger> d, wxWindow* parent)
 	InsertColumn(static_cast<long>(ColumnID::Operand), itemCol);
 	// Comment
 	itemCol.SetId(wxID_ANY);
-	itemCol.SetWidth(150);
+	itemCol.SetWidth(160);
 	InsertColumn(static_cast<long>(ColumnID::Comment), itemCol);
 
 	RefreshValues();

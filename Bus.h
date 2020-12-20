@@ -209,6 +209,8 @@ public:
 	uint8_t Read(uint16_t address);
 	void Clock();
 
+	std::array<uint8_t, 0x8000> GetMemoryDump();
+
 	Memory::Registers regs;
 private:
 	void dmaTransfer(uint8_t data);

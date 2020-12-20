@@ -13,8 +13,18 @@ DisasmPanel::DisasmPanel(std::shared_ptr<Debugger> d, wxWindow* parent)
 	disasmList = new DisasmList(debugger, this);
 	vbox->Add(disasmList, wxSizerFlags(3).Expand());
 
-	bpList = new BreakpointList(debugger, this);
-	vbox->Add(bpList, wxSizerFlags(1).Expand());
+	// Puts disassembler controls in a tabbed interface
+	notebook = new wxNotebook(this, wxID_ANY);
+	bpList = new BreakpointList(debugger, notebook);
+	memBrowser = new MemoryBrowser(debugger->GetBus(), notebook);
+	// Size must be set to show panel in notebook
+	// Setting size causes assertion errors in gtk
+	bpList->SetSize(bpList->GetBestSize());
+	memBrowser->SetSize(memBrowser->GetBestSize());
+	// Add pages to notebook
+	notebook->AddPage(bpList, "Breakpoints", true);
+	notebook->AddPage(memBrowser, "Memory Browser");
+	vbox->Add(notebook, wxSizerFlags(1).Expand());
 
 	SetSizer(vbox);
 }
@@ -23,6 +33,7 @@ void DisasmPanel::OnPause()
 {
 	disasmList->ShowCurrentAddress();
 	disasmList->Refresh();
+	memBrowser->RefreshValues();
 }
 
 void DisasmPanel::OnToggleBreakpoint(wxCommandEvent& evt)

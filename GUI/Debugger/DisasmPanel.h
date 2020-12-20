@@ -2,7 +2,9 @@
 #include "../../Disassembler.h"
 #include "DisasmList.h"
 #include "BreakpointList.h"
+#include "MemoryBrowser.h"
 #include <wx/panel.h>
+#include <wx/notebook.h>
 #include <memory>
 
 
@@ -19,7 +21,9 @@ private:
 
 private:
 	DisasmList* disasmList;
+	wxNotebook* notebook;
 	BreakpointList* bpList;
+	MemoryBrowser* memBrowser;
 	std::shared_ptr<Debugger> debugger;
 
 };

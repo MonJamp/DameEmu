@@ -438,6 +438,48 @@ void Bus::Clock()
 #endif
 }
 
+// For memory browser. Excludes program area
+std::array<uint8_t, 0x8000> Bus::GetMemoryDump()
+{
+	std::array<uint8_t, 0x8000> dump;
+	std::array<uint8_t, 0x2000> eram;
+	std::array<uint8_t, 0x1E00> prohibited1;
+	std::array<uint8_t, 0x60> prohibited2;
+	std::array<uint8_t, 0x80> registers;
+
+
+	// TODO: Get external RAM from cart
+	eram.fill(0);
+	prohibited1.fill(0);
+	prohibited2.fill(0);
+
+	for(uint8_t i = 0; i < 0x80; i++)
+	{
+		registers.at(i) = Read(0xFF00 + i);
+	}
+
+	uint16_t offset = 0;
+	std::copy(vram.begin(), vram.end(), dump.begin());
+	offset += vram.size();
+	std::copy(eram.begin(), eram.end(), dump.begin() + offset);
+	offset += eram.size();
+	std::copy(ram.begin(), ram.end(), dump.begin() + offset);
+	offset += ram.size();
+	std::copy(prohibited1.begin(), prohibited1.end(), dump.begin() + offset);
+	offset += prohibited1.size();
+	std::copy(oam.begin(), oam.end(), dump.begin() + offset);
+	offset += oam.size();
+	std::copy(prohibited2.begin(), prohibited2.end(), dump.begin() + offset);
+	offset += prohibited2.size();
+	std::copy(registers.begin(), registers.end(), dump.begin() + offset);
+	offset += registers.size();
+	std::copy(high_ram.begin(), high_ram.end(), dump.begin() + offset);
+	offset += high_ram.size();
+	dump.at(offset) = regs.int_enable;
+
+	return dump;
+}
+
 void Bus::dmaTransfer(uint8_t data)
 {
 	uint16_t address = data * 0x100;
