@@ -2,6 +2,7 @@
 #include "../SfmlCanvas.h"
 #include "../../Bus.h"
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 class VramCanvas : public SfmlCanvas
 {
@@ -13,6 +14,11 @@ private:
     virtual void OnUpdate();
 
 	std::shared_ptr<Bus> bus;
+	std::vector<sf::Texture*> textures;
+	std::vector<sf::Sprite> sprites;
+
+	float scale, posX, posY;
+	uint16_t tileIndex; // Keeps track of which tile to draw next
 };
 
 class VramFrame : public wxFrame
