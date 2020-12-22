@@ -55,7 +55,7 @@ MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
 
 MemoryBrowser::~MemoryBrowser()
 {
-
+	delete itemAttr;
 }
 
 bool MemoryBrowser::Create(wxWindow* parent)
