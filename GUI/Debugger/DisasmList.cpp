@@ -1,6 +1,4 @@
 #include "DisasmList.h"
-#include <wx/itemattr.h>
-#include <wx/settings.h>
 
 
 wxDEFINE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);

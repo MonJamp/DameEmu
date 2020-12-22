@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Disassembler.h"
-#include <wx/listctrl.h>
+#include "../wx_header.h"
 
 
 class MemoryBrowser : public wxListView

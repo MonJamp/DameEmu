@@ -2,7 +2,7 @@
 #include "../../Disassembler.h"
 #include <cstdint>
 #include <vector>
-#include <wx/listctrl.h>
+#include "../wx_header.h"
 
 
 class BreakpointList : public wxListView

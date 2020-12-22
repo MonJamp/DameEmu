@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Disassembler.h"
-#include <wx/wx.h>
+#include "../wx_header.h"
 #include <vector>
 #include <memory>
 

@@ -3,8 +3,7 @@
 #include "DisasmList.h"
 #include "BreakpointList.h"
 #include "MemoryBrowser.h"
-#include <wx/panel.h>
-#include <wx/notebook.h>
+#include "../wx_header.h"
 #include <memory>
 
 
