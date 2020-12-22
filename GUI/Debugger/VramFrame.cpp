@@ -9,6 +9,8 @@ VramCanvas::VramCanvas(std::shared_ptr<Bus> b, wxWindow* parent)
 	posY = 0.f;
 	tileIndex = 0;
 
+	SetMinSize(wxSize(scale * 8 * 16, scale * 8 * 16));
+
 	uint8_t white_pixels[8 * 8 * 4];
 	for (uint8_t i = 0; i < 8; i++)
 	{
@@ -124,6 +126,7 @@ VramFrame::VramFrame(std::shared_ptr<Bus> b, wxWindow* parent)
 {
     canvas = new VramCanvas(b, this);
 	canvas->SetSize(canvas->GetBestSize());
+	Fit();
 }
 
 VramFrame::~VramFrame()
