@@ -102,7 +102,7 @@ void DisasmFrame::OnShowVram(wxCommandEvent& evt)
 	}
 	else
 	{
-		vramFrame = new VramFrame(this);
+		vramFrame = new VramFrame(debugger->GetBus(), this);
 		vramFrame->SetName("VRAM Viewer");
 		vramFrame->Show();
 	}
