@@ -210,6 +210,7 @@ public:
 	void Clock();
 
 	std::array<uint8_t, 0x8000> GetMemoryDump();
+	std::array<uint8_t, 0x2000>* GetVRAM() { return &vram; }
 
 	Memory::Registers regs;
 private:
