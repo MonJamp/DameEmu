@@ -1,5 +1,4 @@
 #include "RegPanel.h"
-#include <wx/statline.h>
 
 
 RegPanel::RegPanel(wxWindow* parent) : wxPanel(parent)

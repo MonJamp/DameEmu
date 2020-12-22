@@ -1,6 +1,4 @@
 #include "MainFrame.h"
-#include "wx/wfstream.h"
-#include "wx/aboutdlg.h"
 
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)

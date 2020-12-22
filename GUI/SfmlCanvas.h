@@ -1,5 +1,5 @@
 #pragma once
-#include <wx/wx.h>
+#include "wx_header.h"
 #include <SFML/Graphics.hpp>
 
 

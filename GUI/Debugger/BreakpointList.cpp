@@ -1,7 +1,4 @@
 #include "BreakpointList.h"
-#include <wx/menu.h>
-#include <wx/textdlg.h>
-#include <wx/valtext.h>
 
 
 wxBEGIN_EVENT_TABLE(BreakpointList, wxListView)

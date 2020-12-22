@@ -3,7 +3,7 @@
 #include "DisasmPanel.h"
 #include "RegPanel.h"
 #include "VramFrame.h"
-#include <wx/wx.h>
+#include "../wx_header.h"
 #include <memory>
 #include <vector>
 

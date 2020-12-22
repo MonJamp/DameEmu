@@ -1,7 +1,6 @@
 #pragma once
 #include "../../Disassembler.h"
-#include <wx/wx.h>
-#include <wx/listctrl.h>
+#include "../wx_header.h"
 
 
 wxDECLARE_EVENT(TOGGLE_BREAKPOINT, wxCommandEvent);

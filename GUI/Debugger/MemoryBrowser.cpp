@@ -1,5 +1,4 @@
 #include "MemoryBrowser.h"
-#include <wx/settings.h>
 
 
 wxBEGIN_EVENT_TABLE(MemoryBrowser, wxListView)
