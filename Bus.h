@@ -142,7 +142,7 @@ namespace Memory {
 			Register nr50;
 			Register nr51;
 			Register nr52;
-			Register wav[10];
+			Register wav[WAVE_RAM_SIZE];
 		} sound;
 
 		struct LCD {
