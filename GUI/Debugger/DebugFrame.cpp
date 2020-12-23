@@ -78,20 +78,23 @@ void DisasmFrame::OnRunBreak(wxCommandEvent& evt)
 
 void DisasmFrame::RunLoop(wxIdleEvent& evt)
 {
-	debugger->Step();
+	// Cycle through 100 instructions then return control to wxWidgets
+	for (int i = 0; i < 100; i++)
+	{
+		debugger->Step();
 
-	if (debugger->HitBreakpoint())
-	{
-		running = false;
-		btnPanel->runbreakBtn->SetLabel("Run");
-		Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
-		regPanel->UpdateValues(debugger->regState);
-		disasmPanel->OnPause();
+		if (debugger->HitBreakpoint())
+		{
+			running = false;
+			btnPanel->runbreakBtn->SetLabel("Run");
+			Disconnect(wxEVT_IDLE, wxIdleEventHandler(DisasmFrame::RunLoop));
+			regPanel->UpdateValues(debugger->regState);
+			disasmPanel->OnPause();
+			break;
+		}
 	}
-	else
-	{
-		evt.RequestMore(true);
-	}
+
+	evt.RequestMore(true);
 }
 
 void DisasmFrame::OnShowVram(wxCommandEvent& evt)
