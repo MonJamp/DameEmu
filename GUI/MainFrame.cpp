@@ -10,14 +10,14 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(MenuID::ABOUT, MainFrame::OnAbout)
 #ifdef _DEBUG
 	EVT_MENU(MenuID::CHECK, MainFrame::OnCheckCart)
+	EVT_MENU(MenuID::UNLOAD, MainFrame::OnUnloadROM)
 #endif
 wxEND_EVENT_TABLE()
 
 
 MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition, wxSize(600,400))
 {
-	cart.reset(new Cartridge());
-	dameEmu = new DameEmu(cart);
+	dameEmu = std::make_unique<DameEmu>();
 
 	menuBar = new wxMenuBar();
 
@@ -47,6 +47,8 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 	wxMenu* debugMenu = new wxMenu();
 	wxMenuItem* checkCartItem = new wxMenuItem(debugMenu, MenuID::CHECK, _("&Check Cartridge"));
 	debugMenu->Append(checkCartItem);
+	wxMenuItem* unloadItem = new wxMenuItem(debugMenu, MenuID::UNLOAD, _("&Reset dameEmu"));
+	debugMenu->Append(unloadItem);
 	menuBar->Append(debugMenu, _("&Debug"));
 #endif
 
@@ -57,7 +59,7 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 
 MainFrame::~MainFrame()
 {
-	delete dameEmu;
+
 }
 
 void MainFrame::OnLoadROM(wxCommandEvent& evt)
@@ -81,9 +83,7 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 	}
 
 	wxString filename = openFileDialog.GetPath();
-	cart.reset(new Cartridge());
-	cart->open(std::string(filename.mb_str()));
-	dameEmu = new DameEmu(cart);
+	dameEmu = std::make_unique<DameEmu>(std::string(filename.mb_str()));
 	dameEmu->SetCanvas(glPanel);
 }
 
@@ -134,13 +134,19 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 #ifdef _DEBUG
 void MainFrame::OnCheckCart(wxCommandEvent& evt)
 {
-	if (cart->isValid())
+	Cartridge cart = dameEmu->GetCart();
+	if (cart.isValid())
 	{
-		wxMessageBox(cart->headerToString());
+		wxMessageBox(cart.headerToString());
 	}
 	else
 	{
 		wxMessageBox("ROM is invalid");
 	}
+}
+
+void MainFrame::OnUnloadROM(wxCommandEvent& evt)
+{
+	dameEmu.reset();
 }
 #endif

@@ -4,10 +4,7 @@
 #include "Cartridge.h"
 #include <cstdint>
 #include <array>
-
-#ifdef __GNUG__
 #include <memory>
-#endif
 
 
 // Port/Mode Registers
@@ -204,7 +201,7 @@ public:
 
 	void Reset();
 
-	void InsertCartridge(std::shared_ptr<Cartridge>& cart);
+	void InsertCartridge(const std::string& filename);
 	void Write(uint16_t address, uint8_t data);
 	uint8_t Read(uint16_t address);
 	void Clock();
@@ -218,7 +215,7 @@ private:
 private:
 	CPU cpu;
 	PPU ppu;
-	std::shared_ptr<Cartridge> cart;
+	std::unique_ptr<Cartridge> cart;
 
 	std::array<uint8_t, 0x2000> vram;
 	std::array<uint8_t, 0x2000> ram;
