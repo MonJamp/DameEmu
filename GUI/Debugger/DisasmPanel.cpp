@@ -33,7 +33,7 @@ void DisasmPanel::OnPause()
 {
 	disasmList->ShowCurrentAddress();
 	disasmList->Refresh();
-	memBrowser->RefreshValues();
+	memBrowser->Refresh();
 }
 
 void DisasmPanel::OnToggleBreakpoint(wxCommandEvent& evt)

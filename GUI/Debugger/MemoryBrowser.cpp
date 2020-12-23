@@ -7,7 +7,7 @@ wxBEGIN_EVENT_TABLE(MemoryBrowser, wxListView)
 wxEND_EVENT_TABLE()
 
 MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
-    : bus(b)
+    : map(b->GetMemoryDump())
 {
 #ifdef __WINDOWS__
 	// Disables vertical gap between columns
@@ -49,7 +49,8 @@ MemoryBrowser::MemoryBrowser(std::shared_ptr<Bus> b, wxWindow* parent)
     SetMinSize(wxSize(75+340+125, 150));
 #endif
 
-    RefreshValues();
+	SetItemCount(0x8000 / 0x10);
+	Refresh();
 }
 
 MemoryBrowser::~MemoryBrowser()
@@ -127,36 +128,6 @@ wxString HexToAscii(uint8_t x)
     
 }
 
-void MemoryBrowser::RefreshValues()
-{
-	Memory::Map& map = bus->GetMemoryDump();
-
-    memData.clear();
-
-    for(uint16_t i = 0; i < 0x8000; i += 0x10)
-    {
-        MemData data;
-        data.category = GetCategory(i + 0x8000);
-        data.address = intToHexString(i + 0x8000, 2);
-        data.values = "";
-        data.ascii = "";
-
-        for(uint8_t j = 0; j < 0x10; j++)
-        {
-            uint8_t value = map.raw.at(i + j);
-            data.values += intToHexString(value, 1) + " ";
-            data.ascii += HexToAscii(value);
-        }
-
-        data.values.erase(data.values.size() - 1);
-
-        memData.push_back(data);
-    }
-
-    SetItemCount(memData.size());
-    Refresh();
-}
-
 void MemoryBrowser::OnFocus(wxFocusEvent& evt)
 {
     if(!HasFocus())
@@ -171,21 +142,41 @@ void MemoryBrowser::OnFocus(wxFocusEvent& evt)
     evt.Skip();
 }
 
-wxString MemoryBrowser::OnGetItemText(long item, long column) const
+wxString MemoryBrowser::OnGetItemText(long index, long column) const
 {
-    if (static_cast<size_t>(item) > memData.size())
-    {
-        return "";
-    }
+	switch (static_cast<ColumnID>(column))
+	{
+		case ColumnID::CategoryAddress:
+		{
+			wxString category = GetCategory(index * 0x10 + 0x8000);
+			wxString address = intToHexString(index * 0x10 + 0x8000, 2);
+			return category + ":" + address;
+		}
+		case ColumnID::Values:
+		case ColumnID::Ascii:
+		{
+			wxString values = "";
+			wxString ascii = "";
 
-    switch (static_cast<ColumnID>(column))
-    {
-    case ColumnID::CategoryAddress:     return memData[item].category
-                                            + ":" + memData[item].address;
-    case ColumnID::Values:              return memData[item].values;
-    case ColumnID::Ascii:               return memData[item].ascii;
-    default: return "";   
-    }
+			for (uint8_t i = 0; i < 0x10; i++)
+			{
+				uint8_t value = map.raw.at(index * 0x10 + i);
+				values += intToHexString(value, 1) + " ";
+				ascii += HexToAscii(value);
+			}
+
+			values.erase(values.size() - 1);
+
+			if (static_cast<ColumnID>(column) == ColumnID::Values)
+			{
+				return values;
+			}
+			else {
+				return ascii;
+			}
+		}
+		default: return "";
+	}
 }
 
 wxItemAttr* MemoryBrowser::OnGetItemAttr(long item) const
