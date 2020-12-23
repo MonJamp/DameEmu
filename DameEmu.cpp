@@ -2,11 +2,22 @@
 #include "Cartridge.h"
 #include <fstream>
 
-DameEmu::DameEmu(std::shared_ptr<Cartridge>& cart)
+
+DameEmu::DameEmu()
 {
-	bus.reset(new Bus);
-	bus->InsertCartridge(cart);
-	debugger.reset(new Debugger(bus));
+	bus = std::make_shared<Bus>();
+	debugger = std::make_shared<Debugger>(bus);
+
+	debugger->Disassemble();
+}
+
+DameEmu::DameEmu(const std::string& filename)
+{
+	bus = std::make_shared<Bus>();
+	debugger = std::make_shared<Debugger>(bus);
+
+	bus->InsertCartridge(filename);
+	debugger->Disassemble();
 }
 
 DameEmu::~DameEmu()

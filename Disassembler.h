@@ -72,7 +72,7 @@ public:
 	RegState regState;
 
 public:
-	Debugger(std::shared_ptr<Bus>& b);
+	Debugger(std::shared_ptr<Bus> b);
 
 	void Disassemble();
 	void Step();

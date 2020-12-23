@@ -4,10 +4,7 @@
 #include "SfmlCanvas.h"
 #include "Debugger/DebugFrame.h"
 #include "wx_header.h"
-
-#ifdef __GNUG__
 #include <memory>
-#endif
 
 class MainFrame : public wxFrame
 {
@@ -25,6 +22,7 @@ private:
 	void OnAbout(wxCommandEvent& evt);
 #ifdef _DEBUG
 	void OnCheckCart(wxCommandEvent& evt);
+	void OnUnloadROM(wxCommandEvent& evt);
 #endif
 
 	enum MenuID
@@ -36,7 +34,8 @@ private:
 		DEBUGGER,
 		ABOUT,
 #ifdef _DEBUG
-		CHECK
+		CHECK,
+		UNLOAD
 #endif
 	};
 
@@ -56,6 +55,5 @@ private:
 	SfmlCanvas* glPanel = NULL;
 	DisasmFrame* disasmFrame = NULL;
 
-	DameEmu* dameEmu = nullptr;
-	std::shared_ptr<Cartridge> cart;
+	std::unique_ptr<DameEmu> dameEmu;
 };

@@ -4,9 +4,8 @@
 
 
 CPU::CPU(Bus* b)
+	: bus(b)
 {
-	bus = b;
-
 	Reset();
 }
 

@@ -6,7 +6,7 @@
 Bus::Bus()
 	: cpu(this), ppu(this)
 {
-	cart.reset(new Cartridge());
+	cart = std::make_unique<Cartridge>();
 	Reset();
 }
 
@@ -57,9 +57,9 @@ void Bus::Reset()
 	regs.int_enable = 0x00;
 }
 
-void Bus::InsertCartridge(std::shared_ptr<Cartridge>& cart)
+void Bus::InsertCartridge(const std::string& filename)
 {
-	this->cart = cart;
+	cart->open(filename);
 }
 
 void Bus::Write(uint16_t address, uint8_t data)

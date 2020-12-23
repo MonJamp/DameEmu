@@ -157,11 +157,9 @@ std::string GetIORegister(uint16_t address)
 }
 
 
-Debugger::Debugger(std::shared_ptr<Bus>& b)
+Debugger::Debugger(std::shared_ptr<Bus> b)
+	: bus(b)
 {
-	bus = b;
-	Disassemble();
-
 	UpdateRegState();
 }
 
