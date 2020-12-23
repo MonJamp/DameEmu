@@ -50,7 +50,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GUI_SRC})
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC})
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 
 if(WIN32)
