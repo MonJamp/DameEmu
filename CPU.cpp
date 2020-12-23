@@ -137,6 +137,6 @@ uint8_t CPU::Step() {
 }
 
 void CPU::CB() {
-	uint8_t opcode = static_cast<uint8_t>(operand);
+	uint8_t opcode = GetByteAtPC();
 	(this->*cb_jumpTable[opcode].execute)();
 }
