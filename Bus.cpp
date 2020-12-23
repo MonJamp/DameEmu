@@ -7,6 +7,7 @@ Bus::Bus()
 	: cpu(this), ppu(this)
 {
 	cart = std::make_unique<Cartridge>();
+	map = std::make_shared<Memory::Map>();
 	Reset();
 }
 
@@ -17,10 +18,7 @@ Bus::~Bus()
 
 void Bus::Reset()
 {
-	vram.fill(0x00);
-	ram.fill(0x00);
-	oam.fill(0x00);
-	high_ram.fill(0x00);
+	map->raw.fill(0x00);
 
 	// Gameboy boot state after bios
 	// These values are true only for DMG
@@ -70,7 +68,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
-		vram[address - 0x8000] = data;
+		map->vram[address - 0x8000] = data;
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
@@ -78,7 +76,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{
-		ram[address - 0xC000] = data;
+		map->ram[address - 0xC000] = data;
 	}
 	else if (address >= 0xE000 && address <= 0xFDFF)
 	{
@@ -86,7 +84,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0xFE00 && address <= 0xFE9F)
 	{
-		oam[address - 0xFE00] = data;
+		map->oam[address - 0xFE00] = data;
 	}
 	else if (address >= 0xFEA0 && address <= 0xFEFF)
 	{
@@ -94,6 +92,8 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0xFF00 && address <= 0xFF7F)
 	{
+		map->registers[address - 0xFF00] = data;
+
 		// TODO writes to registers not accurate
 		if (address >= ADDR_WAVE_RAM && address < ADDR_WAVE_RAM + WAVE_RAM_SIZE)
 		{
@@ -232,10 +232,11 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0xFF80 && address <= 0xFFFE)
 	{
-		high_ram[address - 0xFF80] = data;
+		map->high_ram[address - 0xFF80] = data;
 	}
 	else if (address == 0xFFFF)
 	{
+		map->int_enable = data;
 		regs.int_enable = data;
 	}
 }
@@ -250,7 +251,7 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
-		data = vram[address - 0x8000];
+		data = map->vram[address - 0x8000];
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
@@ -258,7 +259,7 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{
-		data = ram[address - 0xC000];
+		data = map->ram[address - 0xC000];
 	}
 	else if (address >= 0xE000 && address <= 0xFDFF)
 	{
@@ -266,7 +267,7 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0xFE00 && address <= 0xFE9F)
 	{
-		data = oam[address - 0xFE00];
+		data = map->oam[address - 0xFE00];
 	}
 	else if (address >= 0xFEA0 && address <= 0xFEFF)
 	{
@@ -411,7 +412,7 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0xFF80 && address <= 0xFFFE)
 	{
-		data = high_ram[address - 0xFF80];
+		data = map->high_ram[address - 0xFF80];
 	}
 	else if (address == 0xFFFF)
 	{
@@ -439,51 +440,15 @@ void Bus::Clock()
 }
 
 // For memory browser. Excludes program area
-std::array<uint8_t, 0x8000> Bus::GetMemoryDump()
+Memory::Map& Bus::GetMemoryDump()
 {
-	std::array<uint8_t, 0x8000> dump;
-	std::array<uint8_t, 0x2000> eram;
-	std::array<uint8_t, 0x1E00> prohibited1;
-	std::array<uint8_t, 0x60> prohibited2;
-	std::array<uint8_t, 0x80> registers;
-
-
-	// TODO: Get external RAM from cart
-	eram.fill(0);
-	prohibited1.fill(0);
-	prohibited2.fill(0);
-
-	for(uint8_t i = 0; i < 0x80; i++)
-	{
-		registers.at(i) = Read(0xFF00 + i);
-	}
-
-	uint16_t offset = 0;
-	std::copy(vram.begin(), vram.end(), dump.begin());
-	offset += vram.size();
-	std::copy(eram.begin(), eram.end(), dump.begin() + offset);
-	offset += eram.size();
-	std::copy(ram.begin(), ram.end(), dump.begin() + offset);
-	offset += ram.size();
-	std::copy(prohibited1.begin(), prohibited1.end(), dump.begin() + offset);
-	offset += prohibited1.size();
-	std::copy(oam.begin(), oam.end(), dump.begin() + offset);
-	offset += oam.size();
-	std::copy(prohibited2.begin(), prohibited2.end(), dump.begin() + offset);
-	offset += prohibited2.size();
-	std::copy(registers.begin(), registers.end(), dump.begin() + offset);
-	offset += registers.size();
-	std::copy(high_ram.begin(), high_ram.end(), dump.begin() + offset);
-	offset += high_ram.size();
-	dump.at(offset) = regs.int_enable;
-
-	return dump;
+	return *map;
 }
 
 void Bus::dmaTransfer(uint8_t data)
 {
 	uint16_t address = data * 0x100;
-	for (int i = 0; i < oam.size(); i++)
+	for (int i = 0; i < map->oam.size(); i++)
 	{
 		uint8_t oam_data = Read(address + i);
 		Write(0xFE00 + i, oam_data);

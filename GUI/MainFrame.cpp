@@ -134,7 +134,7 @@ void MainFrame::OnAbout(wxCommandEvent& evt)
 #ifdef _DEBUG
 void MainFrame::OnCheckCart(wxCommandEvent& evt)
 {
-	Cartridge cart = dameEmu->GetCart();
+	Cartridge& cart = dameEmu->GetCart();
 	if (cart.isValid())
 	{
 		wxMessageBox(cart.headerToString());

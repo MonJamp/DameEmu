@@ -188,6 +188,25 @@ namespace Memory {
 		Register int_enable;
 		Register int_request;
 	};
+
+	struct Map
+	{
+		union
+		{
+			std::array<uint8_t, 0x8000> raw;
+			struct {
+				std::array<uint8_t, 0x2000> vram;
+				std::array<uint8_t, 0x2000> eram;
+				std::array<uint8_t, 0x2000> ram;
+				std::array<uint8_t, 0x1E00> echo;
+				std::array<uint8_t, 0x00A0> oam;
+				std::array<uint8_t, 0x60> unused;
+				std::array<uint8_t, 0x80> registers;
+				std::array<uint8_t, 0x007F> high_ram;
+				uint8_t int_enable;
+			};
+		};
+	};
 }
 
 
@@ -206,8 +225,8 @@ public:
 	uint8_t Read(uint16_t address);
 	void Clock();
 
-	std::array<uint8_t, 0x8000> GetMemoryDump();
-	std::array<uint8_t, 0x2000>* GetVRAM() { return &vram; }
+	Memory::Map& GetMemoryDump();
+	std::array<uint8_t, 0x2000>* GetVRAM() { return &map->vram; }
 
 	Memory::Registers regs;
 private:
@@ -216,9 +235,6 @@ private:
 	CPU cpu;
 	PPU ppu;
 	std::unique_ptr<Cartridge> cart;
+	std::shared_ptr<Memory::Map> map;
 
-	std::array<uint8_t, 0x2000> vram;
-	std::array<uint8_t, 0x2000> ram;
-	std::array<uint8_t, 0x00A0> oam;
-	std::array<uint8_t, 0x007F> high_ram;
 };
