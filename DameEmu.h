@@ -18,7 +18,7 @@ public:
 	void Step();
 
 	std::shared_ptr<Debugger> GetDebugger() { return debugger; }
-	const Cartridge& GetCart() { return *bus->cart; }
+	Cartridge& GetCart() { return *bus->cart; }
 
 private:
 	std::shared_ptr <Bus> bus;

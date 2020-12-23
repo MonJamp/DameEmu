@@ -129,7 +129,7 @@ wxString HexToAscii(uint8_t x)
 
 void MemoryBrowser::RefreshValues()
 {
-    std::array<uint8_t, 0x8000> dump = bus->GetMemoryDump();
+	Memory::Map& map = bus->GetMemoryDump();
 
     memData.clear();
 
@@ -143,7 +143,7 @@ void MemoryBrowser::RefreshValues()
 
         for(uint8_t j = 0; j < 0x10; j++)
         {
-            uint8_t value = dump.at(i + j);
+            uint8_t value = map.raw.at(i + j);
             data.values += intToHexString(value, 1) + " ";
             data.ascii += HexToAscii(value);
         }
