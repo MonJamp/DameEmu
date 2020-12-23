@@ -173,6 +173,7 @@ void Debugger::Disassemble()
 		uint16_t address = pc;
 		addressTable[address] = disassembly.size();
 		uint8_t opcode = bus->cart->read(pc++);
+		ir = opcode;
 
 		Instruction ins = insTable[opcode];
 		if (ins.is_prefix)
