@@ -2,7 +2,7 @@
 #include "Bus.h"
 #include "Disassembler.h"
 #include "Cartridge.h"
-#include <SFML/Graphics.hpp>
+#include "GUI/MainCanvas.h"
 #include <string>
 #include <cstdint>
 #include <memory>
@@ -14,7 +14,7 @@ public:
 	DameEmu(const std::string& filename);
 	~DameEmu();
 
-	void SetCanvas(sf::RenderWindow* canvas);
+	void SetCanvas(MainCanvas* canvas);
 	void Step();
 
 	std::shared_ptr<Debugger> GetDebugger() { return debugger; }

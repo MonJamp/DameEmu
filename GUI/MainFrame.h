@@ -1,7 +1,7 @@
 #pragma once
 #include "../DameEmu.h"
 #include "../Cartridge.h"
-#include "SfmlCanvas.h"
+#include "MainCanvas.h"
 #include "Debugger/DebugFrame.h"
 #include "wx_header.h"
 #include <memory>
@@ -52,7 +52,7 @@ private:
 	wxMenuItem* debuggerItem;
 	wxMenuItem* aboutItem;
 
-	SfmlCanvas* glPanel = NULL;
+	MainCanvas* mainCanvas = NULL;
 	DisasmFrame* disasmFrame = NULL;
 
 	std::unique_ptr<DameEmu> dameEmu;

@@ -145,20 +145,39 @@ namespace Memory {
 			Register wav[WAVE_RAM_SIZE];
 		} sound;
 
+		// LCD Registers
 		struct LCD {
 			union LCDC {
 				uint8_t raw;
 				struct {
+					// DMG: set = draw background
+					// CGB: always set
 					unsigned bg_on : 1;
 					unsigned obj_on : 1;
+					// OBJ Block Composition Selection
+					// set = 8 x 8
+					// clear = 8 x 16
 					unsigned obj_flag : 1;
+					// BG Code Area Selection
+					// set = 0x9C00 - 0x9BFF
+					// clear = 0x9800 - 0x9FFF
 					unsigned bg_area_flag : 1;
+					// BG Character Data Selection
+					// set = 0x8000 - 0x8FFF
+					// clear = 0x8800 - 0x97FF
 					unsigned bg_data_flag : 1;
 					unsigned window_on : 1;
+					// Window Code Area Selection
+					// set = 0x9C00 - 0x9FFF
+					// clear = 0x9800 - 0x9BFF
 					unsigned window_area_flag : 1;
+					// set = lcd is on
+					// clear = lcd is off
 					unsigned lcd_on : 1;
 				};
 			} lcdc;
+
+			//TODO: Emulate STAT
 
 			union STAT {
 				uint8_t raw;
@@ -174,10 +193,30 @@ namespace Memory {
 			Register ly;
 			Register lyc;
 			Register dma;
-			Register bgp;
-			Register obp0;
-			Register obp1;
+			// BG Palette Data
+			union BGP {
+				uint8_t raw;
+				struct {
+					unsigned palette00 : 2;
+					unsigned palette01 : 2;
+					unsigned palette10 : 2;
+					unsigned palette11 : 2;
+				};
+			} bgp;
+			// OBJ Palette Data
+			union OBP {
+				uint8_t raw;
+				struct {
+					// Transparent
+					unsigned palette00 : 2;
+					unsigned palette01 : 2;
+					unsigned palette10 : 2;
+					unsigned palette11 : 2;
+				};
+			} obp0, obp1;
+			// Window y-coordinate
 			Register wy;
+			// Window x-coordinate
 			Register wx;
 		} lcd;
 	
