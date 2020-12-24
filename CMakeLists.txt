@@ -17,14 +17,16 @@ set(GUI_SRC
     GUI/Debugger/DisasmList.cpp
     GUI/Debugger/BreakpointList.h
     GUI/Debugger/BreakpointList.cpp
-    GUI/Debugger/MemoryBrowser.cpp
     GUI/Debugger/MemoryBrowser.h
-    GUI/Debugger/VramFrame.cpp
+	GUI/Debugger/MemoryBrowser.cpp
     GUI/Debugger/VramFrame.h
-    GUI/SfmlCanvas.cpp
+	GUI/Debugger/VramFrame.cpp
     GUI/SfmlCanvas.h
+	GUI/SfmlCanvas.cpp
     GUI/MainFrame.h
     GUI/MainFrame.cpp
+	GUI/MainCanvas.h
+    GUI/MainCanvas.cpp
     GUI/wx_header.h
 )
 set(SRC
