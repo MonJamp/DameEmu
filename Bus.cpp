@@ -189,7 +189,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 			regs.lcd.lcdc.raw = data;
 			break;
 		case ADDR_STAT:
-			regs.lcd.stat.raw = data;
+			regs.lcd.stat.raw = (data & 0b01111000);
 			break;
 		case ADDR_SCY:
 			regs.lcd.scy = data;
@@ -370,7 +370,14 @@ uint8_t Bus::Read(uint16_t address)
 			data = regs.lcd.lcdc.raw;
 			break;
 		case ADDR_STAT:
-			data = regs.lcd.stat.raw;
+			// bit 7 always return 1
+			// bit 0-2 return 0 when lcd is off
+			if (regs.lcd.lcdc.lcd_on)
+			{
+				data = 0b10000000 | (regs.lcd.stat.raw & 0b01111111);
+			} else {
+				data = 0b10000000 | (regs.lcd.stat.raw & 0b01111000);
+			}
 			break;
 		case ADDR_SCY:
 			data = regs.lcd.scy;

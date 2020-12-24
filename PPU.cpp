@@ -43,20 +43,39 @@ void PPU::UpdateScreen(uint8_t cycles) {
 	if (bus->regs.lcd.ly < 144)
 	{
 		DrawLine();
+		bus->regs.lcd.stat.match_flag = STAT_HBLANK;
 	}
 	else if (bus->regs.lcd.ly == 144) {
 		//TODO: LCDC should be off during vblank
 
-		BIT_SET(bus->regs.int_enable, INT_VBLANK);
+		BIT_SET(bus->regs.int_request, INT_VBLANK);
+
+		if (bus->regs.lcd.stat.vblank_check)
+		{
+			BIT_SET(bus->regs.int_request, INT_LCDC);
+		}
+
+		bus->regs.lcd.stat.match_flag = STAT_VBLANK;
 
 		//TODO: Only draw canvas during vblank?
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
+		bus->regs.lcd.stat.match_flag = STAT_HBLANK;
 		return;
 	}
 
 	bus->regs.lcd.ly++;
+
+	if (bus->regs.lcd.lyc == bus->regs.lcd.ly)
+	{
+		bus->regs.lcd.stat.match_flag = 1;
+
+		if (bus->regs.lcd.stat.lyc_check)
+		{
+			BIT_SET(bus->regs.int_request, INT_LCDC);
+		}
+	}
 }
 
 void PPU::DrawLine()

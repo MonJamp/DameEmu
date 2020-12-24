@@ -8,6 +8,7 @@
 
 
 // Port/Mode Registers
+
 constexpr auto ADDR_P1 = 0xFF00;
 constexpr auto ADDR_SB = 0xFF01;
 constexpr auto ADDR_SC = 0xFF02;
@@ -15,37 +16,49 @@ constexpr auto ADDR_DIV = 0xFF04;
 constexpr auto ADDR_TIMA = 0xFF05;
 constexpr auto ADDR_TMA = 0xFF06;
 constexpr auto ADDR_TAC = 0xFF07;
+
 // Sound Registers
 // Sound Mode 1
+
 constexpr auto ADDR_NR10 = 0xFF10;
 constexpr auto ADDR_NR11 = 0xFF11;
 constexpr auto ADDR_NR12 = 0xFF12;
 constexpr auto ADDR_NR13 = 0xFF13;
 constexpr auto ADDR_NR14 = 0xFF14;
+
 // Sound Mode 2
+
 constexpr auto ADDR_NR21 = 0xFF16;
 constexpr auto ADDR_NR22 = 0xFF17;
 constexpr auto ADDR_NR23 = 0xFF18;
 constexpr auto ADDR_NR24 = 0xFF19;
+
 // Sound Mode 3
+
 constexpr auto ADDR_NR30 = 0xFF1A;
 constexpr auto ADDR_NR31 = 0xFF1B;
 constexpr auto ADDR_NR32 = 0xFF1C;
 constexpr auto ADDR_NR33 = 0xFF1D;
 constexpr auto ADDR_NR34 = 0xFF1E;
+
 // Sound Mode 4
+
 constexpr auto ADDR_NR41 = 0xFF20;
 constexpr auto ADDR_NR42 = 0xFF21;
 constexpr auto ADDR_NR43 = 0xFF22;
 constexpr auto ADDR_NR44 = 0xFF23;
+
 // Sound Control
+
 constexpr auto ADDR_NR50 = 0xFF24;
 constexpr auto ADDR_NR51 = 0xFF25;
 constexpr auto ADDR_NR52 = 0xFF26;
+
 // Wave RAM
 constexpr auto ADDR_WAVE_RAM = 0xFF30;
 constexpr auto WAVE_RAM_SIZE = 0x10;
 // LCD Display Registers
+
 constexpr auto ADDR_LCDC = 0xFF40;
 constexpr auto ADDR_STAT = 0xFF41;
 constexpr auto ADDR_SCY = 0xFF42;
@@ -58,24 +71,42 @@ constexpr auto ADDR_OBP0 = 0xFF48;
 constexpr auto ADDR_OBP1 = 0xFF49;
 constexpr auto ADDR_WY = 0xFF4A;
 constexpr auto ADDR_WX = 0xFF4B;
+
 // Unmap DMG boot ROM
 // Maybe necessary to emulate boot ROM
 constexpr auto ADDR_ROM = 0xFF50;
 // Interupt Registers
+
 constexpr auto ADDR_IF = 0xFF0F;
 constexpr auto ADDR_IE = 0xFFFF;
 
 // Bit operations
+
 #define BIT_CHECK(x, y) ((x & (y)) == (y))
 #define BIT_SET(x, y)	(x |= (y))
 #define BIT_CLEAR(x, y) (x &= ~(y))
 
 // Interupt flags
+
 #define INT_VBLANK	(1 << 0)
 #define INT_LCDC	(1 << 1)
 #define INT_TIMER	(1 << 2)
 #define INT_SERIAL	(1 << 3)
 #define INT_INPUT	(1 << 4)
+
+// STAT modes
+
+// Mode 00
+// CPU has access to VRAM
+#define STAT_HBLANK 0b00
+// Mode 01
+#define STAT_VBLANK 0b01
+// Mode 10
+// LCD is reading OAM so it's not accessible to CPU
+#define STAT_OAM	0b10
+// Mode 11
+// LCD is using both OAM and VRAM so it's not accessible to CPU
+#define STAT_VRAM	0b11
 
 namespace Memory {
 	struct Registers {
@@ -182,10 +213,23 @@ namespace Memory {
 			union STAT {
 				uint8_t raw;
 				struct {
+					// Mode Flag
+					// Read only
 					unsigned mode_flag : 2;
+					// Match Flag
+					// Set when LYC = LY
+					// Read only
 					unsigned match_flag : 1;
-					unsigned interupt_selection : 4;
-				} field;
+					// Interupt during mode 00
+					unsigned hblank_check : 1;
+					// Interupt during mode 01
+					unsigned vblank_check : 1;
+					// Interupt during mode 10
+					unsigned oam_check : 1;
+					// Interupt when LYC == LY
+					unsigned lyc_check : 1;
+					unsigned unused : 1;
+				};
 			} stat;
 
 			Register scy;
