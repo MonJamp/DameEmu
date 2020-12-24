@@ -40,7 +40,7 @@ SfmlCanvas::~SfmlCanvas()
 
 void SfmlCanvas::OnUpdate()
 {
-	clear(sf::Color::Black);
+	
 }
 
 void SfmlCanvas::OnIdle(wxIdleEvent& evt)

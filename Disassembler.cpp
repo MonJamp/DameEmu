@@ -326,9 +326,9 @@ void Debugger::UpdateRegState()
 	regState.mem.ly		= bus->regs.lcd.ly;
 	regState.mem.lyc	= bus->regs.lcd.lyc;
 	regState.mem.dma	= bus->regs.lcd.dma;
-	regState.mem.bgp	= bus->regs.lcd.bgp;
-	regState.mem.obp0	= bus->regs.lcd.obp0;
-	regState.mem.obp1	= bus->regs.lcd.obp1;
+	regState.mem.bgp	= bus->regs.lcd.bgp.raw;
+	regState.mem.obp0	= bus->regs.lcd.obp0.raw;
+	regState.mem.obp1	= bus->regs.lcd.obp1.raw;
 	regState.mem.wy		= bus->regs.lcd.wy;
 	regState.mem.wx		= bus->regs.lcd.wx;
 	regState.mem.int_req = bus->regs.int_request;

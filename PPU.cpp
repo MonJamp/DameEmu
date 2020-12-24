@@ -1,13 +1,29 @@
 #include "PPU.h"
 #include "Bus.h"
 
+
+Display::Color Display::GetColor(uint8_t data) {
+	switch (data) {
+	case 0b00: return Color(0xFF, 0xFF, 0xFF, 0xFF);
+	case 0b01: return Color(0xA9, 0xA9, 0xA9, 0xFF);
+	case 0b10: return Color(0x54, 0x54, 0x54, 0xFF);
+	case 0b11: return Color(0x00, 0x00, 0x00, 0xFF);
+	default: return Color(0x00, 0x00, 0x00, 0x00);
+	}
+}
+
+Display::Color Display::GetColor(Display::Palette p)
+{
+	return GetColor(static_cast<uint8_t>(p));
+}
+
 PPU::PPU(Bus* b)
 	: bus(b)
 {
 	scanline_counter = 456;
 }
 
-void PPU::SetCanvas(sf::RenderWindow* c)
+void PPU::SetCanvas(MainCanvas* c)
 {
 	canvas = c;
 }
@@ -24,58 +40,82 @@ void PPU::UpdateScreen(uint8_t cycles) {
 
 	scanline_counter = 456;
 
-	bus->regs.lcd.ly++;
-	if (bus->regs.lcd.ly == 144) {
+	if (bus->regs.lcd.ly < 144)
+	{
+		DrawLine();
+	}
+	else if (bus->regs.lcd.ly == 144) {
+		//TODO: LCDC should be off during vblank
+
 		BIT_SET(bus->regs.int_enable, INT_VBLANK);
+
+		//TODO: Only draw canvas during vblank?
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
+		return;
 	}
-	else {
-		DrawLine();
-	}
+
+	bus->regs.lcd.ly++;
 }
 
 void PPU::DrawLine()
 {
-	uint8_t* pixels = new uint8_t[8 * 8 * 4];
-	
-	for (int i = 0; i < 16; i += 2)
+	Memory::Registers::LCD& lcd = bus->regs.lcd;
+
+	// Draw bg
+	if (lcd.lcdc.bg_on)
 	{
-		uint8_t line1 = bus->Read(0x8000 + i);
-		uint8_t line2 = bus->Read(0x8000 + i + 1);
+		uint8_t pixels[20 * 8 * 4];
+		uint16_t bgCodeArea = (lcd.lcdc.bg_area_flag) ? 0x9C00 : 0x9800;
+		uint16_t bgCharArea = (lcd.lcdc.bg_data_flag) ? 0x8000 : 0x8800;
 
-		for (int j = 0; j < 8; j++)
+		for (uint8_t block = 0; block < 20; block++)
 		{
-			uint8_t pixel = (line1 & 1) | (line2 & 1);
+			uint16_t bgCodeOffset = (block + ((lcd.ly / 8) * 32)) % 1024;
+			uint8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
 
-			if (pixel > 0)
-			{
-				pixels[i * 8 + j * 4] = 255;
-				pixels[i * 8 + j * 4 + 1] = 255;
-				pixels[i * 8 + j * 4 + 2] = 255;
-				pixels[i * 8 + j * 4 + 3] = 255;
-			}
-			else
-			{
-				pixels[i * 8 + j * 4] = 0;
-				pixels[i * 8 + j * 4 + 1] = 0;
-				pixels[i * 8 + j * 4 + 2] = 0;
-				pixels[i * 8 + j * 4 + 3] = 255;
-			}
+			uint16_t bgCharOffset = (charCode * 0x10) + ((lcd.ly % 8) * 2);
+			uint8_t upperLine = bus->Read(bgCharArea + bgCharOffset);
+			uint8_t lowerLine = bus->Read(bgCharArea + bgCharOffset + 1);
 
-			line1 >= 1;
-			line2 >= 1;
+			for (uint8_t i = 0; i < 8; i++)
+			{
+				bool upperBit = upperLine & 128;
+				bool lowerBit = lowerLine & 128;
+				Display::Color color(0x00, 0x00, 0x00, 0x00);
+
+				if (upperBit && lowerBit)
+				{
+					color = Display::GetColor(lcd.bgp.palette11);
+				}
+				else if (upperBit && !lowerBit)
+				{
+					color = Display::GetColor(lcd.bgp.palette01);
+				}
+				else if (!upperBit && lowerBit)
+				{
+					color = Display::GetColor(lcd.bgp.palette10);
+				}
+				else
+				{
+					color = Display::GetColor(lcd.bgp.palette00);
+				}
+
+				pixels[block * 32 + i * 4] = color.r;
+				pixels[block * 32 + i * 4 + 1] = color.g;
+				pixels[block * 32 + i * 4 + 2] = color.b;
+				pixels[block * 32 + i * 4 + 3] = color.a;
+
+				upperLine <<= 1;
+				lowerLine <<= 1;
+			}
 		}
-	}
-	
-	sf::Texture texture;
-	texture.create(8, 8);
-	texture.update(pixels);
-	sf::Sprite sprite;
-	sprite.setTexture(texture);
-	sprite.setScale(5.f, 5.f);
-	canvas->draw(sprite);
 
-	delete[] pixels;
+		canvas->UpdateLine(lcd.ly + 1, pixels);
+	}
+
+	//TODO: Draw window
+
+	//TODO: Draw OBJs
 }

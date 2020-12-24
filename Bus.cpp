@@ -47,9 +47,9 @@ void Bus::Reset()
 	regs.lcd.scy = 0x00;
 	regs.lcd.scx = 0x00;
 	regs.lcd.lyc = 0x00;
-	regs.lcd.bgp = 0xFC;
-	regs.lcd.obp0 = 0xFF;
-	regs.lcd.obp1 = 0xFF;
+	regs.lcd.bgp.raw = 0xFC;
+	regs.lcd.obp0.raw = 0xFF;
+	regs.lcd.obp1.raw = 0xFF;
 	regs.lcd.wy = 0x00;
 	regs.lcd.wx = 0x00;
 	regs.int_enable = 0x00;
@@ -209,13 +209,13 @@ void Bus::Write(uint16_t address, uint8_t data)
 			dmaTransfer(data);
 			break;
 		case ADDR_BGP:
-			regs.lcd.bgp = data;
+			regs.lcd.bgp.raw = data;
 			break;
 		case ADDR_OBP0:
-			regs.lcd.obp0 = data;
+			regs.lcd.obp0.raw = data;
 			break;
 		case ADDR_OBP1:
-			regs.lcd.obp1 = data;
+			regs.lcd.obp1.raw = data;
 			break;
 		case ADDR_WY:
 			regs.lcd.wy = data;
@@ -388,13 +388,13 @@ uint8_t Bus::Read(uint16_t address)
 			data = regs.lcd.dma;
 			break;
 		case ADDR_BGP:
-			data = regs.lcd.bgp;
+			data = regs.lcd.bgp.raw;
 			break;
 		case ADDR_OBP0:
-			data = regs.lcd.obp0;
+			data = regs.lcd.obp0.raw;
 			break;
 		case ADDR_OBP1:
-			data = regs.lcd.obp1;
+			data = regs.lcd.obp1.raw;
 			break;
 		case ADDR_WY:
 			data = regs.lcd.wy;

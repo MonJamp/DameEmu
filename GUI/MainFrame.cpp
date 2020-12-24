@@ -54,12 +54,14 @@ MainFrame::MainFrame() : wxFrame(nullptr, wxID_ANY, "DameEmu", wxDefaultPosition
 
 	SetMenuBar(menuBar);
 
-	glPanel = new SfmlCanvas(this);
+	mainCanvas = new MainCanvas(this, 3);
+	mainCanvas->SetSize(mainCanvas->GetBestSize());
+	Fit();
 }
 
 MainFrame::~MainFrame()
 {
-
+	delete mainCanvas;
 }
 
 void MainFrame::OnLoadROM(wxCommandEvent& evt)
@@ -84,7 +86,7 @@ void MainFrame::OnLoadROM(wxCommandEvent& evt)
 
 	wxString filename = openFileDialog.GetPath();
 	dameEmu = std::make_unique<DameEmu>(std::string(filename.mb_str()));
-	dameEmu->SetCanvas(glPanel);
+	dameEmu->SetCanvas(mainCanvas);
 }
 
 void MainFrame::OnRunEmu(wxCommandEvent& evt)
@@ -95,7 +97,12 @@ void MainFrame::OnRunEmu(wxCommandEvent& evt)
 
 void MainFrame::OnIdleRun(wxIdleEvent& evt)
 {
-	dameEmu->Step();
+	for (int i = 0; i < 100; i++)
+	{
+		dameEmu->Step();
+	}
+	
+	evt.RequestMore();
 }
 
 void MainFrame::OnExit(wxCommandEvent& evt)
