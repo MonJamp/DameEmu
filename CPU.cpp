@@ -111,8 +111,14 @@ uint8_t CPU::Step() {
 	cycles = 0;
 	HandleInterupts();
 
-	if (halt || stop)
+	if (stop)
 	{
+		return cycles;
+	}
+
+	if (halt)
+	{
+		cycles = 1;
 		return cycles;
 	}
 
