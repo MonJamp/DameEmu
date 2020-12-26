@@ -1,5 +1,6 @@
 #include "PPU.h"
 #include "Bus.h"
+#include <array>
 
 
 Display::Color Display::GetColor(uint8_t data) {
@@ -85,7 +86,7 @@ void PPU::DrawLine()
 	// Draw bg
 	if (lcd.lcdc.bg_on)
 	{
-		uint8_t pixels[20 * 8 * 4];
+		std::array<uint8_t, 160 * 4> pixels;
 		uint16_t bgCodeArea = (lcd.lcdc.bg_area_flag) ? 0x9C00 : 0x9800;
 		uint16_t bgCharArea = (lcd.lcdc.bg_data_flag) ? 0x8000 : 0x8800;
 

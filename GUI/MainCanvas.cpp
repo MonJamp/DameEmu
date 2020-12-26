@@ -38,7 +38,7 @@ void MainCanvas::OnUpdate()
 	draw(sprite);
 }
 
-void MainCanvas::UpdateLine(int line, uint8_t pixels[160 * 4])
+void MainCanvas::UpdateLine(int line, std::array<uint8_t, 160 * 4> pixels)
 {
-	texture->update(pixels, 160, 1, 0, line);
+	texture->update(pixels.data(), 160, 1, 0, line);
 }
