@@ -89,7 +89,7 @@ void PPU::DrawLine()
 	if (lcd.lcdc.bg_on)
 	{
 		uint16_t bgCodeArea = (lcd.lcdc.bg_area_flag) ? 0x9C00 : 0x9800;
-		uint16_t bgCharArea = (lcd.lcdc.bg_data_flag) ? 0x8000 : 0x8800;
+		uint16_t bgCharArea = (lcd.lcdc.bg_data_flag) ? 0x8000 : 0x9000;
 
 		for (uint8_t block = 0; block < 20; block++)
 		{
@@ -97,7 +97,19 @@ void PPU::DrawLine()
 			uint16_t bgCodeOffset = (block + blockOffset) % 1024;
 			uint8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
 
-			uint16_t bgCharOffset = (charCode * 0x10) + ((lcd.ly % 8) * 2);
+			uint16_t bgCharOffset;
+			// When 0x9000 is base ptr, addressing is signed
+			if (bgCharArea == 0x8000)
+			{
+				uint8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
+				bgCharOffset = (charCode * 0x10) + ((lcd.ly % 8) * 2);
+			}
+			else
+			{
+				int8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
+				bgCharOffset = (charCode * 0x10) + ((lcd.ly % 8) * 2);
+			}
+
 			uint8_t upperLine = bus->Read(bgCharArea + bgCharOffset);
 			uint8_t lowerLine = bus->Read(bgCharArea + bgCharOffset + 1);
 
