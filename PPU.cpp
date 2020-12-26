@@ -83,16 +83,18 @@ void PPU::DrawLine()
 {
 	Memory::Registers::LCD& lcd = bus->regs.lcd;
 
+	std::array<uint8_t, 160 * 4> pixels = { 0x00 };
+
 	// Draw bg
 	if (lcd.lcdc.bg_on)
 	{
-		std::array<uint8_t, 160 * 4> pixels;
 		uint16_t bgCodeArea = (lcd.lcdc.bg_area_flag) ? 0x9C00 : 0x9800;
 		uint16_t bgCharArea = (lcd.lcdc.bg_data_flag) ? 0x8000 : 0x8800;
 
 		for (uint8_t block = 0; block < 20; block++)
 		{
-			uint16_t bgCodeOffset = (block + ((lcd.ly / 8) * 32)) % 1024;
+			uint16_t blockOffset = (((lcd.ly + lcd.scy) / 8) * 32);
+			uint16_t bgCodeOffset = (block + blockOffset) % 1024;
 			uint8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
 
 			uint16_t bgCharOffset = (charCode * 0x10) + ((lcd.ly % 8) * 2);
@@ -131,11 +133,11 @@ void PPU::DrawLine()
 				lowerLine <<= 1;
 			}
 		}
-
-		canvas->UpdateLine(lcd.ly + 1, pixels);
 	}
 
 	//TODO: Draw window
 
 	//TODO: Draw OBJs
+
+	canvas->UpdateLine(lcd.ly + 1, pixels);
 }
