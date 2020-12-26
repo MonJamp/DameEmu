@@ -93,9 +93,11 @@ void PPU::DrawLine()
 
 		for (uint8_t block = 0; block < 20; block++)
 		{
-			uint16_t blockOffset = (((lcd.ly + lcd.scy) / 8) * 32);
-			uint16_t bgCodeOffset = (block + blockOffset) % 1024;
-			uint8_t charCode = bus->Read(bgCodeArea + bgCodeOffset);
+			//TODO: Handle cases where scy is not divisble by 8
+
+			uint16_t y_blockOffset = (((lcd.ly + lcd.scy) / 8) * 32);
+			uint16_t x_blockOffset = (block + (lcd.scx / 8)) % 32;
+			uint16_t bgCodeOffset = (y_blockOffset + x_blockOffset) % 1024;
 
 			uint16_t bgCharOffset;
 			// When 0x9000 is base ptr, addressing is signed
@@ -136,10 +138,24 @@ void PPU::DrawLine()
 					color = Display::GetColor(lcd.bgp.palette00);
 				}
 
-				pixels[block * 32 + i * 4] = color.r;
-				pixels[block * 32 + i * 4 + 1] = color.g;
-				pixels[block * 32 + i * 4 + 2] = color.b;
-				pixels[block * 32 + i * 4 + 3] = color.a;
+				// Used to fix x position when scx is not divisble by 8
+				int8_t x_pos = 0;
+
+				if ((block + (lcd.scx / 8)) >= 32)
+				{
+					x_pos -= lcd.scx % 8;
+				}
+				else
+				{
+					x_pos += lcd.scx % 8;
+				}
+
+				x_pos = (i + x_pos) % 8;
+
+				pixels[block * 32 + x_pos * 4] = color.r;
+				pixels[block * 32 + x_pos * 4 + 1] = color.g;
+				pixels[block * 32 + x_pos * 4 + 2] = color.b;
+				pixels[block * 32 + x_pos * 4 + 3] = color.a;
 
 				upperLine <<= 1;
 				lowerLine <<= 1;
