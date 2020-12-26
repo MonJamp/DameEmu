@@ -83,7 +83,7 @@ void PPU::DrawLine()
 {
 	Memory::Registers::LCD& lcd = bus->regs.lcd;
 
-	std::array<uint8_t, 160 * 4> pixels = { 0x00 };
+	std::array<uint8_t, 160 * 4> pixels = canvas->GetLine(lcd.ly);
 
 	// Draw bg
 	if (lcd.lcdc.bg_on)

@@ -10,9 +10,12 @@ public:
 	~MainCanvas();
 
 	void UpdateLine(int line, std::array<uint8_t, 160 * 4> pixels);
+	std::array<uint8_t, 160 * 4> GetLine(int line);
+
 private:
 	virtual void OnUpdate();
 
 	sf::Texture* texture;
 	sf::Sprite sprite;
+
 };

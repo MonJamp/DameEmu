@@ -42,3 +42,22 @@ void MainCanvas::UpdateLine(int line, std::array<uint8_t, 160 * 4> pixels)
 {
 	texture->update(pixels.data(), 160, 1, 0, line);
 }
+
+std::array<uint8_t, 160 * 4> MainCanvas::GetLine(int line)
+{
+	std::array<uint8_t, 160 * 4> pixels;
+	sf::Image image = texture->copyToImage();
+	const sf::Uint8* pixelsFull = image.getPixelsPtr();
+
+	assert((line * 160 * 4 + (pixels.size() / 4) * 4 + 3) < (image.getSize().x * image.getSize().y * 4));
+
+	for (int i = 0; i < (pixels.size() / 4); i++)
+	{
+		pixels[i * 4] = pixelsFull[line * 160 * 4 + i * 4];
+		pixels[i * 4 + 1] = pixelsFull[line * 160 * 4 + i * 4 + 1];
+		pixels[i * 4 + 2] = pixelsFull[line * 160 * 4 + i * 4 + 2];
+		pixels[i * 4 + 3] = pixelsFull[line * 160 * 4 + i * 4 + 3];
+	}
+
+	return pixels;
+}
