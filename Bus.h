@@ -186,8 +186,8 @@ namespace Memory {
 					unsigned bg_on : 1;
 					unsigned obj_on : 1;
 					// OBJ Block Composition Selection
-					// set = 8 x 8
-					// clear = 8 x 16
+					// set = 8 x 16
+					// clear = 8 x 8
 					unsigned obj_flag : 1;
 					// BG Code Area Selection
 					// set = 0x9C00 - 0x9BFF
@@ -196,6 +196,8 @@ namespace Memory {
 					// BG Character Data Selection
 					// set = 0x8000 - 0x8FFF
 					// clear = 0x8800 - 0x97FF
+					// When data is in 0x8800, 0x9000 is base ptr
+					// and uses signed addressing
 					unsigned bg_data_flag : 1;
 					unsigned window_on : 1;
 					// Window Code Area Selection
