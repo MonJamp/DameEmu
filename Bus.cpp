@@ -20,8 +20,11 @@ void Bus::Reset()
 {
 	map->raw.fill(0x00);
 
+	pulseTimer = false;
+
 	// Gameboy boot state after bios
 	// These values are true only for DMG
+	regs.counter.raw = 0xABCC;
 	regs.timer.tima = 0x00;
 	regs.timer.tma = 0x00;
 	regs.timer.tac.raw = 0x00;
@@ -111,7 +114,8 @@ void Bus::Write(uint16_t address, uint8_t data)
 			regs.serial.sc.raw = data;
 			break;
 		case ADDR_DIV:
-			regs.div = data;
+			// Writing to div resets internal counter
+			regs.counter.raw = 0x00;
 			break;
 		case ADDR_TIMA:
 			regs.timer.tima = data;
@@ -189,7 +193,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 			regs.lcd.lcdc.raw = data;
 			break;
 		case ADDR_STAT:
-			regs.lcd.stat.raw = (data & 0b01111000);
+			regs.lcd.stat.raw = 0b10000000 | (data & 0b11111000);
 			break;
 		case ADDR_SCY:
 			regs.lcd.scy = data;
@@ -292,7 +296,7 @@ uint8_t Bus::Read(uint16_t address)
 			data = regs.serial.sc.raw;
 			break;
 		case ADDR_DIV:
-			data = regs.div;
+			data = regs.counter.div;
 			break;
 		case ADDR_TIMA:
 			data = regs.timer.tima;
@@ -371,12 +375,12 @@ uint8_t Bus::Read(uint16_t address)
 			break;
 		case ADDR_STAT:
 			// bit 7 always return 1
-			// bit 0-2 return 0 when lcd is off
+			// bit 0-1 return 0 when lcd is off
 			if (regs.lcd.lcdc.lcd_on)
 			{
 				data = 0b10000000 | (regs.lcd.stat.raw & 0b01111111);
 			} else {
-				data = 0b10000000 | (regs.lcd.stat.raw & 0b01111000);
+				data = 0b10000000 | (regs.lcd.stat.raw & 0b01111100);
 			}
 			break;
 		case ADDR_SCY:
@@ -435,6 +439,7 @@ void Bus::Clock()
 	if (!cpu.stop)
 	{
 		ppu.UpdateScreen(cycles);
+		UpdateTimers(cycles);
 	}
 
 #ifdef D_SERIAL_OUT
@@ -444,6 +449,51 @@ void Bus::Clock()
 		regs.serial.sc.raw = 0x00;
 	}
 #endif
+}
+
+void Bus::UpdateTimers(uint8_t cycles)
+{
+	// Update internal counter
+	regs.counter.raw += cycles * 4;
+
+	if (regs.timer.tac.enabled)
+	{
+		uint8_t bit = 0;
+		switch (regs.timer.tac.clock)
+		{
+		case 0:
+			bit = 9;
+			break;
+		case 1:
+			bit = 3;
+			break;
+		case 2:
+			bit = 5;
+			break;
+		case 3:
+			bit = 7;
+			break;
+		}
+
+		if (!(regs.counter.raw & (1 << bit)) && pulseTimer)
+		{
+			if (regs.timer.tima == 0xFF)
+			{
+				regs.timer.tima = regs.timer.tma;
+				BIT_SET(regs.int_request, INT_TIMER);
+			}
+			else
+			{
+				regs.timer.tima++;
+			}
+
+			pulseTimer = false;
+		}
+		else if ((regs.counter.raw & (1 << bit)))
+		{
+			pulseTimer = true;
+		}
+	}
 }
 
 // For memory browser. Excludes program area

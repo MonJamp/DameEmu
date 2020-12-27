@@ -145,6 +145,10 @@ namespace Memory {
 			union TAC {
 				uint8_t raw;
 				struct {
+					// 0 = 4096  Hz : 1024 t clocks
+					// 1 = 262144 Hz : 16 t clocks
+					// 2 = 65536 Hz : 64 t clocks
+					// 3 = 16386 Hz : 256 t clocks
 					unsigned clock : 2;
 					unsigned enabled : 1;
 				};
@@ -268,7 +272,16 @@ namespace Memory {
 	
 		// Misc
 
-		Register div;
+		// Internal counter
+		// div is the MSB of counter
+		union Counter {
+			uint16_t raw;
+			struct {
+				uint8_t unused;
+				uint8_t div;
+			};
+		} counter;
+
 		Register boot;
 		Register int_enable;
 		Register int_request;
@@ -315,10 +328,12 @@ public:
 
 	Memory::Registers regs;
 private:
+	void UpdateTimers(uint8_t cycles);
 	void dmaTransfer(uint8_t data);
 private:
 	CPU cpu;
 	PPU ppu;
+	bool pulseTimer;
 	std::unique_ptr<Cartridge> cart;
 	std::shared_ptr<Memory::Map> map;
 

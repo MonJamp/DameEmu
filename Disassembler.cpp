@@ -294,7 +294,7 @@ void Debugger::UpdateRegState()
 	regState.mem.p1		= bus->regs.input.raw;
 	regState.mem.sb		= bus->regs.serial.sb;
 	regState.mem.sc		= bus->regs.serial.sc.raw;
-	regState.mem.div	= bus->regs.div;
+	regState.mem.div	= bus->regs.counter.div;
 	regState.mem.tima	= bus->regs.timer.tima;
 	regState.mem.tma	= bus->regs.timer.tma;
 	regState.mem.tac	= bus->regs.timer.tac.raw;
