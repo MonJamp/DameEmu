@@ -292,8 +292,6 @@ void CPU::DAA() {
 	}
 	else if (FLAG_CHECK(FLAG_NEGATIVE))
 	{
-		FLAG_CLEAR(FLAG_CARRY);
-
 		if (FLAG_CHECK(FLAG_CARRY))
 		{
 			A -= 0x60;
