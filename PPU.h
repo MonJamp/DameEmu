@@ -34,6 +34,33 @@ namespace Display
 	Color GetColor(Palette p);
 }
 
+struct Obj {
+	uint8_t y;
+	uint8_t x;
+	uint8_t chr;
+	struct Attribute {
+		union {
+			uint8_t raw;
+			struct {
+				// Color pallete for CGB mode
+				unsigned cgb_palette : 3;
+				// Character bank for CGB mode
+				unsigned cgb_bank : 1;
+				// Select OBP0 or OBP1
+				unsigned palette : 1;
+				// Flip horizontal
+				unsigned horizontal_flip : 1;
+				// Flip vertical
+				unsigned vertical_flip : 1;
+				// Display priority flag
+				// set = BG priority
+				// clear = OBJ priority
+				unsigned priority : 1;
+			};
+		};
+	} attr;
+};
+
 class Bus;
 
 class PPU {
