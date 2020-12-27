@@ -1139,7 +1139,13 @@ void CPU::LDH_A_n() {
 	cycles += 3;
 }
 
-void CPU::POP_AF() { POP(AF);  }
+void CPU::POP_AF() { 
+	AF = static_cast<uint16_t>(bus->Read(SP)) & 0b11110000;
+	AF |= static_cast<uint16_t>(bus->Read(SP + 1) << 8);
+	SP += 2;
+
+	cycles += 3;  
+}
 
 void CPU::LD_A_Ca() {
 	A = bus->Read(0xFF00 + C);
