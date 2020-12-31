@@ -1,7 +1,7 @@
 #pragma once
 #include "CPU.h"
 #include "PPU.h"
-#include "Cartridge.h"
+#include "Cartridge/Cartridge.h"
 #include <cstdint>
 #include <array>
 #include <memory>

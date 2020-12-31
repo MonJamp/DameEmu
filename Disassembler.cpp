@@ -172,13 +172,13 @@ void Debugger::Disassemble()
 
 		uint16_t address = pc;
 		addressTable[address] = disassembly.size();
-		uint8_t opcode = bus->cart->read(pc++);
+		uint8_t opcode = bus->cart->ROM_Read(pc++);
 		ir = opcode;
 
 		Instruction ins = insTable[opcode];
 		if (ins.is_prefix)
 		{
-			opcode = bus->cart->read(pc++);
+			opcode = bus->cart->ROM_Read(pc++);
 			ir = (ir << 8) | opcode;
 			ins = cb_insTable[opcode];
 		}
@@ -190,11 +190,11 @@ void Debugger::Disassemble()
 			{
 			case Operand::Type::s8:
 			case Operand::Type::u8:
-				i.value = bus->cart->read(pc++);
+				i.value = bus->cart->ROM_Read(pc++);
 				ir = (ir << 8) | i.value;
 				break;
 			case Operand::Type::u16:
-				i.value = bus->cart->read(pc++) | (bus->cart->read(pc++) << 8);
+				i.value = bus->cart->ROM_Read(pc++) | (bus->cart->ROM_Read(pc++) << 8);
 				ir = (ir << 16) | i.value;
 				break;
 			default: break;
