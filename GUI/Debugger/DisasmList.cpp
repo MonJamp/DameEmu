@@ -178,17 +178,22 @@ wxItemAttr* DisasmList::OnGetItemAttr(long item) const
 		}
 	}
 
-	uint16_t index = addressToIndex.at(debugger->regState.cpu.pc);
-	if (item == index)
+	if (debugger->regState.cpu.pc < 0x8000)
 	{
-		if(wxSystemSettings::GetAppearance().IsDark())
+		auto it = addressToIndex.find(debugger->regState.cpu.pc);
+		uint16_t index = it->second;
+		if (item == index)
 		{
-			bgColor = wxColor(153, 170, 0);
-		} else {
-			bgColor = wxColor(205, 220, 57);
-		}
+			if (wxSystemSettings::GetAppearance().IsDark())
+			{
+				bgColor = wxColor(153, 170, 0);
+			}
+			else {
+				bgColor = wxColor(205, 220, 57);
+			}
 
-		itemAttr->SetBackgroundColour(bgColor);
+			itemAttr->SetBackgroundColour(bgColor);
+		}
 	}
 
 	return itemAttr;
