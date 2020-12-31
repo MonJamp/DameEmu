@@ -1,11 +1,15 @@
 #pragma once
+#include "Mapper.h"
 #include <cstdint>
+#include <fstream>
 #include <string>
 #include <array>
+#include <vector>
+#include <memory>
+
 
 // TODO: Handle different size ROMs
 constexpr uint16_t ROM_MAX_SIZE = 0x8000;
-
 
 class Cartridge
 {
@@ -15,7 +19,7 @@ public:
 		DMG, CGB, SGB
 	};
 
-	enum class Mapper
+	enum class MapperType
 	{
 		ROM, MBC1, MBC2, MBC3, MBC5, MBC6, MBC7,
 		MMM01, CAM, TAMA5, HuC3, HuC1, Unknown
@@ -25,7 +29,7 @@ public:
 	{
 		std::string title;
 		Mode mode = Mode::DMG;
-		Mapper mapper;
+		MapperType mapper;
 		bool has_battery = false;
 		bool has_ram = false;
 		bool has_timer = false;
@@ -47,7 +51,10 @@ public:
 
 	void open(const std::string& filename);
 	bool isValid();
-	uint8_t read(const uint16_t& address);
+	uint8_t ROM_Read(const uint16_t& address);
+	void ROM_Write(const uint16_t& address, const uint8_t& data);
+	uint8_t RAM_Read(const uint16_t& address);
+	void RAM_Write(const uint16_t& address, const uint8_t& data);
 	size_t size();
 	uint16_t romSize();
 	uint16_t ramSize();
@@ -58,8 +65,11 @@ public:
 
 private:
 	void ParseHeader();
+	void AllocateRAM();
 
 private:
-	std::array<uint8_t, ROM_MAX_SIZE> rom;
+	std::unique_ptr<Mapper> mapper;
+	std::vector<RomBank*> romBanks;
+	std::vector<RamBank*> ramBanks;
 
 };

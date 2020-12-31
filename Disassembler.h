@@ -1,7 +1,7 @@
 #pragma once
 #include "InstructionSet.h"
 #include "Bus.h"
-#include "Cartridge.h"
+#include "Cartridge/Cartridge.h"
 #include <vector>
 #include <string>
 #include <sstream>

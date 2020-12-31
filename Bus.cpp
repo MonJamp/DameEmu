@@ -67,7 +67,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 {
 	if (address >= 0x0000 && address <= 0x7FFF)
 	{
-		// TODO: Error - writing to cartridge
+		cart->ROM_Write(address, data);
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
@@ -75,7 +75,7 @@ void Bus::Write(uint16_t address, uint8_t data)
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
-		// External RAM
+		cart->RAM_Write(address, data);
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{
@@ -251,7 +251,7 @@ uint8_t Bus::Read(uint16_t address)
 
 	if (address >= 0x0000 && address <= 0x7FFF)
 	{
-		data = cart->read(address);
+		data = cart->ROM_Read(address);
 	}
 	else if (address >= 0x8000 && address <= 0x9FFF)
 	{
@@ -259,7 +259,7 @@ uint8_t Bus::Read(uint16_t address)
 	}
 	else if (address >= 0xA000 && address <= 0xBFFF)
 	{
-		// External RAM
+		data = cart->RAM_Read(address);
 	}
 	else if (address >= 0xC000 && address <= 0xDFFF)
 	{

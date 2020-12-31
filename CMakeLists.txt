@@ -29,8 +29,18 @@ set(GUI_SRC
     GUI/MainCanvas.cpp
     GUI/wx_header.h
 )
+
+set(Cartridge_SRC
+	Cartridge/Cartridge.h
+	Cartridge/Cartridge.cpp
+	Cartridge/Mapper.h
+	Cartridge/Mapper.cpp
+	Cartridge/MBC1.cpp
+)
+
 set(SRC
     ${GUI_SRC}
+	${Cartridge_SRC}
     DameEmu.h
     DameEmu.cpp
 	CPU.h
@@ -41,14 +51,13 @@ set(SRC
     Bus.cpp
     PPU.h
     PPU.cpp
-	Cartridge.h
-    Cartridge.cpp
     Disassembler.h
     Disassembler.cpp
     InstructionSet.h
 )
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GUI_SRC})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Cartridge_SRC})
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC})
 
