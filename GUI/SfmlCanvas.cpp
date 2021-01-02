@@ -74,5 +74,5 @@ void SfmlCanvas::OnEraseBackground(wxEraseEvent& evt)
 void SfmlCanvas::OnSize(wxSizeEvent& evt)
 {
 	setSize(sf::Vector2u(evt.GetSize().x, evt.GetSize().y));
-	setView(sf::View(sf::FloatRect(0, 0, evt.GetSize().x, evt.GetSize().y)));
+	setView(sf::View(sf::FloatRect(0, 0, (float)evt.GetSize().x, (float)evt.GetSize().y)));
 }

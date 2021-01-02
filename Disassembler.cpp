@@ -171,7 +171,7 @@ void Debugger::Disassemble()
 		uint32_t ir = 0x00;
 
 		uint16_t address = pc;
-		addressTable[address] = disassembly.size();
+		addressTable[address] = static_cast<uint16_t>(disassembly.size());
 		uint8_t opcode = bus->cart->ROM_Read(pc++);
 		ir = opcode;
 
@@ -244,7 +244,7 @@ bool Debugger::HitBreakpoint()
 
 bool Debugger::RemoveBreakpoint(uint16_t address)
 {
-	for(int i = 0; i < breakpoints.size(); i++)
+	for(unsigned int i = 0; i < breakpoints.size(); i++)
 	{
 		if(breakpoints[i].address == address)
 		{

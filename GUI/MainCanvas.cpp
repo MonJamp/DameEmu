@@ -51,7 +51,7 @@ std::array<uint8_t, 160 * 4> MainCanvas::GetLine(int line)
 
 	assert((line * 160 * 4 + (pixels.size() / 4) * 4 + 3) < (image.getSize().x * image.getSize().y * 4));
 
-	for (int i = 0; i < (pixels.size() / 4); i++)
+	for (unsigned int i = 0; i < (pixels.size() / 4); i++)
 	{
 		pixels[i * 4] = pixelsFull[line * 160 * 4 + i * 4];
 		pixels[i * 4 + 1] = pixelsFull[line * 160 * 4 + i * 4 + 1];

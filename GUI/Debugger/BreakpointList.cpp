@@ -114,7 +114,7 @@ void BreakpointList::OnPopupClick(wxCommandEvent& evt)
 
 				if(!addressStr.IsEmpty())
 				{
-					uint16_t address = strtol(addressStr, NULL, 16);
+					uint16_t address = static_cast<uint16_t>(strtol(addressStr, NULL, 16));
 					debugger->AddBreakpoint(address);
 					SetItems();
 				}
@@ -124,7 +124,7 @@ void BreakpointList::OnPopupClick(wxCommandEvent& evt)
 		case EventID::RemoveBreakpoint:
 		{
 			long item = reinterpret_cast<long>(static_cast<wxMenu*>(evt.GetEventObject())->GetClientData());
-			uint16_t address = strtol(bpData[item].address, NULL, 16);
+			uint16_t address = static_cast<uint16_t>(strtol(bpData[item].address, NULL, 16));
 			debugger->RemoveBreakpoint(address);
 			SetItems();
 		} break;

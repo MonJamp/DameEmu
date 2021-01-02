@@ -4,9 +4,9 @@
 VramCanvas::VramCanvas(std::shared_ptr<Bus> b, wxWindow* parent)
 	: SfmlCanvas(parent), bus(b)
 {
-	scale = 3.f;
-	posX = 0.f;
-	posY = 0.f;
+	scale = 3;
+	posX = 0;
+	posY = 0;
 	tileIndex = 0;
 
 	SetMinSize(wxSize(scale * 8 * 16, scale * 8 * 16));
@@ -33,14 +33,14 @@ VramCanvas::VramCanvas(std::shared_ptr<Bus> b, wxWindow* parent)
 
 		sf::Sprite sprite;
 		sprite.setTexture(*textures.back());
-		sprite.setScale(scale, scale);
-		sprite.setPosition(posX, posY);
+		sprite.setScale((float)scale, (float)scale);
+		sprite.setPosition((float)posX, (float)posY);
 		sprites.push_back(sprite);
 
 		posX += 8 * scale;
 		if (posX == 8 * scale * 16)
 		{
-			posX = 0.f;
+			posX = 0;
 			posY += 8 * scale;
 		}
 	}

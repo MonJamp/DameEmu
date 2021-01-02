@@ -509,7 +509,7 @@ Memory::Map& Bus::GetMemoryDump()
 void Bus::dmaTransfer(uint8_t data)
 {
 	uint16_t address = data * 0x100;
-	for (int i = 0; i < map->oam.size(); i++)
+	for (unsigned int i = 0; i < map->oam.size(); i++)
 	{
 		uint8_t oam_data = Read(address + i);
 		Write(0xFE00 + i, oam_data);

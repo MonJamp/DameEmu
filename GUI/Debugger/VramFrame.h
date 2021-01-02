@@ -17,7 +17,7 @@ private:
 	std::vector<sf::Texture*> textures;
 	std::vector<sf::Sprite> sprites;
 
-	float scale, posX, posY;
+	int scale, posX, posY;
 	uint16_t tileIndex; // Keeps track of which tile to draw next
 };
 

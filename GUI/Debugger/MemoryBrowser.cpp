@@ -148,7 +148,7 @@ wxString MemoryBrowser::OnGetItemText(long index, long column) const
 	{
 		case ColumnID::CategoryAddress:
 		{
-			wxString category = GetCategory(index * 0x10 + 0x8000);
+			wxString category = GetCategory(static_cast<uint16_t>(index) * 0x10 + 0x8000);
 			wxString address = intToHexString(index * 0x10 + 0x8000, 2);
 			return category + ":" + address;
 		}

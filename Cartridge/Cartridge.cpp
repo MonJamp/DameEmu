@@ -318,7 +318,7 @@ void Cartridge::ParseHeader()
 
 void Cartridge::AllocateRAM()
 {
-	uint16_t ram_size = 0;
+	uint32_t ram_size = 0;
 
 	switch (header.ram_size)
 	{

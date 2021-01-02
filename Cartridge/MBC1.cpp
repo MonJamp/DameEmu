@@ -8,7 +8,6 @@ uint8_t GetBankBitMask(uint8_t x)
 	x |= x >> 1;
 	x |= x >> 2;
 	x |= x >> 4;
-	x |= x >> 8;
 
 	return x;
 }
@@ -21,8 +20,8 @@ MBC1::MBC1(std::vector<RomBank*>& romBanks, std::vector<RamBank*>& ramBanks)
 	BANK2 = 0;
 	MODE = 0;
 
-	romBankMask = GetBankBitMask(romBanks.size() - 1);
-	ramBankMask = GetBankBitMask(ramBanks.size() - 1);
+	romBankMask = GetBankBitMask(static_cast<uint8_t>(romBanks.size()) - 1);
+	ramBankMask = GetBankBitMask(static_cast<uint8_t>(ramBanks.size()) - 1);
 }
 
 MBC1::~MBC1()
