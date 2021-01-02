@@ -35,7 +35,7 @@ void PPU::UpdateScreen(uint8_t cycles) {
 		return;
 	}
 
-	scanline_counter -= cycles;
+	scanline_counter -= cycles * 4;
 	if (scanline_counter > 0) {
 		return;
 	}
@@ -60,6 +60,7 @@ void PPU::UpdateScreen(uint8_t cycles) {
 		bus->regs.lcd.stat.match_flag = STAT_VBLANK;
 
 		//TODO: Only draw canvas during vblank?
+		canvas->PaintNow();
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
@@ -84,7 +85,7 @@ void PPU::DrawLine()
 {
 	Memory::Registers::LCD& lcd = bus->regs.lcd;
 
-	std::array<uint8_t, 160 * 4> pixels = canvas->GetLine(lcd.ly);
+	std::array<uint8_t, 160 * 4> pixels = { 0xFF }; //= canvas->GetLine(lcd.ly);
 
 	// Draw bg
 	if (lcd.lcdc.bg_on)

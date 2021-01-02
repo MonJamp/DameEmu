@@ -17,5 +17,8 @@ private:
 	void OnEraseBackground(wxEraseEvent& evt);
 	void OnSize(wxSizeEvent& evt);
 
+public:
+	void PaintNow();
+
 	DECLARE_EVENT_TABLE()
 };

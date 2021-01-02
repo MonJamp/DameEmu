@@ -94,6 +94,11 @@ void DisasmFrame::RunLoop(wxIdleEvent& evt)
 		}
 	}
 
+	if (wxWindow::FindWindowByName("VRAM Viewer"))
+	{
+		vramFrame->Refresh();
+	}
+
 	evt.RequestMore(true);
 }
 

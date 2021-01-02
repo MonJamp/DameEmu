@@ -8,7 +8,7 @@
 
 BEGIN_EVENT_TABLE(SfmlCanvas, wxControl)
 	EVT_PAINT(SfmlCanvas::OnPaint)
-	EVT_IDLE(SfmlCanvas::OnIdle)
+	//EVT_IDLE(SfmlCanvas::OnIdle)
 	EVT_ERASE_BACKGROUND(SfmlCanvas::OnEraseBackground)
 	EVT_SIZE(SfmlCanvas::OnSize)
 END_EVENT_TABLE()
@@ -51,6 +51,15 @@ void SfmlCanvas::OnIdle(wxIdleEvent& evt)
 void SfmlCanvas::OnPaint(wxPaintEvent& evt)
 {
 	wxPaintDC Dc(this);
+
+	OnUpdate();
+
+	display();
+}
+
+void SfmlCanvas::PaintNow()
+{
+	wxClientDC dc(this);
 
 	OnUpdate();
 
