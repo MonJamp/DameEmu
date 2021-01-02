@@ -3,6 +3,7 @@ set(PROJECT_NAME dameEmu)
 project(${PROJECT_NAME})
 
 set(GUI_SRC
+	GUI/AppMain.h
 	GUI/AppMain.cpp
 )
 
