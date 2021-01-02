@@ -5,6 +5,7 @@ project(${PROJECT_NAME})
 set(GUI_SRC
 	GUI/AppMain.h
 	GUI/AppMain.cpp
+	GUI/Add-ons/imfilebrowser.h
 )
 
 set(Cartridge_SRC
@@ -38,7 +39,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Cartridge_SRC})
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC})
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 if(MSVC)
 	target_link_options(${PROJECT_NAME} PUBLIC "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")

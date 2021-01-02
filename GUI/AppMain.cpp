@@ -1,9 +1,5 @@
 #include "AppMain.h"
 
-#include "imgui.h"
-#include "imgui-SFML.h"
-
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
@@ -23,6 +19,10 @@ void AppMain::MainLoop()
 	app.create(sf::VideoMode(640, 480), "");
     app.setVerticalSyncEnabled(true);
     ImGui::SFML::Init(app);
+
+	fileDialog.SetTitle("Select ROM");
+	fileDialog.SetTypeFilters({".gb"});
+	fileDialog.SetWindowSize(640, 480);
 
     sf::Color bgColor;
 
@@ -89,7 +89,7 @@ void AppMain::MenuBar()
 		{
 			if(ImGui::MenuItem("Load ROM"))
 			{
-				//Do something
+				fileDialog.Open();
 			}
 
 			if(ImGui::MenuItem("Reset"))
@@ -135,6 +135,12 @@ void AppMain::MenuBar()
 		ImGui::EndMainMenuBar();
 	}
 
+
+	fileDialog.Display();
+	if(fileDialog.HasSelected())
+	{
+		fileDialog.ClearSelected();
+	}
 
 	if(showAbout)
 	{
