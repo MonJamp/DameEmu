@@ -1,5 +1,4 @@
 #pragma once
-#include "GUI/MainCanvas.h"
 #include <SFML/Graphics.hpp>
 #include <cstdint>
 
@@ -67,7 +66,7 @@ class PPU {
 public:
 	PPU(Bus* b);
 
-	void SetCanvas(MainCanvas* canvas);
+	void SetCanvas(sf::RenderWindow* canvas);
 	void UpdateScreen(uint8_t cycles);
 private:
 	void DrawLine();
@@ -75,5 +74,5 @@ private:
 	Bus* bus;
 	int16_t scanline_counter;
 
-	MainCanvas* canvas = nullptr;
+	sf::RenderWindow* canvas = nullptr;
 };

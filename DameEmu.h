@@ -1,7 +1,7 @@
 #pragma once
 #include "Bus.h"
 #include "Disassembler.h"
-#include "GUI/MainCanvas.h"
+#include <SFML/Graphics.hpp>
 #include <string>
 #include <cstdint>
 #include <memory>
@@ -13,7 +13,7 @@ public:
 	DameEmu(const std::string& filename);
 	~DameEmu();
 
-	void SetCanvas(MainCanvas* canvas);
+	void SetCanvas(sf::RenderWindow* canvas);
 	void Step();
 
 	std::shared_ptr<Debugger> GetDebugger() { return debugger; }
