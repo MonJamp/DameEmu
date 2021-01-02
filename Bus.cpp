@@ -22,6 +22,9 @@ void Bus::Reset()
 
 	pulseTimer = false;
 
+	//TODO: Temporary until joypad is implemented
+	regs.input.raw = 0xF;
+
 	// Gameboy boot state after bios
 	// These values are true only for DMG
 	regs.counter.raw = 0xABCC;
@@ -105,7 +108,8 @@ void Bus::Write(uint16_t address, uint8_t data)
 
 		switch (address) {
 		case ADDR_P1:
-			regs.input.raw = data;
+			//TODO: Temporary until joypad is implemented
+			//regs.input.raw = data;
 			break;
 		case ADDR_SB:
 			regs.serial.sb = data;
