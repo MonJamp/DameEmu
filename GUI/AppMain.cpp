@@ -1,3 +1,5 @@
+#include "AppMain.h"
+
 #include "imgui.h"
 #include "imgui-SFML.h"
 
@@ -5,11 +7,22 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
-int main()
+
+AppMain::AppMain()
 {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "");
-    window.setVerticalSyncEnabled(true);
-    ImGui::SFML::Init(window);
+	dameEmu = std::make_unique<DameEmu>();
+}
+
+AppMain::~AppMain()
+{
+
+}
+
+void AppMain::MainLoop()
+{
+	app.create(sf::VideoMode(640, 480), "");
+    app.setVerticalSyncEnabled(true);
+    ImGui::SFML::Init(app);
 
     sf::Color bgColor;
 
@@ -19,20 +32,22 @@ int main()
     // for instructions on using std::string with ImGui
     char windowTitle[255] = "ImGui + SFML = <3";
 
-    window.setTitle(windowTitle);
-    window.resetGLStates(); // call it if you only draw ImGui. Otherwise not needed.
+    app.setTitle(windowTitle);
+    app.resetGLStates(); // call it if you only draw ImGui. Otherwise not needed.
     sf::Clock deltaClock;
-    while (window.isOpen()) {
+    while (app.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (app.pollEvent(event)) {
             ImGui::SFML::ProcessEvent(event);
 
             if (event.type == sf::Event::Closed) {
-                window.close();
+                app.close();
             }
         }
 
-        ImGui::SFML::Update(window, deltaClock.restart());
+        ImGui::SFML::Update(app, deltaClock.restart());
+
+		MenuBar();
 
         ImGui::Begin("Sample window"); // begin window
 
@@ -52,14 +67,98 @@ int main()
             // this code gets if user clicks on the button
             // yes, you could have written if(ImGui::InputText(...))
             // but I do this to show how buttons work :)
-            window.setTitle(windowTitle);
+            app.setTitle(windowTitle);
         }
         ImGui::End(); // end window
 
-        window.clear(bgColor); // fill background with color
-        ImGui::SFML::Render(window);
-        window.display();
+        app.clear(bgColor); // fill background with color
+        ImGui::SFML::Render(app);
+        app.display();
     }
 
     ImGui::SFML::Shutdown();
+}
+
+void AppMain::MenuBar()
+{
+	bool showAbout = false;
+
+	if(ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("System"))
+		{
+			if(ImGui::MenuItem("Load ROM"))
+			{
+				//Do something
+			}
+
+			if(ImGui::MenuItem("Reset"))
+			{
+				//Do something
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::MenuItem("Exit"))
+			{
+				app.close();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Emulation"))
+		{
+			if(ImGui::MenuItem("Settings"))
+			{
+				//Do something
+			}
+
+			if(ImGui::MenuItem("Debugger"))
+			{
+				//Do something
+			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Misc"))
+		{
+			if(ImGui::MenuItem("About"))
+			{
+				
+				showAbout = true;
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+	}
+
+
+	if(showAbout)
+	{
+		ImGui::OpenPopup("About DameEmu");
+		showAbout = false;
+	}
+
+	if(ImGui::BeginPopupModal("About DameEmu"))
+	{
+		ImGui::Text("DameEmu");
+		ImGui::Text("https://github.com/MonJamp/DameEmu");
+
+		if(ImGui::Button("Close"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+}
+
+int main()
+{
+    AppMain app;
+	app.MainLoop();
+	return 0;
 }
