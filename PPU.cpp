@@ -1,5 +1,6 @@
 #include "PPU.h"
 #include "Bus.h"
+#include <SFML/Graphics.hpp>
 #include <array>
 #include <vector>
 
@@ -25,7 +26,7 @@ PPU::PPU(Bus* b)
 	scanline_counter = 456;
 }
 
-void PPU::SetCanvas(MainCanvas* c)
+void PPU::SetCanvas(sf::RenderWindow* c)
 {
 	canvas = c;
 }
@@ -60,7 +61,7 @@ void PPU::UpdateScreen(uint8_t cycles) {
 		bus->regs.lcd.stat.match_flag = STAT_VBLANK;
 
 		//TODO: Only draw canvas during vblank?
-		canvas->PaintNow();
+		//canvas->PaintNow();
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
@@ -337,5 +338,5 @@ void PPU::DrawLine()
 
 	//TODO: Draw window
 
-	canvas->UpdateLine(lcd.ly + 1, pixels);
+	//canvas->UpdateLine(lcd.ly + 1, pixels);
 }

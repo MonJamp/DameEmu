@@ -24,7 +24,7 @@ DameEmu::~DameEmu()
 
 }
 
-void DameEmu::SetCanvas(MainCanvas* canvas)
+void DameEmu::SetCanvas(sf::RenderWindow* canvas)
 {
 	bus->ppu.SetCanvas(canvas);
 }
