@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../DameEmu.h"
+#include "MainCanvas.h"
 
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -25,6 +26,7 @@ public:
 private:
 	sf::RenderWindow app;
 	std::unique_ptr<DameEmu> dameEmu;
+	bool running;
 
 	ImGui::FileBrowser fileDialog;
 };

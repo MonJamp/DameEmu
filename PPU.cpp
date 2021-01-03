@@ -1,7 +1,7 @@
 #include "PPU.h"
 #include "Bus.h"
+#include "GUI/MainCanvas.h"
 #include <SFML/Graphics.hpp>
-#include <array>
 #include <vector>
 
 
@@ -23,12 +23,16 @@ Display::Color Display::GetColor(Display::Palette p)
 PPU::PPU(Bus* b)
 	: bus(b)
 {
-	scanline_counter = 456;
+	Reset();
 }
 
-void PPU::SetCanvas(sf::RenderWindow* c)
+void PPU::Reset()
 {
-	canvas = c;
+	scanline_counter = 456;
+	frameBuffer = new FrameBuffer();
+	frameBuffer->fill(0xFF);
+
+	MainCanvas::Paint();
 }
 
 void PPU::UpdateScreen(uint8_t cycles) {
@@ -61,7 +65,8 @@ void PPU::UpdateScreen(uint8_t cycles) {
 		bus->regs.lcd.stat.match_flag = STAT_VBLANK;
 
 		//TODO: Only draw canvas during vblank?
-		//canvas->PaintNow();
+		MainCanvas::UpdateCanvas(frameBuffer);
+		MainCanvas::Paint();
 	}
 	else if (bus->regs.lcd.ly > 153) {
 		bus->regs.lcd.ly = 0;
@@ -339,4 +344,6 @@ void PPU::DrawLine()
 	//TODO: Draw window
 
 	//canvas->UpdateLine(lcd.ly + 1, pixels);
+	//MainCanvas::UpdateLine(lcd.ly + 1, pixels);
+	std::copy(pixels.begin(), pixels.end(), frameBuffer->begin() + (lcd.ly * 160 * 4));
 }

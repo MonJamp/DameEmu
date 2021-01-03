@@ -1,10 +1,11 @@
 #pragma once
 #include "Bus.h"
 #include "Disassembler.h"
-#include <SFML/Graphics.hpp>
+
 #include <string>
 #include <cstdint>
 #include <memory>
+#include <array>
 
 
 class DameEmu {
@@ -13,8 +14,8 @@ public:
 	DameEmu(const std::string& filename);
 	~DameEmu();
 
-	void SetCanvas(sf::RenderWindow* canvas);
 	void Step();
+	void Reset();
 
 	std::shared_ptr<Debugger> GetDebugger() { return debugger; }
 	Cartridge& GetCart() { return *bus->cart; }

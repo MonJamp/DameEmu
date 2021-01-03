@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <cstdint>
+#include <array>
 
 
 namespace Display
@@ -60,13 +61,15 @@ struct Obj {
 	} attr;
 };
 
+using FrameBuffer = std::array<uint8_t, 160 * 144 * 4>;
+
 class Bus;
 
 class PPU {
 public:
 	PPU(Bus* b);
 
-	void SetCanvas(sf::RenderWindow* canvas);
+	void Reset();
 	void UpdateScreen(uint8_t cycles);
 private:
 	void DrawLine();
@@ -74,5 +77,5 @@ private:
 	Bus* bus;
 	int16_t scanline_counter;
 
-	sf::RenderWindow* canvas = nullptr;
+	FrameBuffer* frameBuffer;
 };
