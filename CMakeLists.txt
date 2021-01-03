@@ -5,6 +5,8 @@ project(${PROJECT_NAME})
 set(GUI_SRC
 	GUI/AppMain.h
 	GUI/AppMain.cpp
+	GUI/MainCanvas.h
+	GUI/MainCanvas.cpp
 	GUI/Add-ons/imfilebrowser.h
 )
 

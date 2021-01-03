@@ -20,13 +20,13 @@ friend class Debugger;
 public:
 	CPU(Bus* b);
 
+	void Reset();
 	uint8_t Step();
 
 public:
 	bool stop;
 
 private:
-	void Reset();
 	void HandleInterupts();
 
 	void write(uint16_t address, uint8_t data);

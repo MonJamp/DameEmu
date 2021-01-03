@@ -3,10 +3,14 @@
 #include <SFML/System/Clock.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include <vector>
+
 
 AppMain::AppMain()
 {
 	dameEmu = std::make_unique<DameEmu>();
+	running = false;
+	MainCanvas::Init();
 }
 
 AppMain::~AppMain()
@@ -16,12 +20,12 @@ AppMain::~AppMain()
 
 void AppMain::MainLoop()
 {
-	app.create(sf::VideoMode(640, 480), "");
-    app.setVerticalSyncEnabled(true);
+	app.create(sf::VideoMode(800, 600), "");
+    //app.setVerticalSyncEnabled(true);
     ImGui::SFML::Init(app);
 
 	fileDialog.SetTitle("Select ROM");
-	fileDialog.SetTypeFilters({".gb"});
+	fileDialog.SetTypeFilters({".gb", ".GB"});
 	fileDialog.SetWindowSize(640, 480);
 
     sf::Color bgColor;
@@ -33,47 +37,61 @@ void AppMain::MainLoop()
     char windowTitle[255] = "ImGui + SFML = <3";
 
     app.setTitle(windowTitle);
-    app.resetGLStates(); // call it if you only draw ImGui. Otherwise not needed.
     sf::Clock deltaClock;
     while (app.isOpen()) {
-        sf::Event event;
-        while (app.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
 
-            if (event.type == sf::Event::Closed) {
-                app.close();
-            }
-        }
+		if (running)
+		{
+			dameEmu->Step();
 
-        ImGui::SFML::Update(app, deltaClock.restart());
+			if (MainCanvas::IsVblank())
+			{
+				sf::Event event;
+				while (app.pollEvent(event)) {
+					ImGui::SFML::ProcessEvent(event);
 
-		MenuBar();
+					if (event.type == sf::Event::Closed) {
+						app.close();
+					}
+				}
 
-        ImGui::Begin("Sample window"); // begin window
+				ImGui::SFML::Update(app, deltaClock.restart());
 
-                                       // Background color edit
-        if (ImGui::ColorEdit3("Background color", color)) {
-            // this code gets called if color value changes, so
-            // the background color is upgraded automatically!
-            bgColor.r = static_cast<sf::Uint8>(color[0] * 255.f);
-            bgColor.g = static_cast<sf::Uint8>(color[1] * 255.f);
-            bgColor.b = static_cast<sf::Uint8>(color[2] * 255.f);
-        }
+				app.clear(sf::Color::Black);
+				MenuBar();
 
-        // Window title text edit
-        ImGui::InputText("Window title", windowTitle, 255);
+				{
+					ImGui::SetNextWindowPos(ImVec2(0.f, 20.f));
+					ImGui::Begin("DameEmu", NULL,
+						ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
+					ImGui::Image(MainCanvas::GetSprite());
+					ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+					ImGui::End();
+				}
 
-        if (ImGui::Button("Update window title")) {
-            // this code gets if user clicks on the button
-            // yes, you could have written if(ImGui::InputText(...))
-            // but I do this to show how buttons work :)
-            app.setTitle(windowTitle);
-        }
-        ImGui::End(); // end window
+				ImGui::SFML::Render(app);
+				app.display();
+			}
+		}
+		else
+		{
+			sf::Event event;
+			while (app.pollEvent(event)) {
+				ImGui::SFML::ProcessEvent(event);
 
-        app.clear(bgColor); // fill background with color
-        ImGui::SFML::Render(app);
-        app.display();
+				if (event.type == sf::Event::Closed) {
+					app.close();
+				}
+			}
+
+			ImGui::SFML::Update(app, deltaClock.restart());
+
+			MenuBar();
+
+			app.clear(sf::Color::Black);
+			ImGui::SFML::Render(app);
+			app.display();
+		}
     }
 
     ImGui::SFML::Shutdown();
@@ -94,7 +112,8 @@ void AppMain::MenuBar()
 
 			if(ImGui::MenuItem("Reset"))
 			{
-				//Do something
+				running = true;
+				dameEmu->Reset();
 			}
 
 			ImGui::Separator();
@@ -139,6 +158,7 @@ void AppMain::MenuBar()
 	fileDialog.Display();
 	if(fileDialog.HasSelected())
 	{
+		dameEmu = std::make_unique<DameEmu>(fileDialog.GetSelected().string());
 		fileDialog.ClearSelected();
 	}
 

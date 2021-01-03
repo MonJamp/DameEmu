@@ -18,6 +18,7 @@ Bus::~Bus()
 
 void Bus::Reset()
 {
+	cpu.Reset();
 	map->raw.fill(0x00);
 
 	pulseTimer = false;
