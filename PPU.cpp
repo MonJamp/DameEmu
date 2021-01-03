@@ -91,8 +91,6 @@ void PPU::DrawLine()
 {
 	Memory::Registers::LCD& lcd = bus->regs.lcd;
 
-	std::array<uint8_t, 160 * 4> pixels = { 0xFF }; //= canvas->GetLine(lcd.ly);
-
 	// Draw bg
 	if (lcd.lcdc.bg_on)
 	{
@@ -160,10 +158,10 @@ void PPU::DrawLine()
 
 				x_pos = (i + x_pos) % 8;
 
-				pixels[block * 32 + x_pos * 4] = color.r;
-				pixels[block * 32 + x_pos * 4 + 1] = color.g;
-				pixels[block * 32 + x_pos * 4 + 2] = color.b;
-				pixels[block * 32 + x_pos * 4 + 3] = color.a;
+				frameBuffer->at(lcd.ly * 160 * 4 + block * 32 + x_pos * 4) = color.r;
+				frameBuffer->at(lcd.ly * 160 * 4 + block * 32 + x_pos * 4 + 1) = color.g;
+				frameBuffer->at(lcd.ly * 160 * 4 + block * 32 + x_pos * 4 + 2) = color.b;
+				frameBuffer->at(lcd.ly * 160 * 4 + block * 32 + x_pos * 4 + 3) = color.a;
 
 				upperLine <<= 1;
 				lowerLine <<= 1;
@@ -322,28 +320,25 @@ void PPU::DrawLine()
 					// Sprites can still be visible when BG has priority
 					// if the BG color is 0
 					//TODO: Proper check to see if color is 0
-					if (pixels[(x_pos / 8) * 32 + i * 4] == 0xFF)
+					if (frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4) == 0xFF)
 					{
-						pixels[(x_pos / 8) * 32 + i * 4] = color.r;
-						pixels[(x_pos / 8) * 32 + i * 4 + 1] = color.g;
-						pixels[(x_pos / 8) * 32 + i * 4 + 2] = color.b;
-						pixels[(x_pos / 8) * 32 + i * 4 + 3] = color.a;
+						frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4) = color.r;
+						frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 1) = color.g;
+						frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 2) = color.b;
+						frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 3) = color.a;
 					}
 					
 					continue;
 				}
 
-				pixels[(x_pos / 8) * 32 + i * 4] = color.r;
-				pixels[(x_pos / 8) * 32 + i * 4 + 1] = color.g;
-				pixels[(x_pos / 8) * 32 + i * 4 + 2] = color.b;
-				pixels[(x_pos / 8) * 32 + i * 4 + 3] = color.a;
+				frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4) = color.r;
+				frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 1) = color.g;
+				frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 2) = color.b;
+				frameBuffer->at(lcd.ly * 160 * 4 + (x_pos / 8) * 32 + i * 4 + 3) = color.a;
 			}
 		}
 	}
 
 	//TODO: Draw window
 
-	//canvas->UpdateLine(lcd.ly + 1, pixels);
-	//MainCanvas::UpdateLine(lcd.ly + 1, pixels);
-	std::copy(pixels.begin(), pixels.end(), frameBuffer->begin() + (lcd.ly * 160 * 4));
 }
