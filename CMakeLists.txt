@@ -7,6 +7,8 @@ set(GUI_SRC
 	GUI/AppMain.cpp
 	GUI/MainCanvas.h
 	GUI/MainCanvas.cpp
+	GUI/DebuggerWidget.h
+	GUI/DebuggerWidget.cpp
 	GUI/Add-ons/imfilebrowser.h
 )
 

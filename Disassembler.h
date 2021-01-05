@@ -76,6 +76,7 @@ public:
 
 	void Disassemble();
 	void Step();
+	void Break();
 	bool HitBreakpoint();
 	bool RemoveBreakpoint(uint16_t address);
 	void AddBreakpoint(uint16_t address);
