@@ -229,6 +229,11 @@ void Debugger::Step()
 	UpdateRegState();
 }
 
+void Debugger::Break()
+{
+	UpdateRegState();
+}
+
 bool Debugger::HitBreakpoint()
 {
 	for (auto i : breakpoints)

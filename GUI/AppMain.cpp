@@ -8,19 +8,21 @@
 
 AppMain::AppMain()
 {
-	dameEmu = std::make_unique<DameEmu>();
 	running = false;
+	showDebugger = false;
+	dameEmu = std::make_unique<DameEmu>();
+	debuggerWidget = new DebuggerWidget(dameEmu->GetDebugger(), running);
 	MainCanvas::Init();
 }
 
 AppMain::~AppMain()
 {
-
+	delete debuggerWidget;
 }
 
 void AppMain::MainLoop()
 {
-	app.create(sf::VideoMode(800, 600), "");
+	app.create(sf::VideoMode(800, 720), "");
     //app.setVerticalSyncEnabled(true);
     ImGui::SFML::Init(app);
 
@@ -44,36 +46,13 @@ void AppMain::MainLoop()
 		{
 			dameEmu->Step();
 
-			if (MainCanvas::IsVblank())
+			if (debuggerWidget->BreakExecution())
 			{
-				sf::Event event;
-				while (app.pollEvent(event)) {
-					ImGui::SFML::ProcessEvent(event);
-
-					if (event.type == sf::Event::Closed) {
-						app.close();
-					}
-				}
-
-				ImGui::SFML::Update(app, deltaClock.restart());
-
-				app.clear(sf::Color::Black);
-				MenuBar();
-
-				{
-					ImGui::SetNextWindowPos(ImVec2(0.f, 20.f));
-					ImGui::Begin("DameEmu", NULL,
-						ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar);
-					ImGui::Image(MainCanvas::GetSprite());
-					ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-					ImGui::End();
-				}
-
-				ImGui::SFML::Render(app);
-				app.display();
+				running = false;
 			}
 		}
-		else
+
+		if (MainCanvas::IsVblank() || !running)
 		{
 			sf::Event event;
 			while (app.pollEvent(event)) {
@@ -86,9 +65,21 @@ void AppMain::MainLoop()
 
 			ImGui::SFML::Update(app, deltaClock.restart());
 
+			app.clear(sf::Color::Black);
 			MenuBar();
 
-			app.clear(sf::Color::Black);
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
+				ImGui::SetNextWindowPos(ImVec2(0.f, 20.f));
+				ImGui::Begin("DameEmu", NULL,
+					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_NoBringToFrontOnFocus);
+				ImGui::Image(MainCanvas::GetSprite());
+				ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+				ImGui::End();
+				ImGui::PopStyleVar();
+			}
+
 			ImGui::SFML::Render(app);
 			app.display();
 		}
@@ -135,7 +126,16 @@ void AppMain::MenuBar()
 
 			if(ImGui::MenuItem("Debugger"))
 			{
-				//Do something
+				if (!showDebugger)
+				{
+					delete debuggerWidget;
+					debuggerWidget = new DebuggerWidget(dameEmu->GetDebugger(), running);
+					showDebugger = true;
+				}
+				else
+				{
+					showDebugger = false;
+				}
 			}
 			ImGui::EndMenu();
 		}
@@ -160,6 +160,11 @@ void AppMain::MenuBar()
 	{
 		dameEmu = std::make_unique<DameEmu>(fileDialog.GetSelected().string());
 		fileDialog.ClearSelected();
+	}
+
+	if (showDebugger)
+	{
+		debuggerWidget->Show();
 	}
 
 	if(showAbout)
