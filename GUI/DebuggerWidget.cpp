@@ -91,7 +91,7 @@ void DebuggerWidget::ShowAddress(uint16_t a)
 void DebuggerWidget::Show()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(2.f, 2.f));
-	ImGui::SetNextWindowPos(ImVec2(160.f * 3.f, 20.f), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ImVec2(160.f * 3.f, ImGui::GetFrameHeight()), ImGuiCond_Once);
 	ImGui::SetNextWindowSize(ImVec2(320.f, 144.f * 3.f + ImGui::GetTextLineHeightWithSpacing()), ImGuiCond_Once);
 	ImGui::Begin("Debugger", NULL, window_flags);
 
@@ -276,7 +276,7 @@ void DebuggerWidget::OnGetItemAttr(int item)
 		uint16_t currAddressIndex = it->second;
 		if (item == currAddressIndex)
 		{
-			ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, 0xFF3B4D21);
+			ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, 0xFF406626);
 		}
 	}
 }
