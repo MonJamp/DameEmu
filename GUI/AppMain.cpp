@@ -64,7 +64,7 @@ void AppMain::MainLoop()
 
 			{
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
-				ImGui::SetNextWindowPos(ImVec2(0.f, ImGui::GetFrameHeight()));
+				ImGui::SetNextWindowPos(ImVec2(320.f, 720.f - (144.f * 3.f + ImGui::GetFrameHeight())));
 				ImGui::Begin("DameEmu", NULL,
 					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
 					ImGuiWindowFlags_NoBringToFrontOnFocus);
