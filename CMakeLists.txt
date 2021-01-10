@@ -10,6 +10,7 @@ set(GUI_SRC
 	GUI/DebuggerWidget.h
 	GUI/DebuggerWidget.cpp
 	GUI/Add-ons/imfilebrowser.h
+	GUI/Add-ons/imgui_memory_editor.h
 )
 
 set(Cartridge_SRC
