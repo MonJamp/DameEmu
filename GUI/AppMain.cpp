@@ -10,6 +10,7 @@ AppMain::AppMain()
 {
 	running = false;
 	showDebugger = false;
+	showCartInfo = false;
 	dameEmu = std::make_unique<DameEmu>();
 	debuggerWidget = new DebuggerWidget(dameEmu->GetDebugger(), running);
 	MainCanvas::Init();
@@ -155,6 +156,11 @@ void AppMain::MenuBar()
 
 		if (ImGui::BeginMenu("Misc"))
 		{
+			if (ImGui::MenuItem("Cartridge Info"))
+			{
+				showCartInfo = true;
+			}
+
 			if(ImGui::MenuItem("About"))
 			{
 				
@@ -179,6 +185,32 @@ void AppMain::MenuBar()
 	if (showDebugger)
 	{
 		debuggerWidget->Show();
+	}
+
+	if (showCartInfo)
+	{
+		ImGui::OpenPopup("Cartridge Info##popup");
+		showCartInfo = false;
+	}
+
+	if (ImGui::BeginPopupModal("Cartridge Info##popup"))
+	{
+		Cartridge& cart = dameEmu->GetCart();
+		if (cart.isValid())
+		{
+			ImGui::TextUnformatted(cart.headerToString().c_str());
+		}
+		else
+		{
+			ImGui::TextUnformatted("ROM is invalid");
+		}
+
+		if (ImGui::Button("Close"))
+		{
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
 	}
 
 	if(showAbout)

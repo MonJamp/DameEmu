@@ -69,6 +69,11 @@ uint8_t logo[] =
 
 bool Cartridge::isValid()
 {
+	if (!romBanks.size() > 0)
+	{
+		return false;
+	}
+
 	RomBank& bank0 = *romBanks[0];
 
 	// Logo test
