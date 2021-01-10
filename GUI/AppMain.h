@@ -29,6 +29,7 @@ private:
 
 	bool running;
 	bool showDebugger;
+	bool showCartInfo;
 
 	ImGui::FileBrowser fileDialog;
 	DebuggerWidget* debuggerWidget;
