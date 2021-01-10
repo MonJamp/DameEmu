@@ -24,14 +24,14 @@ void SetUpImGuiStyle();
 
 void AppMain::MainLoop()
 {
-	app.create(sf::VideoMode(800, 720), "DameEmu");
+	app.create(sf::VideoMode(160 * 3, 144 * 3 + 37), "DameEmu");
     //app.setVerticalSyncEnabled(true);
     ImGui::SFML::Init(app);
 	SetUpImGuiStyle();
 
 	fileDialog.SetTitle("Select ROM");
 	fileDialog.SetTypeFilters({".gb", ".GB"});
-	fileDialog.SetWindowSize(640, 480);
+	fileDialog.SetWindowSize(480, 432);
 
     sf::Clock deltaClock;
     while (app.isOpen()) {
@@ -64,9 +64,17 @@ void AppMain::MainLoop()
 
 			{
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
-				ImGui::SetNextWindowPos(ImVec2(320.f, 720.f - (144.f * 3.f + ImGui::GetFrameHeight())));
+				if (showDebugger)
+				{
+					ImGui::SetNextWindowPos(ImVec2(320.f, 720.f - (144.f * 3.f + ImGui::GetFrameHeight())));
+				}
+				else
+				{
+					ImGui::SetNextWindowPos(ImVec2(2.5f, ImGui::GetFrameHeight()));
+				}
+
 				ImGui::Begin("DameEmu", NULL,
-					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar |
+					ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration |
 					ImGuiWindowFlags_NoBringToFrontOnFocus);
 				ImGui::Image(MainCanvas::GetSprite());
 				ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
@@ -134,10 +142,12 @@ void AppMain::MenuBar()
 					delete debuggerWidget;
 					debuggerWidget = new DebuggerWidget(dameEmu->GetDebugger(), running);
 					showDebugger = true;
+					app.setSize({ 800, 720 });
 				}
 				else
 				{
 					showDebugger = false;
+					app.setSize({ 160 * 3, 144 * 3 + 37});
 				}
 			}
 			ImGui::EndMenu();
