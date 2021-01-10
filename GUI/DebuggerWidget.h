@@ -5,6 +5,26 @@
 #include <vector>
 
 
+class VramWidget
+{
+public:
+	VramWidget(std::shared_ptr<Bus> b);
+	~VramWidget();
+
+	void Show();
+
+private:
+	void OnUpdate();
+
+	std::shared_ptr<Bus> bus;
+	sf::Texture* texture;
+	sf::Sprite sprite;
+
+	float scale;
+	int posX, posY;
+	uint16_t tileIndex; // Keeps track of which tile to draw next
+};
+
 class DebuggerWidget
 {
 public:
@@ -49,6 +69,7 @@ private:
 	std::vector<BreakpointData> bpData;
 	AddressTable addressToIndex; // Address is key, index is value
 	Memory::Map& map;
+	VramWidget vramWidget;
 
 	bool& running;
 

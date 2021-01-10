@@ -1,13 +1,149 @@
 #include "DebuggerWidget.h"
 #include "Add-ons/imgui_memory_editor.h"
 #include <imgui.h>
+#include <imgui-SFML.h>
 
+
+VramWidget::VramWidget(std::shared_ptr<Bus> b)
+	: bus(b)
+{
+	scale = 1.5f;
+	posX = 0;
+	posY = 0;
+	tileIndex = 0;
+
+	texture = new sf::Texture();
+	texture->create(16 * 8, 16 * 8);
+	sprite.setTexture(*texture);
+	sprite.setScale(scale, scale);
+
+	uint8_t white_pixels[8 * 8 * 4] = { 0xFF };
+
+	for (uint16_t i = 0; i < 256; i++)
+	{
+		sf::Texture tileTex;
+		tileTex.create(8, 8);
+		tileTex.update(white_pixels);
+
+		texture->update(tileTex, posX, posY);
+
+		posX += 8;
+		if (posX == 8 * 16)
+		{
+			posX = 0;
+			posY += 8;
+		}
+	}
+
+	posX = 0;
+	posY = 0;
+}
+
+VramWidget::~VramWidget()
+{
+	delete texture;
+}
+
+void VramWidget::OnUpdate()
+{
+	uint8_t pixels[8 * 8 * 4];
+	std::array<uint8_t, 0x2000>* vram = bus->GetVRAM();
+
+	for (int i = 0; i < 8; i++)
+	{
+		uint8_t upper = vram->at(tileIndex * 16 + i * 2);
+		uint8_t lower = vram->at(tileIndex * 16 + i * 2 + 1);
+
+		for (int j = 0; j < 8; j++)
+		{
+			bool upperBit = upper & 128;
+			bool lowerBit = lower & 128;
+			uint32_t color = 0x00000000;
+
+			if (upperBit && lowerBit)
+			{
+				//Color 4
+				color = 0xFF000000;
+			}
+			else if (upperBit && !lowerBit)
+			{
+				//Color 3
+				color = 0xFFA9A9A9;
+			}
+			else if (!upperBit && lowerBit)
+			{
+				//Color 2
+				color = 0xFF545454;
+			}
+			else
+			{
+				//Color 1
+				color = 0xFFFFFFFF;
+			}
+
+
+			pixels[i * 32 + j * 4] = color & 0xFF;
+			pixels[i * 32 + j * 4 + 1] = (color & 0xFF00) >> 8;
+			pixels[i * 32 + j * 4 + 2] = (color & 0xFF0000) >> 16;
+			pixels[i * 32 + j * 4 + 3] = (color & 0xFF000000) >> 24;
+
+			upper <<= 1;
+			lower <<= 1;
+		}
+	}
+
+
+	texture->update(pixels, 8, 8, posX, posY);
+
+	tileIndex++;
+	if (tileIndex > 255)
+	{
+		tileIndex = 0;
+	}
+
+	posX += 8;
+	if (posX == 8 * 16)
+	{
+		posX = 0;
+		posY += 8;
+		if (posY == 8 * 16)
+		{
+			posY = 0;
+		}
+	}
+}
+
+#define IM_MAX(A, B) (((A) >= (B)) ? (A) : (B))
+static void Square(ImGuiSizeCallbackData* data)
+{
+	data->DesiredSize.x = data->DesiredSize.y = IM_MAX(data->DesiredSize.x, data->DesiredSize.y);
+}
+
+void VramWidget::Show()
+{
+	OnUpdate();
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+	ImGui::SetNextWindowPos(ImVec2(320.f, ImGui::GetFrameHeight()), ImGuiCond_Once);
+	float usableHeight = 720.f - (144.f * 3.f) - ImGui::GetFrameHeight() - ImGui::GetTextLineHeightWithSpacing() - 1.f;
+	ImGui::SetNextWindowSize(ImVec2(usableHeight, usableHeight), ImGuiCond_Once);
+	ImGui::SetNextWindowSizeConstraints(ImVec2(128.f, 128.f), ImVec2(FLT_MAX, FLT_MAX), Square);
+	ImGui::Begin("Tile Viewer", NULL, ImGuiWindowFlags_NoScrollbar);
+	ImVec2 p1 = ImGui::GetCursorScreenPos();
+	ImVec2 winSize = ImGui::GetItemRectSize();
+	winSize = { winSize.x, winSize.y - p1.y };
+	float scale = ((float)winSize.x / 128.f) * 1.f;
+	sprite.setScale(scale, scale);
+	ImGui::Image(sprite);
+	ImGui::End();
+	ImGui::PopStyleVar();
+}
 
 DebuggerWidget::DebuggerWidget(std::shared_ptr<Debugger> d, bool& r)
-	: debugger(d), running(r), map(d->GetBus()->GetMemoryDump())
+	: debugger(d), running(r), map(d->GetBus()->GetMemoryDump()), vramWidget(d->GetBus())
 {
 	window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar;
+		ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
 	table_flags = ImGuiTableFlags_ScrollY;
 	column_flags = ImGuiTableColumnFlags_WidthFixed;
 
@@ -92,6 +228,8 @@ void DebuggerWidget::FocusAddress(uint16_t a)
 
 void DebuggerWidget::Show()
 {
+	vramWidget.Show();
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(2.f, 2.f));
 	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight()), ImGuiCond_Once);
 	ImGui::SetNextWindowSize(ImVec2(320.f, 720.f - ImGui::GetFrameHeight()), ImGuiCond_Once);
