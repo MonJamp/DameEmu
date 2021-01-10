@@ -31,11 +31,15 @@ public:
 	bool BreakExecution();
 	void RefreshDisassembly();
 	void RefreshBreakpoints();
-	void ShowCurrentAddress();
-	void ShowAddress(uint16_t a);
+	void FocusCurrentAddress();
+	void FocusAddress(uint16_t a);
 	void Show();
 
 private:
+	void ShowRegisterCtrl();
+	void ShowDebuggerCtrl();
+	void ShowBreakpointCtrl();
+	void ShowMemoryCtrl();
 	void OnGetItemAttr(int item);
 	void OnToggleBreakpoint(int item);
 
@@ -44,6 +48,7 @@ private:
 	std::vector<InsData> disasmData;
 	std::vector<BreakpointData> bpData;
 	AddressTable addressToIndex; // Address is key, index is value
+	Memory::Map& map;
 
 	bool& running;
 
