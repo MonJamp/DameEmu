@@ -16,9 +16,14 @@ addons:
         
 before_script:
     - git clone https://github.com/ocornut/imgui.git
+    - cd imgui/
+    - git reset --hard e18abe3619cfa0eced163c027d0349506814816c
+    - cd ..
     - git clone https://github.com/eliasdaler/imgui-sfml.git
-    - mkdir imgui-sfml/build
-    - cd imgui-sfml/build
+    - cd imgui-sfml
+    - git reset --hard 35185b16dade7f6237ccda82427682be4876db84
+    - mkdir build
+    - cd build
     - cmake -DBUILD_SHARED_LIBS=ON -DIMGUI_DIR:FILEPATH=../imgui ..
     - sudo cmake --build . --target install
     - cd ../../
