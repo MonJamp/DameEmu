@@ -49,9 +49,9 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 if(MSVC)
 	target_link_options(${PROJECT_NAME} PUBLIC "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")
 	set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+	set(SFML_STATIC_LIBRARIES TRUE)
 endif()
 
-set(SFML_STATIC_LIBRARIES TRUE)
 find_package(SFML 2.5 COMPONENTS window graphics REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES} ${SFML_DEPEDENCIES})
 
